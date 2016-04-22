@@ -7,7 +7,7 @@
 
 
 var ejs = require("ejs");
-var mysql = require('./services/mysql');
+var mysql = require('./mysql');
 
 
 exports.createProduct = function(msg, callback){

@@ -3,7 +3,7 @@ var amqp = require('amqp')
     , util = require('util');
 
 var login = require('./services/login');
-var product = require('./services/product.js');
+var product = require('./services/product');
 var billing = require('./services/billing');
 var customer = require('./services/customer');
 var trip = require('./services/trips');
