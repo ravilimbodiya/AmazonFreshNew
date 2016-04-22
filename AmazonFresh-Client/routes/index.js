@@ -4,5 +4,5 @@
  */
 
 exports.index = function(req, res){
-  res.render('signin', { title: 'Express' });
+  res.render('index', { title: 'AmazonFresh' });
 };
