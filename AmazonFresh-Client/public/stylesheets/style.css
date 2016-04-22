@@ -1,8 +1,102 @@
 body {
-  padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
 a {
   color: #00B7FF;
+}
+
+#headerNav {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    background-image: url("../images/header-bg.png");
+    border-color: #ccc;
+    border-image: url("../images/header-undergradient.png") 0 0 2 0;
+    border-style: solid;
+    border-width: 0;
+    color: #fff;
+    height: 45px;
+    left: 0;
+    margin: 0;
+    min-width: 1015px;
+    padding: 0;
+    position: fixed;
+    right: 0;
+    top: 0;
+    z-index: 100;
+}
+
+ul.sidelist {
+    border: 0 none;
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+}
+#headerNav #freshLogo {
+    padding-right: 25px;
+}
+#headerNav #greeting #signInLink {
+    text-decoration: underline;
+}
+#headerNav ul.sidelist li {
+    display: inline-block;
+    line-height: 44px;
+    margin: 0;
+    padding: 0;
+    vertical-align: middle;
+}
+#headerNav ul.sidelist li a {
+    color: #fff;
+    font-size: 13px;
+    outline: medium none;
+    text-decoration: none;
+}
+#headerNav #freshLogo a img {
+    margin-top: -4px;
+}
+#headerNav ul.sidelist li img {
+    border: medium none;
+    vertical-align: middle;
+    padding-left: 15px;
+}
+#refreshFooter {
+    background-color: #393f44;
+    color: #fff;
+    min-height: 100px;
+    padding: 15px;
+    text-align: left;
+}
+#refreshFooter .column {
+    float: left;
+    margin-bottom: 15px;
+}
+#refreshFooter .column a {
+    color: #fff;
+    display: block;
+    font-size: 14px;
+    margin-right: 50px;
+    text-decoration: none;
+}
+#refreshFooter #copyrightAndDisclaimer {
+    clear: both;
+    font-size: 12px;
+}
+.welPanel {
+    min-height: 600px;
+}
+.welImage {
+    background: rgba(0, 0, 0, 0) url("../images/home-bg.jpg") no-repeat scroll 50% 30% / cover ;
+}
+.errorContent{
+	background-color: #fff;
+	opacity: 0.9;
+	top: 30%;
+	 padding: 10px;
+	position: absolute !important;
+	 box-shadow: 10px 10px 5px #888888;
+	 font-family: verdana,arial,helvetica,sans-serif;
+	 font-weight: bold;
+	 font-size: medium;
 }
