@@ -81,6 +81,21 @@ function fail_login(req,res)
     });
 }
 
+exports.productDescription = function productDescription(req,res) {
+
+	ejs.renderFile('./views/productDescription.ejs',function(err, result) {
+	   // render on success
+	   if (!err) {
+	            res.end(result);
+	   }
+	   // render or error
+	   else {
+	            res.end('An error occurred');
+	            console.log(err);
+	   }
+   });
+}
+
 exports.sign_in=sign_in;
 exports.after_sign_in=after_sign_in;
 exports.success_login=success_login;

@@ -100,3 +100,27 @@ ul.sidelist {
 	 font-weight: bold;
 	 font-size: medium;
 }
+
+.profilePic{
+    border: 1px solid #fff;
+    border-radius: 7px;
+    box-sizing: border-box;
+    color: #000;
+    height: 40px;
+    width: 40px;
+     
+    position: relative;
+    
+}
+.cart{
+	font-size: 26px;
+    margin-right: 20px;
+    padding: 10px;
+}
+.decoration{
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+.prodDesc{
+	padding: 0px;
+}

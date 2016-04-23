@@ -28,6 +28,7 @@ app.get('/signin',home.sign_in);
 app.post('/login', home.after_sign_in);
 app.get('/success_login', home.success_login);
 app.get('/fail_login', home.fail_login);
+app.get('/productDescription',home.productDescription);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
