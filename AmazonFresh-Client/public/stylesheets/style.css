@@ -122,5 +122,11 @@ ul.sidelist {
 	margin-bottom: 5px;
 }
 .prodDesc{
-	padding: 0px;
+	font-size: 24px;
+    font-weight: bold;
+}
+.price{
+	font-size: 24px;
+    font-weight: bold;
+    color: green;
 }
