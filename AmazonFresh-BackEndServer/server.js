@@ -7,6 +7,7 @@ var product = require('./services/product');
 var billing = require('./services/billing');
 var customer = require('./services/customer');
 var trip = require('./services/trips');
+var truck = require('./services/trucks');
 
 var express = require('express');
 var http = require('http');
@@ -44,12 +45,13 @@ app.use(expressSession({
 cnn.on('ready', function () {
     console.log("listening on login_queue");
     console.log('reached backend server');
-    cnn.queue('login_queue', function (q) {
+    
+    cnn.queue('checkLogin_queue', function (q) {
         q.subscribe(function (message, headers, deliveryInfo, m) {
             util.log(util.format(deliveryInfo.routingKey, message));
             util.log("Message: " + JSON.stringify(message));
             util.log("DeliveryInfo: " + JSON.stringify(deliveryInfo));
-            login.handle_request(message, function (err, res) {
+            login.checkLogin(message, function (err, res) {
 
                 //return index sent
                 cnn.publish(m.replyTo, res, {
@@ -60,6 +62,23 @@ cnn.on('ready', function () {
             });
         });
     });
+    
+    cnn.queue('createCustomer_queue', function(q){
+		q.subscribe(function(message, headers, deliveryInfo, m){
+			util.log(util.format( deliveryInfo.routingKey, message));
+			util.log("Message: "+JSON.stringify(message));
+			util.log("DeliveryInfo: "+JSON.stringify(deliveryInfo));
+			customer.create(message, function(err,res){
+
+				//return index sent
+				cnn.publish(m.replyTo, res, {
+					contentType:'application/json',
+					contentEncoding:'utf-8',
+					correlationId:m.correlationId
+				});
+			});
+		});
+	});
 
     //Create product queue
     cnn.queue('product_createProduct', function (q) {
@@ -381,5 +400,71 @@ cnn.on('ready', function () {
         });
     });
 
+    //TRUCKS MODULE
+    cnn.queue('createTruck_queue', function (q) {
+        q.subscribe(function (message, headers, deliveryInfo, m) {
+            util.log(util.format(deliveryInfo.routingKey, message));
+            util.log("Message: " + JSON.stringify(message));
+            util.log("DeliveryInfo: " + JSON.stringify(deliveryInfo));
+            truck.add(message, function (err, res) {
+
+                //return index sent
+                cnn.publish(m.replyTo, res, {
+                    contentType: 'application/json',
+                    contentEncoding: 'utf-8',
+                    correlationId: m.correlationId
+                });
+            });
+        });
+    });
+    cnn.queue('updateTruck_queue', function (q) {
+        q.subscribe(function (message, headers, deliveryInfo, m) {
+            util.log(util.format(deliveryInfo.routingKey, message));
+            util.log("Message: " + JSON.stringify(message));
+            util.log("DeliveryInfo: " + JSON.stringify(deliveryInfo));
+            truck.update(message, function (err, res) {
+
+                //return index sent
+                cnn.publish(m.replyTo, res, {
+                    contentType: 'application/json',
+                    contentEncoding: 'utf-8',
+                    correlationId: m.correlationId
+                });
+            });
+        });
+    });
+
+    cnn.queue('deleteTruck_queue', function (q) {
+        q.subscribe(function (message, headers, deliveryInfo, m) {
+            util.log(util.format(deliveryInfo.routingKey, message));
+            util.log("Message: " + JSON.stringify(message));
+            util.log("DeliveryInfo: " + JSON.stringify(deliveryInfo));
+            truck.deleteTruck(message, function (err, res) {
+
+                //return index sent
+                cnn.publish(m.replyTo, res, {
+                    contentType: 'application/json',
+                    contentEncoding: 'utf-8',
+                    correlationId: m.correlationId
+                });
+            });
+        });
+    });
+    cnn.queue('currentLocation_queue', function (q) {
+        q.subscribe(function (message, headers, deliveryInfo, m) {
+            util.log(util.format(deliveryInfo.routingKey, message));
+            util.log("Message: " + JSON.stringify(message));
+            util.log("DeliveryInfo: " + JSON.stringify(deliveryInfo));
+            truck.currentLocation(message, function (err, res) {
+
+                //return index sent
+                cnn.publish(m.replyTo, res, {
+                    contentType: 'application/json',
+                    contentEncoding: 'utf-8',
+                    correlationId: m.correlationId
+                });
+            });
+        });
+    });
 
 });
