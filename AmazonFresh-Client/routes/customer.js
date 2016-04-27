@@ -1,55 +1,6 @@
 var mq_client = require('../rpc/client');
 
-exports.createCustomer = function createCustomer(req, res) {
-    var msg_Payload = {
-        'customerId': req.param('customerId'),
-        'firstName': req.param('firstName'),
-        'lastName': req.param('lastName'),
-        'address': req.param('address'),
-        'city': req.param('city'),
-        'state': req.param('state'),
-        'zipcode': req.param('zipcode'),
-        'email': req.param('email'),
-        'cc_no': req.param('cc_no'),
-        'cc_name': req.param('cc_name'),
-        'cc_expiry': req.param('cc_expiry'),
-        'cvv': req.param('cvv')
-    };
-
-    if(req.param('userType') === 'customer'){
-	    mq_client.make_request('createCustomer_queue', msg_Payload, function (err, results) {
-	        if (err) {
-	            console.log('Err: ' + err);
-	            res.send({'statusCode': 400});
-	            throw err;
-	        } else {
-	            if (results.statusCode == 200) {
-	                console.log('Successful creation of customer!');
-	                res.send(results);
-	            } else {
-	                console('Error Occured!');
-	                res.send({'statusCode': 400});
-	            }
-	        }
-	    });
-    } else if(req.param('userType') === 'farmer'){
-	    mq_client.make_request('createFarmer_queue', msg_Payload, function (err, results) {
-	        if (err) {
-	            console.log('Err: ' + err);
-	            res.send({'statusCode': 400});
-	            throw err;
-	        } else {
-	            if (results.statusCode == 200) {
-	                console.log('Successful creation of farmer!');
-	                res.send(results);
-	            } else {
-	                console('Error Occured!');
-	                res.send({'statusCode': 400});
-	            }
-	        }
-	    });
-    }
-};
+exports.createCustomer = function createCustomer(req, res) {};
 
 exports.deleteCustomer = function deleteCustomer(req, res) {
     var msg_Payload = {
@@ -145,4 +96,28 @@ exports.postReviewRating = function postReviewRating(req, res) {
             }
         }
     });
+};
+
+exports.addToCart = function addToCart(req, res) {
+	var msg_Payload = {
+	        'cust_id': req.session.user[0].cust_id,
+	        'product': req.param('product'),
+	        'quantity': req.param('quantity')
+	    };
+	    mq_client.make_request('addToCart_queue', msg_Payload, function (err, results) {
+	        if (err) {
+	            console.log('Err: ' + err);
+	            res.send({'statusCode': 401});
+	            throw err;
+	        } else {
+	            if (results.statusCode === 200) {
+	                console.log('Product added to shopping cart!');
+	                req.session.shoppingCart = results.shoppingCart;
+	                res.send(results);
+	            } else {
+	                console.log('Error Occured!');
+	                res.send({'statusCode': 401});
+	            }
+	        }
+	    });
 };

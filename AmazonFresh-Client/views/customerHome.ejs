@@ -1,19 +1,24 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="amazonFreshApp" ng-controller="amazonCntrl">
   <head>
     <title>Welcome | AmazonFresh</title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <!-- Latest compiled and minified CSS -->
 	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
 	<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel='stylesheet' href='/stylesheets/carousel.css' />
  
 	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://code.jquery.com/jquery.js"></script>
      <script src="//code.jquery.com/jquery-1.10.2.js"></script>
   	<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
   	<script	src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+  	<script src="/js/prefixfree.min.js"></script>
   </head>
-  <body>
+  <body ng-init="listAllProducts();">
   	<header>
   		<nav class="navbar navbar-default" id="headerNav">
 		  <div class="container-fluid">
@@ -30,9 +35,11 @@
 		    </div>
 		    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 		    	<ul class="nav navbar-nav navbar-right">
-			        <li style="cursor: pointer;"><i class="glyphicon glyphicon-shopping-cart cart"></i></li>
+			        <li style="cursor: pointer;"><i class="glyphicon glyphicon-shopping-cart cart"><span class="cartItems">{{itemsInCart}}</span></i>
+
+			        </li>
 			        <li class="dropdown">
-			          <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="margin-right: 10px; padding: 5px;" role="button" aria-haspopup="true" aria-expanded="false"><img alt="" src="/images/user.jpg" class="profilePic"><span class="caret"></span></a>
+			          <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="margin-right: 10px; padding: 5px;" role="button" aria-haspopup="true" aria-expanded="false"><img alt="" src="/images/user.png" class="profilePic"><span class="caret"></span></a>
 			          <ul class="dropdown-menu">
 			            <li><a href="#">User Name<br><span style="font-size: 9px;">View Profile</span></a></li>
 			            <li><a href="#">Help</a></li>
@@ -76,100 +83,118 @@
 		  		</div>
 	    	</div>
     	</section>
-    	<section class="decoration">
-    		<div style="margin-top: 70px;"></div>
-	    	<div class="row">
-		    	
-		    	<div class="col-3" style="padding-left: 5%;">
-		    	<img alt="Fruit" src="../images/image1.jpg">
-		    		<div class="prodDesc">
-		    			<span>ProductName</span>
-		    			<span>ProductDescription</span>
-		    		
-		    		</div>
-		    			<span>Other Products by <a href="#">FarmerName</a></span>
-		    		
-		    	
-		    			<span><label class="price">$1.69</label></span>
-		    		
-		    		
-		    		
-		    			<span><button class="btn btn-primary btn-lg">Add to Cart</button></span>
-		    	</div>
-	    	</div>
-    	</section>
     	
-		    		<section class="decoration">
-    		<div style="margin-top: 70px;"></div>
-	    	<div class="row">
-		    	
-		    	<div class="col-3" style="padding-left: 5%;">
-		    	<img alt="Fruit" src="../images/image2.jpg">
-		    		<div class="prodDesc">
-		    			<span>ProductName2</span>
-		    			<span>ProductDescription2</span>
-		    		
-		    		</div>
-		    			<span>Other Products by <a href="#">FarmerName2</a></span>
-		    		
-		    	
-		    			<span><label class="price">$2.69</label></span>
-		    		
-		    		
-		    		
-		    			<span><button class="btn btn-primary btn-lg">Add to Cart</button></span>
-		    	</div>
-	    	</div>
-    	</section>
-    	<section class="decoration">
-    		<div style="margin-top: 70px;"></div>
-	    	<div class="row">
-		    	
-		    	<div class="col-3" style="padding-left: 5%;">
-		    	<img alt="Fruit" src="../images/image3.jpg">
-		    		<div class="prodDesc">
-		    			<span>ProductName3</span>
-		    			<span>ProductDescription3</span>
-		    		
-		    		</div>
-		    			<span>Other Products by <a href="#">FarmerName3</a></span>
-		    		
-		    	
-		    			<span><label class="price">$3.69</label></span>
-		    		
-		    		
-		    		
-		    			<span><button class="btn btn-primary btn-lg">Add to Cart</button></span>
-		    	</div>
-	    	</div>
-    	</section>
-    	<section class="decoration">
-    		<div style="margin-top: 70px;"></div>
-	    	<div class="row">
-		    	
-		    	<div class="col-3" style="padding-left: 5%;">
-		    			<img alt="Fruit" src="../images/image4.jpg">
-		    		<div class="prodDesc">
-		    			<span>ProductName4</span>
-		    			<span>ProductDescription4</span>
-		    
-		    		</div><br><br><br>
-		    			<span>Other Products by <a href="#">FarmerName4</a></span>
-		    		
-		    	
-		    			<span><label class="price">$4.69</label></span>
-		    		
-		    		
-		    		
-		    			<span><button class="btn btn-primary btn-lg">Add to Cart</button></span>
-		    	</div>
-	    	</div>
-    	</section>
-    	<hr>
-    </div> 
+    	<section>
+    	<div class="container marketing" style="width: 80%;">
+			<div id="myCarousel1" class="carousel slide" data-ride="carousel">
+		      <!-- Indicators -->
+		      <div class="carousel-inner">
+		        <div class="item active">
+		         <div class="row">
+		        <div class="col-lg-4">
+		          <img src="../images/temp/salate.png" alt="Generic placeholder image">
+		          <h4>Salates</h4>
+		          <p><a class="btn btn-default" href="#" role="button">Add to cart &raquo;</a></p>
+		        </div><!-- /.col-lg-4 -->
+		        <div class="col-lg-4">
+		          <img src="../images/temp/burger.png" alt="Generic placeholder image">
+		          <h4>Meal</h4>
+		          <p><a class="btn btn-default" href="#" role="button">Add to cart &raquo;</a></p>
+		        </div><!-- /.col-lg-4 -->
+		        <div class="col-lg-4">
+		          <img src="../images/temp/drinks.png" alt="Generic placeholder image">
+		          <h4>Drink</h4>
+		          <p><a class="btn btn-default" href="#" role="button">Add to cart &raquo;</a></p>
+		        </div><!-- /.col-lg-4 -->
+		      </div><!-- /.row -->
+				 
+		        </div>
+		        <div class="item">
+		         <div class="row">
+		        <div class="col-lg-4">
+		          <img src="../images/temp/salate.png" alt="Generic placeholder image">
+		          <h4>Salates</h4>
+		          <p><a class="btn btn-default" href="#" role="button">Add to cart &raquo;</a></p>
+		        </div><!-- /.col-lg-4 -->
+		        <div class="col-lg-4">
+		          <img src="../images/temp/burger.png" alt="Generic placeholder image">
+		          <h4>Meal</h4>
+		          <p><a class="btn btn-default" href="#" role="button">Add to cart &raquo;</a></p>
+		        </div><!-- /.col-lg-4 -->
+		        <div class="col-lg-4">
+		          <img src="../images/temp/drinks.png" alt="Generic placeholder image">
+		          <h4>Drink</h4>
+		          <p><a class="btn btn-default" href="#" role="button">Add to cart &raquo;</a></p>
+		        </div><!-- /.col-lg-4 -->
+		      </div><!-- /.row -->
+				 
+		        </div>
+		        <div class="item">
+		          <div class="row">
+		        <div class="col-lg-4">
+		          <img  src="../images/temp/salate.png" alt="Generic placeholder image">
+		          <h4>Salates</h4>
+		          <p><a class="btn btn-default" href="#" role="button">Add to cart &raquo;</a></p>
+		        </div><!-- /.col-lg-4 -->
+		        <div class="col-lg-4">
+		          <img  src="../images/temp/burger.png" alt="Generic placeholder image">
+		          <h4>Meal</h4>
+		          <p><a class="btn btn-default" href="#" role="button">Add to cart &raquo;</a></p>
+		        </div><!-- /.col-lg-4 -->
+		        <div class="col-lg-4">
+		          <img  src="../images/temp/drinks.png" alt="Generic placeholder image">
+		          <h4>Drink</h4>
+		          <p><a class="btn btn-default" href="#" role="button">Add to cart &raquo;</a></p>
+		        </div><!-- /.col-lg-4 -->
+		      </div><!-- /.row -->
+		        </div>
+		      </div>
+		      <a class="left carousel-control" href="#myCarousel1" data-slide="prev"><span class="glyphicon glyphicon-chevron-left"></span></a>
+		      <a class="right carousel-control" href="#myCarousel1" data-slide="next"><span class="glyphicon glyphicon-chevron-right"></span></a>
+		    </div><!-- /.carousel -->
+			</div>
 
+		    <!-- Carousel
+		    ================================================== -->
 
-    <footer>
+			<div class="mainTitle">
+			<div class="container">
+			<h1>Shop All Categories</h1>
+			</div>
+			</div>
+
+		    <!-- Marketing messaging and featurettes
+		    ================================================== -->
+		 
+			
+			
+
+			
+
+			<div class="highlightSection">
+			<div class="container" style="padding: 0; width: 90%;">
+			<div class="row">
+				<div class="col-lg-4" ng-repeat="product in allProducts track by $index" style="margin-bottom: 15px;">
+					<div class="media">
+					  <img id="{{product.product_id}}" class="img-circle" src="../images/temp/nepali-momo.png" width="250" height="200" alt="Generic placeholder image">
+			          <h2>{{product.name}}</h2>
+			          <p>{{product.description}}</p>
+			          
+			          <span style="width: 20%; float: left;"><input type="number" ng-model="quantity" name="quantity" value="1" class="form-control" required/></span>
+			          <span style="width: 60%;" class="add-to-cart"><button class="btn btn-default" ng-click="addToCart(product, quantity);" role="button" >&dollar;<b>{{product.price}}</b> Add to cart &raquo;</button></span>
+			          <span><a class="btn" role="button" href="/showProduct/{{product.product_id}}" style="float: right;">[+] Details</a></span>
+					</div>
+				</div>
+			
+			</div>
+		
+			</div>
+	      
+
+    	</section>
+    </div>
+
+    <footer style="padding: 0;">
     	<div id="refreshFooter">
 		    <div class="column" id="column1">
 		        <a id="lnk-gbl-help" href="#">Help</a>
@@ -186,5 +211,9 @@
     		</div>
 		</div>
     </footer>
+    <script src="/js/holder.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+  <script src="/angular/controller.js"></script>
+  
   </body>
 </html>

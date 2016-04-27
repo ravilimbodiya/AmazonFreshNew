@@ -14,6 +14,7 @@ var express = require('express')
   , billing = require('./routes/billing')
   , customer = require('./routes/customer')
   , trips = require('./routes/trips')
+  , sessionMgmt = require('./routes/sessionMgmt')
   , product = require('./routes/product');
 
 //URL for the sessions collections in mongoDB
@@ -57,11 +58,16 @@ if ('development' == app.get('env')) {
 app.get('/', routes.index); 
 app.get('/signin',index.signIn);
 app.get('/signup', index.signUp);
-app.get('/productDescription',product.productDescription);
+app.get('/homepage', login.redirectToHomepage);
+app.get('/logout', login.logout);
+app.get('/showProduct/:productId', product.showProductDescription);
 
 //POST
 app.post('/checkLogin', login.checkLogin);
-app.post('/insertUser', customer.createCustomer);
+app.post('/register', user.register);
+app.post('/listAllProducts', product.listAllProduct);
+app.post('/addToCart', customer.addToCart);
+
 
 app.use(function(req, res, next) {
 	res.render('error');

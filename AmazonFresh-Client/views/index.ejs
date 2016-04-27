@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="amazonFreshApp">
   <head>
     <title>Welcome | AmazonFresh</title>
     <link rel='stylesheet' href='/stylesheets/style.css' />
@@ -30,7 +30,11 @@
     	</div>
     </header>
     <div class="welPanel welImage">
-    	
+    	<div ng-controller="login">
+    		<span style="background-color: #fff;">
+    			{{message}}
+    		</span>
+    	</div>
     </div>
     <footer>
     	<div id="refreshFooter">
@@ -49,5 +53,7 @@
     		</div>
 		</div>
     </footer>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+	<script src="angular/login.js"></script>
   </body>
 </html>

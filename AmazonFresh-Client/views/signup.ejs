@@ -70,7 +70,7 @@
 					<input class="form-control" type="text" name="ssn" ng-model="ssn" placeholder="Your SSN (Example: 000-00-0000)" required>					
 				</div>
 				Registering As...<br>
-				<select class="form-control" style="margin-top: 5px;" ng-model="userType">
+				<select class="form-control" style="margin-top: 5px;" ng-model="userType" required>
 				  <option value="customer">Customer</option>
 				  <option value="farmer">Farmer</option>
 				</select>
@@ -79,9 +79,48 @@
 			    <br>
 			    <br>
 				<br>
-				<input type="submit" class=" form-control" style="background-color: #669900; color:white; font-size: medium; margin-bottom:15px" ng-click="showNext();" value="Continue" />
+				<input type="submit" class=" form-control" style="background-color: #669900; color:white; font-size: medium; margin-bottom:15px" ng-click="showNext('2');" value="Continue" />
 				
 				<br>
+      			
+			</form>	
+		
+		</div>
+		
+		<div class="col-md-4"></div>
+	</div>
+	<div class="row" style="margin-top: 5%; margin-bottom: 5%;" ng-hide="addSection">
+		<div class="col-md-4"></div>
+		
+		<div class="col-md-4" id="contentArea">
+			
+			<form role="form">		
+				<h3 align="left" style="margin-top: 10px;">Enter Address</h3>
+				
+				<div class="form-group" style="margin-top: 10px;">
+					
+					<input class="form-control" type="text" name="address" ng-model="address" placeholder="Address" required>					
+				</div>
+				
+				
+				<div class="form-group" style="margin-top: 10px;">		
+					
+					<input class="form-control" type="text" name="city" ng-model="city" placeholder="City" required>
+				</div>
+				
+				
+				<div class="form-group">	
+					<input type="text" ng-model="state" class="date form-control" placeholder="State (Example: CA)">
+				</div>
+				
+				<div class="form-group" style="margin-top: 10px;">			
+					
+					<input class="form-control" type="text" name="Zipcode" ng-model="zipcode" placeholder="Zipcode" required>
+				</div>
+					<br>
+			    <br>
+				<br>
+				<input type="button" class="form-control" ng-click="showNext('3');" style="background-color: #669900; color:white; font-size: medium; margin-bottom:10px" value="Continue" />
       			
 			</form>	
 		
@@ -105,7 +144,7 @@
 				
 				<div class="form-group" style="margin-top: 10px;">		
 					
-					<input class="form-control" type="text" name="cardUserName" ng-model="cardUserName" placeholder="Name on Card" required>
+					<input class="form-control" type="text" name="nameOnCard" ng-model="nameOnCard" placeholder="Name on Card" required>
 				</div>
 				
 				
@@ -117,17 +156,23 @@
 			    	
 					<input class="form-control" type="number" name="cvv" ng-model="cvv" placeholder="CVV" required>
 				</div>
-				
-				<div class="form-group" style="margin-top: 10px;">			
-					
-					<input class="form-control" type="text" name="Zipcode" ng-model="zipcode" placeholder="Zipcode" required>
-				</div>
 					<br>
 			    <br>
 				<br>
 				<input type="button" class="form-control" ng-click="register();" style="background-color: #669900; color:white; font-size: medium; margin-bottom:10px" value="Finish" />
       			
 			</form>	
+		
+		</div>
+		
+		<div class="col-md-4"></div>
+	</div>
+	<div class="row" style="margin-top: 5%; margin-bottom: 5%;" ng-hide="notifySection">
+		<div class="col-md-4"></div>
+		
+		<div class="col-md-4" id="contentArea">
+			
+				{{message}} <a href="/">Sign In</a>
 		
 		</div>
 		

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="amazonFreshApp" ng-controller="amazonCntrl">
   <head>
     <title>Welcome | AmazonFresh</title>
     <link rel='stylesheet' href='/stylesheets/style.css' />
@@ -30,9 +30,11 @@
 		    </div>
 		    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 		    	<ul class="nav navbar-nav navbar-right">
-			        <li style="cursor: pointer;"><i class="glyphicon glyphicon-shopping-cart cart"></i></li>
+			        <li style="cursor: pointer;"><i class="glyphicon glyphicon-shopping-cart cart"><span class="cartItems">{{itemsInCart}}</span></i>
+
+			        </li>
 			        <li class="dropdown">
-			          <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="margin-right: 10px; padding: 5px;" role="button" aria-haspopup="true" aria-expanded="false"><img alt="" src="/images/user.jpg" class="profilePic"><span class="caret"></span></a>
+			          <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="margin-right: 10px; padding: 5px;" role="button" aria-haspopup="true" aria-expanded="false"><img alt="" src="/images/user.png" class="profilePic"><span class="caret"></span></a>
 			          <ul class="dropdown-menu">
 			            <li><a href="#">User Name<br><span style="font-size: 9px;">View Profile</span></a></li>
 			            <li><a href="#">Help</a></li>
@@ -80,23 +82,24 @@
     		<div style="margin-top: 70px;"></div>
 	    	<div class="row">
 		    	<div class="col-md-3">
-		    		<img src="../images/user.jpg">
+		    		<img id="<%=selectedProduct.product_id%>" src="../images/user.jpg">
 		    	</div>
 		    	<div class="col-md-9" style="padding-left: 5%;">
 		    		<div class="prodDesc">
-		    			<span>ProductName</span>
-		    			<span>ProductDescription</span>
+		    			<span><%=selectedProduct.name%></span>
+		    			<span><%=selectedProduct.description%></span>
 		    		</div>
 		    		<div>
-		    			<span>Other Products by <a href="#">FarmerName</a></span>
+		    			<span>Other Products by <a href="#"><%=selectedProduct.farmer_id%></a></span>
 		    		</div>
 		    		<br><br><br>
 		    		<div>
-		    			<span><label class="price">$1.69</label></span>
+		    			<span><label class="price">$<%=selectedProduct.price%></label></span>
 		    		</div>
 		    		<br>
 		    		<div>
-		    			<span><button class="btn btn-primary btn-lg">Add to Cart</button></span>
+		    			<span style="width: 20%; float: left;"><input type="number" ng-model="quantity" name="quantity" value="1" class="form-control" required/></span>
+		    			<span style="width: 60%;" class="add-to-cart"><button class="btn btn-default" ng-click="addToCart(<%=selectedProduct%>, quantity);" role="button" >Add to cart</button></span>
 		    		</div>
 		  		</div>
 	    	</div>

@@ -1,10 +1,6 @@
 /**
  * Created by Sourabh on 4/22/2016.
  */
-/**
- * Created by Sourabh on 4/20/2016.
- */
-
 
 var ejs = require("ejs");
 var mysql = require('./mysql');
@@ -83,7 +79,7 @@ exports.deleteProduct = function(msg, callback){
     }, query, [msg.prod_id]);
 
 
-}
+};
 
 exports.listallProduct = function(msg, callback){
 
@@ -116,7 +112,7 @@ exports.listallProduct = function(msg, callback){
     }, query);
 
 
-}
+};
 
 exports.updateProduct = function(msg, callback){
 
@@ -124,7 +120,7 @@ exports.updateProduct = function(msg, callback){
 
 
 
-}
+};
 
 exports.searchProductbyattribute = function(msg, callback){
 
@@ -156,11 +152,11 @@ exports.searchProductbyattribute = function(msg, callback){
         }
     }, query, [msg.keyword,msg.keyword,msg.keyword,msg.keyword,msg.keyword,msg.keyword,msg.keyword]);
 
-}
+};
 
 exports.displayProduct = function(msg, callback){
 
-    var query="select * from product where prod_id = ?";
+    var query="select * from product where product_id = ?";
     var json_responses;
     console.log("Query is:"+query);
 
@@ -188,5 +184,5 @@ exports.displayProduct = function(msg, callback){
         }
     }, query, [msg.prod_id]);
 
-}
+};
 

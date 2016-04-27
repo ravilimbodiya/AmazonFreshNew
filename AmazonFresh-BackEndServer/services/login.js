@@ -20,7 +20,7 @@ exports.checkLogin = function(msg, callback) {
 		mysql.fetchData(function(err,results){
 			if(err){
 				console.log("ERROR: "+err);
-				json_responses = {"statusCode" : 401};
+				json_responses = {"statusCode" : 401, "msg": "Some error occured!", "userType": msg.userType};
 				callback(null, json_responses);
 			}
 			else 
@@ -32,27 +32,32 @@ exports.checkLogin = function(msg, callback) {
 					// apply the same algorithm to the POSTed password, applying                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
 					  // the hash against the pass / salt, if there is a match we                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
 					  // found the user                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
-					  hash(pass, rows[0].salt, function(err, hash){                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+					  hash(msg.password, rows[0].salt, function(err, hash){                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
 					    if (err) {
 					    	console.log("ERROR: "+err);
-					    	json_responses = {"statusCode" : 401};
+					    	json_responses = {"statusCode" : 401, "msg": "Some error occurred. Please try again later.", "userType": msg.userType};
 					    	callback(null, json_responses);
 					    }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
 					    if (hash.toString() == rows[0].hash){
-						   
-						        	//console.log(result);
-						        	console.log(jsonParse);
-						        	req.session.user = jsonParse;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
-					                req.session.success = 'Authenticated as ' + jsonParse.firstName                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
-					                  + ' click to <a href="/logout">logout</a>.';  
-					                res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
-					                json_responses = {"statusCode" : 200, "userObj" : jsonParse};
-					                callback(null, json_responses);
-						            
+					    	mongo.connect(mongoURL, function() {
+					    		var coll = mongo.collection('shopping_cart');
+					    		coll.findOne({"cust_id" : jsonParse[0].cust_id}, function(err1,results1){
+					    			if(err1){
+					    				console.log("ERROR: "+err1);
+					    				json_responses = {"statusCode" : 401, "msg": "Some error occurred in fetching shopping cart.", "userType": msg.userType};
+					    				callback(null, json_responses);
+					    			}
+					    			else 
+					    			{
+					    				//console.log(result);
+							        	console.log(jsonParse);
+						                json_responses = {"statusCode" : 200, "userObj" : jsonParse, "shoppingCart":results1, "userType": msg.userType};
+						                callback(null, json_responses);
+					    			}  
+					    		});
+					    	});
 					    } else {
-					    	req.session.error = 'Authentication failed';
-					    	//res.render('login', { title: 'Twitter' , alertClass: 'alert-danger', msg: 'Email/Password combination is Invalid.'});
-					    	json_responses = {"statusCode" : 401, "msg" : "Email/Password combination is Invalid."};
+					    	json_responses = {"statusCode" : 401, "msg" : "Email/Password combination is Invalid.", "userType": msg.userType};
 					    	callback(null, json_responses);
 					    }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
 					                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
@@ -61,7 +66,7 @@ exports.checkLogin = function(msg, callback) {
 				else {    
 					console.log("Invalid Login");
 					//res.render('login', { title: 'Twitter' , alertClass: 'alert-danger', msg: 'The email and password you entered did not match our records. Please double-check and try again.'});
-					json_responses = {"statusCode" : 401, "msg" : "The email and password you entered did not match our records. Please double-check and try again."};
+					json_responses = {"statusCode" : 401, "msg" : "The email and password you entered did not match our records. Please double-check and try again.", "userType": msg.userType};
 					callback(null, json_responses);
 				}
 			}  

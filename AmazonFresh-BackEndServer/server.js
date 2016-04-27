@@ -8,6 +8,7 @@ var billing = require('./services/billing');
 var customer = require('./services/customer');
 var trip = require('./services/trips');
 var truck = require('./services/trucks');
+var cart = require('./services/cart');
 
 var express = require('express');
 var http = require('http');
@@ -68,7 +69,7 @@ cnn.on('ready', function () {
 			util.log(util.format( deliveryInfo.routingKey, message));
 			util.log("Message: "+JSON.stringify(message));
 			util.log("DeliveryInfo: "+JSON.stringify(deliveryInfo));
-			customer.create(message, function(err,res){
+			customer.createCustomer(message, function(err,res){
 
 				//return index sent
 				cnn.publish(m.replyTo, res, {
@@ -456,6 +457,23 @@ cnn.on('ready', function () {
             util.log("Message: " + JSON.stringify(message));
             util.log("DeliveryInfo: " + JSON.stringify(deliveryInfo));
             truck.currentLocation(message, function (err, res) {
+
+                //return index sent
+                cnn.publish(m.replyTo, res, {
+                    contentType: 'application/json',
+                    contentEncoding: 'utf-8',
+                    correlationId: m.correlationId
+                });
+            });
+        });
+    });
+    
+    cnn.queue('addToCart_queue', function (q) {
+        q.subscribe(function (message, headers, deliveryInfo, m) {
+            util.log(util.format(deliveryInfo.routingKey, message));
+            util.log("Message: " + JSON.stringify(message));
+            util.log("DeliveryInfo: " + JSON.stringify(deliveryInfo));
+            cart.addToCart(message, function (err, res) {
 
                 //return index sent
                 cnn.publish(m.replyTo, res, {

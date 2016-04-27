@@ -1,34 +1,40 @@
+CREATE DATABASE `amazonfresh` /*!40100 DEFAULT CHARACTER SET latin1 */;
+
+
 ************************PRODUCTS*************************
 
-CREATE TABLE product
-(
-product_id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
-farmer_id varchar(9) NOT NULL,
-name varchar(255),
-price int NOT NULL,
-description varchar(255),
-reviews varchar(500),
-ratings int
+CREATE TABLE `product` (
+  `product_id` int(11) NOT NULL AUTO_INCREMENT,
+  `farmer_id` varchar(255) NOT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `price` int(11) NOT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `ratings` int(11) DEFAULT NULL,
+  `image_url` varchar(500) DEFAULT NULL,
+  `product_type` varchar(500) DEFAULT NULL,
+  `prod_id` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`product_id`)
 );
 
-CREATE TABLE `amazonfresh`.`customers` (
-  `cust_id` INT NOT NULL AUTO_INCREMENT,
-  `customer_id` VARCHAR(45) NOT NULL,
-  `first_name` VARCHAR(45) NOT NULL,
-  `last_name` VARCHAR(45) NOT NULL,
-  `address` VARCHAR(255) NULL,
-  `city` VARCHAR(45) NULL,
-  `state` VARCHAR(45) NULL,
-  `zipcode` VARCHAR(45) NULL,
-  `phone_number` VARCHAR(45) NULL,
-  `email` VARCHAR(45) NOT NULL,
-  `cc_no` INT NULL,
-  `cc_name` VARCHAR(255) NULL,
-  `cc_expiry` DATETIME NULL,
-  `cvv` INT NULL,
-  `hash` VARCHAR(1000) NOT NULL,
-  `salt` LONGBLOB NOT NULL,
-  PRIMARY KEY (`cust_id`));
+CREATE TABLE `customers` (
+  `cust_id` int(11) NOT NULL AUTO_INCREMENT,
+  `customer_id` varchar(45) DEFAULT NULL,
+  `first_name` varchar(45) DEFAULT NULL,
+  `last_name` varchar(45) DEFAULT NULL,
+  `address` varchar(255) DEFAULT NULL,
+  `city` varchar(45) DEFAULT NULL,
+  `state` varchar(45) DEFAULT NULL,
+  `zipcode` varchar(45) DEFAULT NULL,
+  `email` varchar(45) DEFAULT NULL,
+  `cc_no` varchar(45) DEFAULT NULL,
+  `cc_name` varchar(255) DEFAULT NULL,
+  `cc_expiry` varchar(255) DEFAULT NULL,
+  `cvv` int(11) DEFAULT NULL,
+  `hash` longblob,
+  `salt` varchar(1000) DEFAULT NULL,
+  PRIMARY KEY (`cust_id`)
+);
+
 
   CREATE TABLE amazonfresh.trip
   (

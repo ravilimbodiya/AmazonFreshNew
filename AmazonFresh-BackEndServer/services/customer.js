@@ -20,7 +20,7 @@ exports.createCustomer = function(msg, callback){
 	
 	
 	// insert user into db
-	var query="insert into customers (customer_id, first_name, last_name, address, city, state, zipcode, phone_number, email, cc_no, cc_name, cc_expiry, cvv, hash, salt) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+	var query="insert into customers (customer_id, first_name, last_name, address, city, state, zipcode, email, cc_no, cc_name, cc_expiry, cvv, hash, salt) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 	var json_responses;
 	console.log("Query is:"+query);
 	
@@ -32,21 +32,15 @@ exports.createCustomer = function(msg, callback){
 		}
 		else 
 		{
-			if(results.length > 0){
 				var rows = results;
 				var jsonString = JSON.stringify(results);
 				var jsonParse = JSON.parse(jsonString);
 				json_responses = {"statusCode" : 200, result: jsonParse};
 				//console.log(jsonParse);
 				callback(null, json_responses);
-			}
-			else {    
-				console.log('Error occurred in creating customer.');
-				json_responses = {"statusCode" : 401};
-				callback(null, json_responses);
-			}
+			
 		}  
-	}, query, [msg.customerId, msg.firstName, msg.lastName, msg.address, msg.city, msg.state, msg.zipcode, msg.email, msg.cc_no, msg.cc_name, msg.cc_expiry, msg.cvv, hashGen, saltGen]);
+	}, query, [msg.ssn, msg.firstName, msg.lastName, msg.address, msg.city, msg.state, msg.zipcode, msg.email, msg.cc_no, msg.cc_name, msg.cc_expiry, msg.cvv, hashGen, saltGen]);
 	
 	}); 
 };

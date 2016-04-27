@@ -53,10 +53,10 @@ exports.listAllProduct = function listAllProduct(req, res) {
     mq_client.make_request('product_listallProduct', {}, function (err, results) {
         if (err) {
             console.log("Err: " + err);
-            res.send({'statusCode': 200});
+            res.send({'statusCode': 401});
             throw err;
         } else {
-            if (results.statusCode == 200) {
+            if (results.statusCode === 200) {
                 res.send(results);
             } else {
                 console.log('Error Occured!');
@@ -105,36 +105,27 @@ exports.searchProductByAttribute = function searchProductByAttribute(req, res) {
 };
 
 exports.displayProduct = function displayProduct(req, res) {
-    var msg_payLoad = {'prod_id': req.param('prod_id')};
-
-    mq_client.make_request('product_displayProduct', msg_Payload, function (err, results) {
-        if (err) {
-            console.log("Err: " + err);
-            res.send({'statusCode': 200});
-            throw err;
-        } else {
-            if (results.statusCode == 200) {
-                res.send(results);
-            } else {
-                console.log('Error Occured!');
-                res.send(results);
-            }
-        }
-    });
+    
 };
 
 
-exports.productDescription = function productDescription(req,res) {
+exports.showProductDescription = function showProductDescription(req,res) {
 
-	ejs.renderFile('./views/productDescription.ejs',function(err, result) {
-	   // render on success
-	   if (!err) {
-	            res.end(result);
-	   }
-	   // render or error
-	   else {
-	            res.end('An error occurred');
-	            console.log(err);
-	   }
-   });
+	var msg_payLoad = {'prod_id': req.param('productId')};
+
+    mq_client.make_request('product_displayProduct', msg_payLoad, function (err, results) {
+        if (err) {
+            console.log("Err: " + err);
+            res.render('error');
+            throw err;
+        } else {
+            if (results.statusCode === 200) {
+            	console.log('Currently displaying: '+ results.result[0].name);
+                res.render('productDescription',{selectedProduct: results.result[0]});
+            } else {
+                console.log('Error Occured!');
+                res.render('error');
+            }
+        }
+    });
 };

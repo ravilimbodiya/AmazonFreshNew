@@ -13,7 +13,7 @@ exports.login = function(req, res) {
 		});
 	} else {
 		res.render('login', {
-			title : 'Log in to Twitter',
+			title : 'Log in to AmazonFresh',
 			alertClass : '',
 			msg : ''
 		});
@@ -25,7 +25,7 @@ exports.checkLogin = function(req, res) {
 	if (req.session.user) {
 		console.log('validated user');
 		res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
-		res.render("customerHome", { userObj : req.session.user });
+		res.send({"statusCode": 200});
 	} else {
 		var json_responses;
 		var email = req.param("email");
@@ -41,9 +41,11 @@ exports.checkLogin = function(req, res) {
 			}
 			else 
 			{
-				if(results.statusCode == 200){
+				if(results.statusCode === 200){
 					console.log("valid Login");
 					req.session.user = results.userObj;
+					req.session.userType = results.userType;
+					req.session.shoppingCart = results.shoppingCart;
 					res.send(results);
 				}
 				else {    
@@ -61,9 +63,19 @@ exports.redirectToHomepage = function(req, res) {
 	if (req.session.user) {
 		//Set these headers to notify the browser not to maintain any cache for the page being loaded
 		res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
-		res.render("customerHome", {
-			user : req.session.user
-		});
+		var uType = req.session.userType;
+		if(uType === 'customer'){
+			res.render("customerHome", {
+				user : req.session.user,
+				userType: req.session.userType
+			});
+		} else if(uType === 'farmer'){
+			res.render("farmerHome", {
+				user : req.session.user,
+				userType: req.session.userType
+			});
+		}
+		
 	} else {
 		res.redirect('/');
 	}
