@@ -97,27 +97,3 @@ exports.postReviewRating = function postReviewRating(req, res) {
         }
     });
 };
-
-exports.addToCart = function addToCart(req, res) {
-	var msg_Payload = {
-	        'cust_id': req.session.user[0].cust_id,
-	        'product': req.param('product'),
-	        'quantity': req.param('quantity')
-	    };
-	    mq_client.make_request('addToCart_queue', msg_Payload, function (err, results) {
-	        if (err) {
-	            console.log('Err: ' + err);
-	            res.send({'statusCode': 401});
-	            throw err;
-	        } else {
-	            if (results.statusCode === 200) {
-	                console.log('Product added to shopping cart!');
-	                req.session.shoppingCart = results.shoppingCart;
-	                res.send(results);
-	            } else {
-	                console.log('Error Occured!');
-	                res.send({'statusCode': 401});
-	            }
-	        }
-	    });
-};

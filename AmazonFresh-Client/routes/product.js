@@ -121,6 +121,7 @@ exports.showProductDescription = function showProductDescription(req,res) {
         } else {
             if (results.statusCode === 200) {
             	console.log('Currently displaying: '+ results.result[0].name);
+            	req.session.selectedProduct = results.result[0];
                 res.render('productDescription',{selectedProduct: results.result[0]});
             } else {
                 console.log('Error Occured!');

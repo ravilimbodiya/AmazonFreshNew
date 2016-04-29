@@ -29,13 +29,13 @@
 			        <span class="icon-bar"></span>
 			        <span class="icon-bar"></span>
 			    </button>
-		      <a class="navbar-brand" href="#">
+		      <a class="navbar-brand" href="/">
 		        <img alt="Brand" src="../images/logo.png">
 		      </a>
 		    </div>
 		    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 		    	<ul class="nav navbar-nav navbar-right">
-			        <li style="cursor: pointer;"><i class="glyphicon glyphicon-shopping-cart cart"><span class="cartItems">{{itemsInCart}}</span></i>
+			        <li style="cursor: pointer;"><a style="color: #fff; padding: 0;" href="/shoppingCart"><i class="glyphicon glyphicon-shopping-cart cart"><span class="cartItems">{{itemsInCart}}</span></i></a>
 
 			        </li>
 			        <li class="dropdown">
@@ -181,8 +181,8 @@
 			          <p>{{product.description}}</p>
 			          
 			          <span style="width: 20%; float: left;"><input type="number" ng-model="quantity" name="quantity" value="1" class="form-control" required/></span>
-			          <span style="width: 60%;" class="add-to-cart"><button class="btn btn-default" ng-click="addToCart(product, quantity);" role="button" >&dollar;<b>{{product.price}}</b> Add to cart &raquo;</button></span>
-			          <span><a class="btn" role="button" href="/showProduct/{{product.product_id}}" style="float: right;">[+] Details</a></span>
+			          <span style="width: 60%;" class="add-to-cart"><button class="btn btn-default" ng-click="addToCart(product, quantity, product.product_id);" role="button" >&dollar;<b>{{product.price}}</b> Add to cart &raquo;</button></span>
+			          <span><a class="btn" role="button" target="_blank" href="/showProduct/{{product.product_id}}" style="float: right; color: #7db641;">[+] Details</a></span>
 					</div>
 				</div>
 			

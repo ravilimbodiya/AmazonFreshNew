@@ -25,7 +25,7 @@ amazon.controller('amazonCntrl', function($scope, $http) {
 		});
 	};
 	
-	$scope.addToCart = function(product, quantity) {
+	$scope.addToCart = function(product, quantity, imageId) {
 		//alert(product.name);
 		$http({
 			method : "POST",
@@ -48,7 +48,7 @@ amazon.controller('amazonCntrl', function($scope, $http) {
 		
 		
         var cart = $('.glyphicon-shopping-cart');
-        var imgId = '#'+product.product_id;
+        var imgId = '#'+imageId;
         var imgtodrag = $(imgId);
         if (imgtodrag) {
             var imgclone = imgtodrag.clone()
@@ -84,5 +84,53 @@ amazon.controller('amazonCntrl', function($scope, $http) {
                 $(this).detach()
             });
         }
+	};
+	
+	$scope.showShoppingCart = function() {
+		window.location.assign = "/shoppingCart";
+	};
+	
+	$scope.getShoppingCart = function() {
+		$http({
+			method : "POST",
+			url : '/getShoppingCart'
+		}).success(function(data) {
+			//checking the response data for statusCode
+			if (data.statusCode === 200) {
+				$scope.shoppingCart = data.shoppingCart;
+				$scope.allItems = data.shoppingCart.items;
+				$scope.sum = data.sum;
+				$scope.itemsInCart = data.shoppingCart.items.length;
+			}
+			else {
+				
+			}
+		}).error(function(error) {
+			
+		});
+	};
+	
+	
+	$scope.removeItemFromCart = function(index) {
+		$http({
+			method : "POST",
+			url : '/removeItemFromCart',
+			data : {
+				"index" : index
+			}
+		}).success(function(data) {
+			//checking the response data for statusCode
+			if (data.statusCode === 200) {
+				$scope.shoppingCart = data.shoppingCart;
+				$scope.allItems = data.shoppingCart.items;
+				$scope.sum = data.sum;
+				$scope.itemsInCart = data.shoppingCart.items.length;
+			}
+			else {
+				
+			}
+		}).error(function(error) {
+			
+		});
 	};
 });

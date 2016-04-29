@@ -13,6 +13,7 @@ var express = require('express')
   , user = require('./routes/user')
   , billing = require('./routes/billing')
   , customer = require('./routes/customer')
+  , order = require('./routes/order')
   , trips = require('./routes/trips')
   , sessionMgmt = require('./routes/sessionMgmt')
   , product = require('./routes/product');
@@ -61,12 +62,16 @@ app.get('/signup', index.signUp);
 app.get('/homepage', login.redirectToHomepage);
 app.get('/logout', login.logout);
 app.get('/showProduct/:productId', product.showProductDescription);
+app.get('/shoppingCart', order.showShoppingCart);
+app.get('/checkout', order.checkout);
 
 //POST
 app.post('/checkLogin', login.checkLogin);
 app.post('/register', user.register);
 app.post('/listAllProducts', product.listAllProduct);
-app.post('/addToCart', customer.addToCart);
+app.post('/addToCart', order.addToCart);
+app.post('/getShoppingCart', order.getShoppingCart);
+app.post('/removeItemFromCart', order.removeItemFromCart);
 
 
 app.use(function(req, res, next) {
