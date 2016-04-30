@@ -70,7 +70,7 @@ exports.redirectToHomepage = function(req, res) {
 				userType: req.session.userType
 			});
 		} else if(uType === 'farmer'){
-			res.render("farmerHome", {
+			res.render("farmerDashboard", {
 				user : req.session.user,
 				userType: req.session.userType
 			});

@@ -537,5 +537,42 @@ cnn.on('ready', function () {
             });
         });
     });
+    
+  //Farmer Queues
+    cnn.queue('addFarmerProduct_queue', function (q) {
+        q.subscribe(function (message, headers, deliveryInfo, m) {
+            util.log(util.format(deliveryInfo.routingKey, message));
+            util.log("Message: " + JSON.stringify(message));
+            util.log("DeliveryInfo: " + JSON.stringify(deliveryInfo));            
+            
+            farmer.submitAddProduct(message, function (err, res) {
+
+                //return index sent
+                cnn.publish(m.replyTo, res, {
+                    contentType: 'application/json',
+                    contentEncoding: 'utf-8',
+                    correlationId: m.correlationId
+                });
+            });
+        });
+    });
+    
+    cnn.queue('loadProducts_queue', function (q) {
+        q.subscribe(function (message, headers, deliveryInfo, m) {
+            util.log(util.format(deliveryInfo.routingKey, message));
+            util.log("Message: " + JSON.stringify(message));
+            util.log("DeliveryInfo: " + JSON.stringify(deliveryInfo));            
+            
+            farmer.loadProducts(message, function (err, res) {
+
+                //return index sent
+                cnn.publish(m.replyTo, res, {
+                    contentType: 'application/json',
+                    contentEncoding: 'utf-8',
+                    correlationId: m.correlationId
+                });
+            });
+        });
+    });
 
 });

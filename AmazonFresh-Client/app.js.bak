@@ -16,7 +16,6 @@ var express = require('express')
   , order = require('./routes/order')
   , trips = require('./routes/trips')
   , sessionMgmt = require('./routes/sessionMgmt')
-  , farmer = require('./routes/farmer')
   , product = require('./routes/product');
 
 //URL for the sessions collections in mongoDB
@@ -66,9 +65,6 @@ app.get('/showProduct/:productId', product.showProductDescription);
 app.get('/shoppingCart', order.showShoppingCart);
 app.get('/checkout', order.checkout);
 app.get('/makePayment', order.makePayment);
-app.get('/farmerDashboard', farmer.farmerDashboard);
-app.get('/addProduct', farmer.addProduct);
-app.get('/loadProducts', farmer.loadProducts);
 
 //POST
 app.post('/checkLogin', login.checkLogin);
@@ -79,9 +75,6 @@ app.post('/getShoppingCart', order.getShoppingCart);
 app.post('/removeItemFromCart', order.removeItemFromCart);
 app.post('/placeOrder', order.placeOrder);
 app.post('/getExistingAddress', customer.getExistingAddress);
-app.post('/renderAddProduct', farmer.renderAddProduct);
-app.post('/submitAddProduct', farmer.submitAddProduct);
-
 
 app.use(function(req, res, next) {
 	res.render('error');

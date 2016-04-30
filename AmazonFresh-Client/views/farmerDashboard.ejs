@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html ng-app="amazonFreshApp" ng-controller="amazonCntrl" ng-init="loadProducts()">
+<head>
+    <title>Welcome | AmazonFresh</title>
+    <link rel='stylesheet' href='../stylesheets/style.css'/>
+    	
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://code.jquery.com/jquery.js"></script>
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    
+    <!-- AM Charts -->
+    <script src="https://www.amcharts.com/lib/3/amcharts.js"></script>
+    <script src="https://www.amcharts.com/lib/3/serial.js"></script>
+    <script src="https://www.amcharts.com/lib/3/themes/light.js"></script>
+    
+    <!-- AngularJs library --> 	
+	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+    
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+	
+	<!-- Loading the AngularJS file from /public/angular folder -->
+	<script src="angular/controller.js"></script>
+</head>
+<body>
+<header>
+    <nav class="navbar navbar-default" id="headerNav">
+        <div class="container-fluid">
+            <div class="navbar-header"  id="freshLogo">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">
+                    <img alt="Brand" src="../images/logo.png">
+                </a>
+            </div>
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li style="cursor: pointer;"><i class="glyphicon glyphicon-shopping-cart cart"></i></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="margin-right: 10px; padding: 5px;" role="button" aria-haspopup="true" 
+                        	aria-expanded="false">
+                        	<img class="profilePic" alt="" src="/images/user.jpg">
+                        	<span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#" ng-model="userName" class="dropdown-item">User Name<br><span style="font-size: 9px;">View Profile</span></a></li>
+                            <li><a href="#" class="dropdown-item">Help</a></li>
+                            <li><a href="#" class="dropdown-item">Settings</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="#" class="dropdown-item">Log out</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+</header>
+
+<content>
+
+<div class="container" style="margin-top: 5%;" id="shopBar">
+<section class="decoration shoppingListBar">
+	<div class="row">
+    	<div class="col-md-4" align="left">
+    		<div class="dropdown">
+			  <button class="btn dropdown-toggle" type="button" 
+				  id="shopDefault" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+			    Add Product
+			    <span class="caret"></span>
+			  </button>
+			  <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+			    <li><a class="small trigger right-caret" tabindex="-1"><strong>Produce</strong></a>
+				    <ul class="dropdown-menu sub-menu">
+						<li><a class="small" style="color: #464646;" ng-click="renderAddProduct('Fresh Fruits')">Fresh Fruits</a></li>
+						<li><a class="small" style="color: #464646;" ng-click="renderAddProduct('Fresh Vegetables')">Fresh Vegetables</a></li>
+						<li><a class="small" style="color: #464646;" ng-click="renderAddProduct('Herbs')">Herbs</a></li>
+						<li><a class="small" style="color: #464646;" ng-click="renderAddProduct('Nuts, Seeds & Dried Fruits')">Nuts, Seeds & Dried Fruits</a></li>
+					</ul>	    
+			    </li>
+			    <li><a class="small trigger right-caret" tabindex="-1"><strong>Perishables</strong></a>
+				    <ul class="dropdown-menu sub-menu">
+					<li><a class="small" style="color: #464646;" ng-click="renderAddProduct('Breads & Bakery')">Breads & Bakery</a></li>
+					<li><a class="small" style="color: #464646;" ng-click="renderAddProduct('Cheese')">Cheese</a></li>
+					<li><a class="small" style="color: #464646;" ng-click="renderAddProduct('Dairy & Eggs')">Dairy & Eggs</a></li>
+					<li><a class="small" style="color: #464646;" ng-click="renderAddProduct('Deli')">Deli</a></li>
+					<li><a class="small" style="color: #464646;" ng-click="renderAddProduct('Frozen Foods')">Frozen Foods</a></li>
+					<li><a class="small" style="color: #464646;" ng-click="renderAddProduct('Meat & Seafood')">Meat & Seafood</a></li>
+					<li><a class="small" style="color: #464646;" ng-click="renderAddProduct('Premium Juice')">Premium Juice</a></li>
+					<li><a class="small" style="color: #464646;" ng-click="renderAddProduct('Yogurt')">Yogurt</a></li>
+					</ul>			    
+			    </li>
+			    <li><a class="small trigger right-caret" tabindex="-1"><strong>Pantry</strong></a>
+				    <ul class="dropdown-menu sub-menu">
+					<li><a class="small" style="color: #464646;" ng-click="renderAddProduct('Beer & Wine')">Beer & Wine</a></li>
+					<li><a class="small" style="color: #464646;" ng-click="renderAddProduct('Beverages')">Beverages</a></li>
+					<li><a class="small" style="color: #464646;" ng-click="renderAddProduct('Breakfast Foods')">Breakfast Foods</a></li>
+					<li><a class="small" style="color: #464646;" ng-click="renderAddProduct('Grains & Pasta')">Grains & Pasta</a></li>
+					<li><a class="small" style="color: #464646;" ng-click="renderAddProduct('Snacks, Cookies & Candy')">Snacks, Cookies & Candy</a></li>
+					</ul>
+			    </li>			    
+			    <li><a class="small trigger right-caret" tabindex="-1"><strong>Speciality</strong></a>
+				    <ul class="dropdown-menu sub-menu">
+					<li><a class="small" style="color: #464646;" ng-click="renderAddProduct('Gluten-Free')">Gluten-Free</a></li>
+					<li><a class="small" style="color: #464646;" ng-click="renderAddProduct('Organic Grocery')">Organic Grocery</a></li>
+					</ul>				    
+			    </li>
+			  </ul>
+			</div>
+    	</div>
+    	<div class="col-md-8">
+    		<div class="input-group">
+		      <input type="text" class="form-control" placeholder="Amazon Fresh Search">
+		      <span class="input-group-btn">
+		        <button class="btn btn-default" type="button" id="shopGo"></button>
+		      </span>
+		    </div>
+  		</div>
+	</div>
+</section>
+</div>
+
+<!--Start consolidated table for farmer-->
+<section>
+<div class="container-fluid">
+<div class="row">
+	<div class="col-md-6">
+	<h3>Summary</h3>
+		<table class="table table-bordered table-hover table-condensed">
+			<tr>
+				<th>Total Earning</th>
+				<td>$100</td>
+			</tr>
+			<tr>
+				<th>Number of Orders</th>
+				<td>30</td>
+			</tr>
+			<tr>
+				<th>Number of Products</th>
+				<td>10</td>
+			</tr>
+		</table>
+	</div>
+	<div class="col-md-6">	
+		<div id="chartdiv"></div>
+		<!--<div class="container-fluid">
+		  <div class="row text-center" style="overflow:hidden;">
+				<div class="col-sm-3" style="float: none !important;display: inline-block;">
+					<label class="text-left">Top Radius:</label>
+					<input class="chart-input" data-property="topRadius" type="range" min="0" max="1.5" value="1" step="0.01"/>
+				</div>
+	
+				<div class="col-sm-3" style="float: none !important;display: inline-block;">
+					<label class="text-left">Angle:</label>
+					<input class="chart-input" data-property="angle" type="range" min="0" max="89" value="30" step="1"/>	
+				</div>
+	
+				<div class="col-sm-3" style="float: none !important;display: inline-block;">
+					<label class="text-left">Depth:</label>
+					<input class="chart-input" data-property="depth3D" type="range" min="1" max="120" value="40" step="1"/>
+				</div>
+			</div>
+		</div>-->		
+	</div>
+</div>
+</div>
+</section>
+<!--End consolidated table for farmer-->
+
+<!--Start product table-->
+<section id="productTable">
+<div class="container-fluid">
+<div class="row">
+
+	<div class="col-md-12">
+	<h3>Product Description</h3>
+		<table class="table table-condensed table-bordered">
+			<thead>
+				<tr>
+					<th>#</th>
+					<th>Image</th>
+					<th>Product Name</th>
+					<th>Product Description</th>
+					<th>Product Type</th>
+					<th>Price</th>
+					<th>Quantity</th>
+					<th>Rating</th>
+					<th>Review</th>
+				</tr>
+			</thead>
+			<tbody ng-repeat="product in allProducts">
+				<tr>
+					<td>{{product.product_id}}</td>
+					<td><img id="productImg" src="../images/strawberries.jpg"  width="80px" height="80px"></img></td>
+					<td>{{product.name}}</td>
+					<td>{{product.description}}</td>
+					<td>{{product.product_type}}</td>
+					<td>${{product.price}}</td>
+					<td>{{product.quantity}}</td>
+					<td>1</td>
+					<td data-toggle="tooltip" data-placement="bottom" title="Great in taste" style="text-decoration: underline;">1</td>
+				</tr>					
+			</tbody>
+		</table>
+	</div>
+</div>
+</div>
+</section>
+<!--End product table-->
+</content>
+
+<footer class="footerFarmerDash">
+    <div id="refreshFooter">
+        <div class="column" id="column1">
+            <a id="lnk-gbl-help" href="#">Help</a>
+            <a href="#">Conditions of Use</a>
+            <a href="#">Privacy Notice</a>
+        </div>
+        <div class="column" id="column2">
+            <a href="#">About</a>
+            <a href="#">Careers</a>
+        </div>
+        <div id="copyrightAndDisclaimer">
+            &copy; 2016 AmazonFresh, LLC or its affiliates&nbsp;
+            All items sold by and ship from AmazonFresh unless otherwise specified.
+        </div>
+    </div>
+</footer>
+
+<script type="text/javascript">
+    
+    //For making the AM chart
+    
+    var chart = AmCharts.makeChart("chartdiv", {
+        "theme": "light",
+        "type": "serial",
+    	"startDuration": 2,
+        "dataProvider": [{
+            "col": "Earnings",
+            "value": 100,
+            "color": "#FF0F00"
+        }, {
+            "col": "Orders",
+            "value": 30,
+            "color": "#FF6600"
+        }, {
+            "col": "Products",
+            "value": 10,
+            "color": "FF9E01"
+        }],
+        "valueAxes": [{
+            "position": "left",
+            "axisAlpha":0,
+            "gridAlpha":0         
+        }],
+        "graphs": [{
+            "balloonText": "[[category]]: <b>[[value]]</b>",
+            "colorField": "color",
+            "fillAlphas": 0.85,
+            "lineAlpha": 0.1,
+            "type": "column",
+            "topRadius":1,
+            "valueField": "value"
+        }],
+        "depth3D": 40,
+    	"angle": 30,
+        "chartCursor": {
+            "categoryBalloonEnabled": false,
+            "cursorAlpha": 0,
+            "zoomable": false
+        },    
+        "categoryField": "col",
+        "categoryAxis": {
+            "gridPosition": "start",
+            "axisAlpha":0,
+            "gridAlpha":0
+            
+        },
+        "export": {
+        	"enabled": true
+         }
+
+    },0);
+
+    jQuery('.chart-input').off().on('input change',function() {
+    	var property	= jQuery(this).data('property');
+    	var target		= chart;
+    	chart.startDuration = 0;
+
+    	if ( property == 'topRadius') {
+    		target = chart.graphs[0];
+    	}
+
+    	target[property] = this.value;
+    	chart.validateNow();
+    });
+    
+    //For tool tip
+    $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip();   
+    });
+    
+    //For multilevel drop down
+    $(function(){
+    	$(".dropdown-menu > li > a.trigger").on("click",function(e){
+    		var current=$(this).next();
+    		var grandparent=$(this).parent().parent();
+    		if($(this).hasClass('left-caret')||$(this).hasClass('right-caret'))
+    			$(this).toggleClass('right-caret left-caret');
+    		grandparent.find('.left-caret').not(this).toggleClass('right-caret left-caret');
+    		grandparent.find(".sub-menu:visible").not(current).hide();
+    		current.toggle();
+    		e.stopPropagation();
+    	});
+    	$(".dropdown-menu > li > a:not(.trigger)").on("click",function(){
+    		var root=$(this).closest('.dropdown');
+    		root.find('.left-caret').toggleClass('right-caret left-caret');
+    		root.find('.sub-menu:visible').hide();
+    	});
+    });	      
+
+</script>
+</body>
+</html>

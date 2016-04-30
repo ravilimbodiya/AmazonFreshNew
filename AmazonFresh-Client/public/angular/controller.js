@@ -218,4 +218,80 @@ amazon.controller('amazonCntrl', function($scope, $http) {
 			
 		});
 	};
+	
+	//Start Add Product
+	$scope.renderAddProduct = function(type) {
+		
+		$http({
+			method : "POST",
+			url : '/renderAddProduct',
+			data : {
+					"type":type
+				}
+		}).success(function(data) {
+			//checking the response data for statusCode
+			if (data.statusCode == 200) {				
+				window.location.assign("/addProduct");
+			}
+			else {
+				window.location.assign("/farmerDashboard");
+			}
+		}).error(function(error) {
+				window.location.assign("/farmerDashboard");
+		});
+	};
+	//End Add Product
+
+	//Start Submit Add Product
+	$scope.submitAddProduct = function(type) {
+			
+		var filePath = document.getElementById("imgFile").value;
+		//alert("File Path: " + filePath);
+		$http({
+			method : "POST",
+			url : '/submitAddProduct',
+			data : {
+					"prodType" 		: $scope.prodType,
+					"prodName" 		: $scope.prodName,
+					"price" 		: $scope.price,
+					"description" 	: $scope.description,
+					"imgFile" 		: $scope.imgFile,
+					"quantity"		: $scope.quantity
+				}
+		}).success(function(data) {
+			//checking the response data for statusCode
+			if (data.statusCode == 200) {				
+				window.location.assign("/farmerDashboard");
+			}
+			else {
+				window.location.assign("/addProduct");
+			}
+		}).error(function(error) {
+				window.location.assign("/farmerDashboard");
+		});
+	};
+	//End Submit Add Product
+	
+	//Start Add Product
+	$scope.loadProducts = function() {
+		var allProducts = [];
+		$http({
+			method : "GET",
+			url    : '/loadProducts'
+		}).success(function(data) {
+			//checking the response data for statusCode
+			if (data.statusCode == 200) {				
+				for(var i=0; i<data.rows.length; i++)
+					allProducts.push(data.rows[i]);				
+				
+				$scope.allProducts = allProducts;				
+			}
+			else {
+				alert("Unexpected Error. Please try again");
+			}
+		}).error(function(error) {
+				alert("Unexpected Error: " + error);
+		});
+	};
+	//End Add Product
 });
