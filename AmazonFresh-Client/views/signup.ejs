@@ -38,24 +38,28 @@
 	</div>
 	</header>
 	
-	<div class="row" style="margin-top: 5%; margin-bottom: 3%;" ng-hide="personalInfoSection">
+	<div class="row" style="margin-top: 5%; margin-bottom: 3%;" >
 		<div class="col-md-4"></div>
 		
 		<div class="col-md-4" id="contentArea">
+		<form name="form">
 			<!-- Sign Up-->
-			<form role="form">		
-				<label align="left" style="margin-top: 20px;"><h1>Create New Account</h1></label>
+			<div>		
+				<label align="left" style="margin-top: 20px;"><h1>Create New Account</h1></label>{{form.firstName.$valid}}
 				<div class="row" style="margin-top: 20px;">	
 					<div class="col-md-6">
-						<input class="form-control" type="text" name="firstName" ng-model="firstName" autofocus placeholder="Your First Name" required>
+						<p id="fnerror" ng-show="fnerror" style="color: red;">
+							<strong>Invalid First Name</strong>
+						</p>
+						<input class="form-control" type="text" name="firstName" ng-model="firstName" autofocus placeholder="Your First Name" required ng-pattern="firstNameRegex">
 					</div>
 					<div class="col-md-6">
-						<input class="form-control" type="text" name="lastName" ng-model="lastName" placeholder="Your Last Name" required>
+						<input class="form-control" type="text" name="lastName" ng-model="lastName" pattern="\w+.*" placeholder="Your Last Name" required>
 					</div>	
 				</div>
 				
 				<div class="form-group" style="margin-top: 10px;">				
-					<input class="form-control" type="email" name="email" ng-model="email" placeholder="Email" required>					
+					<input class="form-control" type="email" name="email" ng-model="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$" placeholder="Email" required>					
 				</div>
 				
 				<div class="form-group" style="margin-top: 10px;">				
@@ -67,106 +71,89 @@
 				</div>
 				
 				<div class="form-group" style="margin-top: 10px;">				
-					<input class="form-control" type="text" name="ssn" ng-model="ssn" placeholder="Your SSN (Example: 000-00-0000)" required>					
+					<input class="form-control" type="text" name="ssn" ng-model="ssn" pattern="^\d{3}-\d{2}-\d{4}$" placeholder="Your SSN (Example: 000-00-0000)" required>					
 				</div>
 				Registering As...<br>
 				<select class="form-control" style="margin-top: 5px;" ng-model="userType" required>
 				  <option value="customer">Customer</option>
 				  <option value="farmer">Farmer</option>
 				</select>
+				<div ng-hide="personalInfoSection">
+					<br>
+				    <br>
+					<br>
+					<input type="submit" class=" form-control" style="background-color: #669900; color:white; font-size: medium; margin-bottom:15px" ng-click="showNext('2');" value="Continue" />
+				</div>
+				</div><br><br><br>
+				<div ng-hide="addSection">
+					<h3 align="left" style="margin-top: 10px;">Enter Address</h3>
+					
+					<div class="form-group" style="margin-top: 10px;">
+						
+						<input class="form-control" type="text" name="address" ng-model="address" placeholder="Address" required>					
+					</div>
+					<div class="form-group" style="margin-top: 10px;">			
+						
+						<span  style="width: 70%; float: left; margin-right: 10px;"><input class="form-control" type="text" name="Zipcode" ng-model="zipcode" placeholder="Zipcode" required></span>
+						<span  style="width: 20%"><button class="btn btn-success" ng-click="getCityState(zipcode);">Lookup</button></span>
+					</div>
+					
+					<div class="form-group" style="margin-top: 10px;">		
+						
+						<input class="form-control" type="text" name="city" ng-model="city" placeholder="City" required>
+					</div>
+					
+					
+					<div class="form-group">	
+						<input type="text" ng-model="state" class="date form-control" placeholder="State (Example: CA)">
+					</div>
+					
+					
+					<div ng-hide="addBtnSection">
+						<br>
+					    <br>
+						<br>
+						<input type="button" class="form-control" ng-click="showNext('3');" style="background-color: #669900; color:white; font-size: medium; margin-bottom:10px" value="Continue" />
+					</div>
+				   </div>
+			    	<br><br><br>
+					<div ng-hide="ccSection">		
+						<h3 align="left" style="margin-top: 10px;">Enter Card Details</h3>
+						
+						<div class="form-group" style="margin-top: 10px;">
+							
+							<input class="form-control" type="text" name="cardNumber" ng-model="cardNumber" placeholder="Card Number" required>					
+						</div>
+						
+						
+						<div class="form-group" style="margin-top: 10px;">		
+							
+							<input class="form-control" type="text" name="nameOnCard" ng-model="nameOnCard" placeholder="Name on Card" required>
+						</div>
+						
+						
+						<div class="form-group">	
+							<input type="text" id='datepicker' ng-model="expiry" class="date form-control" placeholder="Expiration date (mm/dd/yyyy)">
+						</div>
+					    
+					    <div class="form-group" style="margin-top: 10px;">
+					    	
+							<input class="form-control" type="number" name="cvv" ng-model="cvv" placeholder="CVV" required>
+						</div>
+							<br>
+					    <br>
+						<br>
+						<input type="button" class="form-control" ng-click="register();" style="background-color: #669900; color:white; font-size: medium; margin-bottom:10px" value="Finish" />
+		      			
+					</div>	
+				<br>
+			</form>
+		</div>
+		
+		<div class="col-md-4"></div>
+	</div>
 
-			   
-			    <br>
-			    <br>
-				<br>
-				<input type="submit" class=" form-control" style="background-color: #669900; color:white; font-size: medium; margin-bottom:15px" ng-click="showNext('2');" value="Continue" />
-				
-				<br>
-      			
-			</form>	
-		
-		</div>
-		
-		<div class="col-md-4"></div>
-	</div>
-	<div class="row" style="margin-top: 5%; margin-bottom: 5%;" ng-hide="addSection">
-		<div class="col-md-4"></div>
-		
-		<div class="col-md-4" id="contentArea">
-			
-			<form role="form">		
-				<h3 align="left" style="margin-top: 10px;">Enter Address</h3>
-				
-				<div class="form-group" style="margin-top: 10px;">
-					
-					<input class="form-control" type="text" name="address" ng-model="address" placeholder="Address" required>					
-				</div>
-				
-				
-				<div class="form-group" style="margin-top: 10px;">		
-					
-					<input class="form-control" type="text" name="city" ng-model="city" placeholder="City" required>
-				</div>
-				
-				
-				<div class="form-group">	
-					<input type="text" ng-model="state" class="date form-control" placeholder="State (Example: CA)">
-				</div>
-				
-				<div class="form-group" style="margin-top: 10px;">			
-					
-					<input class="form-control" type="text" name="Zipcode" ng-model="zipcode" placeholder="Zipcode" required>
-				</div>
-					<br>
-			    <br>
-				<br>
-				<input type="button" class="form-control" ng-click="showNext('3');" style="background-color: #669900; color:white; font-size: medium; margin-bottom:10px" value="Continue" />
-      			
-			</form>	
-		
-		</div>
-		
-		<div class="col-md-4"></div>
-	</div>
-	<div class="row" style="margin-top: 5%; margin-bottom: 5%;" ng-hide="ccSection">
-		<div class="col-md-4"></div>
-		
-		<div class="col-md-4" id="contentArea">
-			
-			<form role="form">		
-				<h3 align="left" style="margin-top: 10px;">Enter Card Details</h3>
-				
-				<div class="form-group" style="margin-top: 10px;">
-					
-					<input class="form-control" type="text" name="cardNumber" ng-model="cardNumber" placeholder="Card Number" required>					
-				</div>
-				
-				
-				<div class="form-group" style="margin-top: 10px;">		
-					
-					<input class="form-control" type="text" name="nameOnCard" ng-model="nameOnCard" placeholder="Name on Card" required>
-				</div>
-				
-				
-				<div class="form-group">	
-					<input type="text" id='datepicker' ng-model="expiry" class="date form-control" placeholder="Expiration date (mm/dd/yyyy)">
-				</div>
-			    
-			    <div class="form-group" style="margin-top: 10px;">
-			    	
-					<input class="form-control" type="number" name="cvv" ng-model="cvv" placeholder="CVV" required>
-				</div>
-					<br>
-			    <br>
-				<br>
-				<input type="button" class="form-control" ng-click="register();" style="background-color: #669900; color:white; font-size: medium; margin-bottom:10px" value="Finish" />
-      			
-			</form>	
-		
-		</div>
-		
-		<div class="col-md-4"></div>
-	</div>
+	
 	<div class="row" style="margin-top: 5%; margin-bottom: 5%;" ng-hide="notifySection">
 		<div class="col-md-4"></div>
 		

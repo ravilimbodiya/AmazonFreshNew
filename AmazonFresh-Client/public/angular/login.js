@@ -13,7 +13,28 @@ login.controller('login', function($scope, $http) {
 	$scope.ccSection = true;
 	$scope.addSection = true;
 	$scope.notifySection = true;
+	
 	$scope.message = "";
+	
+	/*$scope.firstNameRegex = '\\w+.*';
+	$scope.lastNameRegex = '\\w+.*';
+	$scope.emailRegex = '\\w+.*';
+	$scope.ssnRegex = '\\w+.*';
+	$scope.firstNameRegex = '\\w+.*';
+	$scope.firstNameRegex = '\\w+.*';
+	$scope.firstNameRegex = '\\w+.*';*/	
+	$scope.getCityState = function(zip) {
+		$http({
+			method : "GET",
+			url : 'http://maps.googleapis.com/maps/api/geocode/json?address='+zip
+		
+		}).success(function(data) {
+			$scope.city = data.results[0].address_components[1].long_name;
+			$scope.state = data.results[0].address_components[3].short_name;
+		}).error(function(error) {
+			$scope.ziperror = true;
+		});
+	};
 	
 	$scope.login = function() {
 		$http({
@@ -45,14 +66,40 @@ login.controller('login', function($scope, $http) {
 	};
 	
 	$scope.showNext = function(secPosition) {
+		var allValidFlag = true;
+		if(!$scope.form.firstName.$valid){
+			$scope.fnerror = true;
+			allValidFlag = false;
+		} else {
+			$scope.fnerror = false;
+		}
+		if(!$scope.form.firstName.$valid){
+			$scope.fnerror = true;
+			allValidFlag = false;
+		} else {
+			$scope.fnerror = false;
+		}
+		if(!$scope.form.firstName.$valid){
+			$scope.fnerror = true;
+			allValidFlag = false;
+		} else {
+			$scope.fnerror = false;
+		}
+		
 		if(secPosition === '2'){
-			$scope.ccSection = true;
-			$scope.addSection = false;
-			$scope.personalInfoSection = true;
+			if(allValidFlag){
+				$scope.ccSection = true;
+				$scope.addSection = false;
+				$scope.personalInfoSection = true;
+				$scope.addBtnSection = false;
+			}
 		} else if(secPosition === '3'){
-			$scope.ccSection = false;
-			$scope.addSection = true;
-			$scope.personalInfoSection = true;
+			if(allValidFlag){
+				$scope.ccSection = false;
+				$scope.addSection = false;
+				$scope.personalInfoSection = true;
+				$scope.addBtnSection = true;
+			}
 		}
 		
 	};
