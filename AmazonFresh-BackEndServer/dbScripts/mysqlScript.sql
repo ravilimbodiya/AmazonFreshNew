@@ -35,6 +35,25 @@ CREATE TABLE `customers` (
   PRIMARY KEY (`cust_id`)
 );
 
+CREATE TABLE `farmers` (
+  `far_id` int(11) NOT NULL AUTO_INCREMENT,
+  `farmer_id` varchar(45) DEFAULT NULL,
+  `first_name` varchar(45) DEFAULT NULL,
+  `last_name` varchar(45) DEFAULT NULL,
+  `address` varchar(255) DEFAULT NULL,
+  `city` varchar(45) DEFAULT NULL,
+  `state` varchar(45) DEFAULT NULL,
+  `zipcode` varchar(45) DEFAULT NULL,
+  `email` varchar(45) DEFAULT NULL,
+  `cc_no` varchar(45) DEFAULT NULL,
+  `cc_name` varchar(255) DEFAULT NULL,
+  `cc_expiry` varchar(255) DEFAULT NULL,
+  `cvv` int(11) DEFAULT NULL,
+  `approved` int(11) DEFAULT '0',
+  `hash` longblob,
+  `salt` varchar(1000) DEFAULT NULL,
+  PRIMARY KEY (`far_id`)
+);
 
   CREATE TABLE amazonfresh.trip
   (

@@ -6,9 +6,11 @@ var login = require('./services/login');
 var product = require('./services/product');
 var billing = require('./services/billing');
 var customer = require('./services/customer');
+var farmer = require('./services/farmer');
 var trip = require('./services/trips');
 var truck = require('./services/trucks');
 var cart = require('./services/cart');
+var order = require('./services/order');
 
 var express = require('express');
 var http = require('http');
@@ -491,6 +493,40 @@ cnn.on('ready', function () {
             util.log("Message: " + JSON.stringify(message));
             util.log("DeliveryInfo: " + JSON.stringify(deliveryInfo));
             cart.removeItemFromCart(message, function (err, res) {
+
+                //return index sent
+                cnn.publish(m.replyTo, res, {
+                    contentType: 'application/json',
+                    contentEncoding: 'utf-8',
+                    correlationId: m.correlationId
+                });
+            });
+        });
+    });
+    
+    cnn.queue('placeOrder_queue', function (q) {
+        q.subscribe(function (message, headers, deliveryInfo, m) {
+            util.log(util.format(deliveryInfo.routingKey, message));
+            util.log("Message: " + JSON.stringify(message));
+            util.log("DeliveryInfo: " + JSON.stringify(deliveryInfo));
+            order.placeOrder(message, function (err, res) {
+
+                //return index sent
+                cnn.publish(m.replyTo, res, {
+                    contentType: 'application/json',
+                    contentEncoding: 'utf-8',
+                    correlationId: m.correlationId
+                });
+            });
+        });
+    });
+    
+    cnn.queue('createFarmer_queue', function (q) {
+        q.subscribe(function (message, headers, deliveryInfo, m) {
+            util.log(util.format(deliveryInfo.routingKey, message));
+            util.log("Message: " + JSON.stringify(message));
+            util.log("DeliveryInfo: " + JSON.stringify(deliveryInfo));
+            farmer.createFarmer(message, function (err, res) {
 
                 //return index sent
                 cnn.publish(m.replyTo, res, {

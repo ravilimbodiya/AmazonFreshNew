@@ -90,6 +90,7 @@
 				</div>
 			</div>
 			<br><br>
+
     	<section class="col-md-7 items" style="min-height: 300px;" id="menu">
     		
 	    	<table class="table">
@@ -102,6 +103,7 @@
 	    			<th>Remove</th>
 	    		</thead>
 	    		<tbody>
+	    			<div class="alert alert-warning" ng-show="emptyShoppingCart"> {{msg}}</div>
 	    			<tr ng-repeat="item in allItems track by $index">
 	    				<td><img class="imgClass" src="../images/temp/nepali-momo.png" height="50" width="50" alt="Item Photo"></td>
 	    				<td>{{item.product.name}}</td>

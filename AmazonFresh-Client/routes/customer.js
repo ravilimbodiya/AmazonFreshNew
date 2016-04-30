@@ -1,6 +1,9 @@
 var mq_client = require('../rpc/client');
 
-exports.createCustomer = function createCustomer(req, res) {};
+exports.getExistingAddress = function getExistingAddress(req, res) {
+	var add = req.session.user[0].address + ', '+req.session.user[0].city+', '+req.session.user[0].state;
+	res.send({'statusCode': 200, 'address': add, 'zipcode': req.session.user[0].zipcode});
+};
 
 exports.deleteCustomer = function deleteCustomer(req, res) {
     var msg_Payload = {

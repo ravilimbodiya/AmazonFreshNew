@@ -6,6 +6,7 @@ exports.addToCart = function addToCart(req, res) {
 	if(req.param('product') === 'selectedProd'){
 		p = req.session.selectedProduct;
 	}
+	
 	var msg_Payload = {
 	        'cust_id': req.session.user[0].cust_id,
 	        'product': p,
@@ -34,11 +35,16 @@ exports.showShoppingCart = function showShoppingCart(req, res) {
 };
 
 exports.getShoppingCart = function getShoppingCart(req, res) {
-	var sum = 0.0;
-	for(var i = 0; i < req.session.shoppingCart.items.length; i++){
-		sum += (parseFloat(req.session.shoppingCart.items[i].product.price))*(parseFloat(req.session.shoppingCart.items[i].quantity));
+	if(req.session.shoppingCart !== null){
+		var sum = 0.0;
+		for(var i = 0; i < req.session.shoppingCart.items.length; i++){
+			sum += (parseFloat(req.session.shoppingCart.items[i].product.price))*(parseFloat(req.session.shoppingCart.items[i].quantity));
+		}
+		res.send({"statusCode": 200, shoppingCart: req.session.shoppingCart, sum: sum});
+	} else {
+		res.send({"statusCode": 401, msg: "You don't have any item added to Shopping Cart."});
 	}
-	res.send({"statusCode": 200, shoppingCart: req.session.shoppingCart, sum: sum});
+	
 };
 
 exports.removeItemFromCart = function removeItemFromCart(req, res) {
@@ -70,4 +76,48 @@ exports.removeItemFromCart = function removeItemFromCart(req, res) {
 
 exports.checkout = function checkout(req, res) {
 	res.render('checkout');
+};
+
+exports.makePayment = function makePayment(req, res) {
+	res.render('orderConfirmation');
+};
+
+exports.placeOrder = function placeOrder(req, res) {
+	if(req.session.shoppingCart !== null){
+		var sum = 0.0;
+		for(var i = 0; i < req.session.shoppingCart.items.length; i++){
+			sum += (parseFloat(req.session.shoppingCart.items[i].product.price))*(parseFloat(req.session.shoppingCart.items[i].quantity));
+		}
+		
+		var msg_Payload = {
+				'customerObj' : req.session.user[0],
+		        'shoppingCartObj': req.session.shoppingCart,
+		        'amount' : sum,
+		        'deliveryAddress' : req.param('address'),
+		        'deliveryZipcode' : req.param('zipcode'),
+		        'deliveryDate' : req.param('deliveryDate'),
+		        'deliveryTime' : req.param('deliveryTime'),
+		        'paymentMethod' : req.param('paymentMethod'),
+		        'cardNumber' : req.param('cardNumber')
+		    };
+		    mq_client.make_request('placeOrder_queue', msg_Payload, function (err, results) {
+		        if (err) {
+		            console.log('Err: ' + err);
+		            res.send({'statusCode': 401});
+		            throw err;
+		        } else {
+		            if (results.statusCode === 200) {
+		                console.log('Order placed.');
+		                req.session.shoppingCart = null;
+		                console.log(results);
+		            	res.send(results);
+		            } else {
+		                console.log('Error Occured!');
+		                res.send({'statusCode': 401});
+		            }
+		        }
+		    });
+		} else {
+			res.send({'statusCode': 401});
+		}
 };

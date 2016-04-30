@@ -1,46 +1,78 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="amazonFreshApp" ng-controller="amazonCntrl">
 <head>
     <title>Welcome | AmazonFresh</title>
-    <link rel='stylesheet' href='../stylesheets/style.css'/>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
     <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
-
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel='stylesheet' href='/stylesheets/carousel.css' />
+ 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://code.jquery.com/jquery.js"></script>
-    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+     <script src="//code.jquery.com/jquery-1.10.2.js"></script>
     <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script>
+      $(function() {
+        $( "#datepicker" ).datepicker();
+      });
+    </script>
 </head>
-<body>
+<body ng-init="getShoppingCart();">
 <header>
-    <div id="headerNav">
-        <ul class="sidelist">
-            <li id="freshLogo">
-                <a id="fresh_logo_link" href="/"><img alt="AmazonFresh Home" src="../images/logo.png">
-                    <span></span></a>
-            </li>
-            <li class="first">
-	                <span id="greeting" class="greeting">
-	                    Already an AmazonFresh customer? <a id="signInLink" href="/signIn">Sign in</a>.
-	                </span>
-            </li>
-        </ul>
-    </div>
-</header>
+        <nav class="navbar navbar-default" id="headerNav">
+          <div class="container-fluid">
+            <div class="navbar-header"  id="freshLogo">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+              <a class="navbar-brand" href="/">
+                <img alt="Brand" src="../images/logo.png">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li style="cursor: pointer;"><a style="color: #fff; padding: 0;" href="/shoppingCart"><i class="glyphicon glyphicon-shopping-cart cart"><span class="cartItems">{{itemsInCart}}</span></i></a>
+
+                    </li>
+                    <li class="dropdown">
+                      <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="margin-right: 10px; padding: 5px;" role="button" aria-haspopup="true" aria-expanded="false"><img alt="" src="/images/user.png" class="profilePic"><span class="caret"></span></a>
+                      <ul class="dropdown-menu">
+                        <li><a href="#">User Name<br><span style="font-size: 9px;">View Profile</span></a></li>
+                        <li><a href="#">Help</a></li>
+                        <li><a href="#">Settings</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="/logout">Log out</a></li>
+                      </ul>
+                    </li>
+                 </ul>
+            </div>
+          </div>
+        </nav>
+        
+    </header>
+<br>
+<section id="checkoutSection" ng-show="checkoutSection">
+        <div class="mainTitle" style="margin-top: 50px;">
+                <div class="container">
+                <h1>Checkout</h1>
+                </div>
+            </div>
+            <br><br>
 
 <div class="container-fluid">
-    <div class="row">
-        <div class="col-md-12">
-            <h3 class="checkoutHead text-center">
-                Checkout
-            </h3>
-        </div>
-    </div>
+    
     <div class="row">
         <div class="col-md-12">
             <div class="row">
-                <div class="col-md-8">
+                <div class="col-md-7">
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             <h3 class="panel-title">
@@ -51,24 +83,46 @@
                         <div class="panel-body">
 
                             <div class="row">
-                                <div class="col-lg-4">
+                                <div class="col-lg-8">
                                     <div class="input-group">
-
-                                        <input type="radio" name="address"> Address in our System
-
-                                        <textarea class="form-control"></textarea>
+                                        <span style="float: left;">Select Delivery Address: </span>
+                                        <select name="address" style="width: 150px;  margin-left: 10px;" class="form-control" ng-model="addressType" placeholder="Delivery Time" required="" ng-change="getExistingAddress();">
+                                            <option value="existing">Existing Address</option>
+                                            <option value="new">New Address</option>
+                                        </select><br><br><br>
+                                        <textarea class="form-control" aria-label="..." id="address" ng-model="address" style="margin-bottom: 10px;" placeholder="Address, City, State">{{address}}</textarea>
+                                        <input type="text" class="form-control" id="zipcode" ng-model="zipcode" name="zipcode" placeholder="Zipcode" value="{{zipcode}}"/>
                                     </div><!-- /input-group -->
                                 </div><!-- /.col-lg-6 -->
-                                <div class="col-lg-4">
-                                    <div class="input-group">
-                                        <input type="radio" name="address"> Enter your Address
-                                        <textarea class="form-control" aria-label="..."></textarea>
-                                    </div><!-- /input-group -->
-                                </div><!-- /.col-lg-6 -->
+                                
                             </div><!-- /.row -->
                         </div>
-                        <div class="panel-footer">
-                            <button class="btn btn-primary" onclick="selectAddress()">Select Address</button>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">
+                                Select Date and Time for Delivery
+                            </h3>
+                        </div>
+
+                        <div class="panel-body">
+
+                            <div class="row">
+                                <div class="">
+                                    <div class="input-group">
+
+                                        <input type="text" id='datepicker' name="deliveryDate" style="width: 150px; margin-left: 10px;" class="form-control" ng-model="deliveryDate" placeholder="Delivery Date" required="">
+                                        <select name="deliveryTime" style="width: 150px;  margin-left: 10px;" class="form-control" ng-model="deliveryTime" placeholder="Delivery Time" required="">
+                                                        <option value="9:00 AM">9:00 AM</option>
+                                                        <option value="12:00 PM">12:00 PM</option>
+                                                        <option value="3:00 PM">3:00 PM</option>
+                                                        <option value="6:00 PM">6:00 PM</option>
+                                                        
+                                        </select>
+                                    </div><!-- /input-group -->
+                                </div><!-- /.col-lg-6 -->
+                                
+                            </div><!-- /.row -->
                         </div>
                     </div>
                     <div class="panel panel-default">
@@ -79,114 +133,272 @@
                         </div>
                         <div class="panel-body">
                             <div class="input-group">
-                                <input type="radio" name="payment"> Credit/Debit Card
-                                <input type="radio" name="payment"> Cash on Delivery
+                                
+                                
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="span12">
+                                          <form class="form-horizontal span6">
+                                            <fieldset>
+                                                <span style="float: left;">Select Payment Method: </span>
+                                                <select name="paymentMethod" style="width: 150px;  margin-left: 10px;" class="form-control" ng-model="paymentMethod" placeholder="Payment Method" required="" ng-change="showPaymentMethod();">
+                                                    <option value="cash">Cash on Delivery</option>
+                                                    <option value="card">Credit/Debit Card</option>
+                                                </select><br><br><br>
+                                            <div ng-hide="paymentMethodFlag">
+                                              <div class="">
+                                                <label class="control-label">Card Holder's Name</label>
+                                                <div class="">
+                                                  <input type="text" ng-model="nameOnCard" class="input-block-level form-control" pattern="\w+ \w+.*" title="Fill your first and last name" required>
+                                                </div>
+                                              </div>
+                                           
+                                              <div class="">
+                                                <label class="control-label">Card Number</label>
+                                                <div class="">
+                                                  <div class="row-fluid">
+                                                    <span class="">
+                                                      <input type="text" ng-model="cardNumber1" class="span3 input-block-level form-control " autocomplete="off" maxlength="4" pattern="\d{4}" title="First four digits" required>
+                                                    </span> 
+                                                    <span class="">
+                                                      <input type="text" ng-model="cardNumber2" class="span3 input-block-level form-control" autocomplete="off" maxlength="4" pattern="\d{4}" title="Second four digits" required>
+                                                    </span>
+                                                    <span class="">
+                                                      <input type="text" ng-model="cardNumber3" class="span3 input-block-level form-control" autocomplete="off" maxlength="4" pattern="\d{4}" title="Third four digits" required>
+                                                    </span>
+                                                    <span class="">
+                                                      <input type="text" ng-model="cardNumber4" class="span3 input-block-level form-control" autocomplete="off" maxlength="4" pattern="\d{4}" title="Fourth four digits" required>
+                                                    </span>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                            <br>
+                                              <div class="">
+                                                <label class="control-label">Card Expiry Date</label>
+                                                <div class="">
+                                                  <div class="row-fluid">
+                                                    <span class="span9">
+                                                      <select class="span3 input-block-level form-control" ng-model="expiryMonth">
+                                                        <option value="January">January</option>
+                                                        <option value="February">February</option>
+                                                        <option value="March">March</option>
+                                                        <option value="April">April</option>
+                                                        <option value="May">May</option>
+                                                        <option value="June">June</option>
+                                                        <option value="July">July</option>
+                                                        <option value="August">August</option>
+                                                        <option value="September">September</option>
+                                                        <option value="October">October</option>
+                                                        <option value="November">November</option>
+                                                        <option value="December">December</option>
+                                                      </select>
+                                                    </span>
+                                                    <span class="span3">
+                                                      <select class="span3 input-block-level form-control" ng-model="expiryYear">
+                                                        <option value="2016">2016</option>
+                                                        <option value="2017">2017</option>
+                                                        <option value="2018">2018</option>
+                                                        <option value="2019">2019</option>
+                                                        <option value="2020">2020</option>
+                                                        <option value="2021">2021</option>
+                                                        <option value="2022">2022</option>
+                                                        <option value="2023">2023</option>
+                                                        <option value="2024">2024</option>
+                                                        <option value="2025">2025</option>
+                                                        <option value="2026">2026</option>
+                                                        <option value="2027">2027</option>
+                                                      </select>
+                                                    </span>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                           <br>
+                                              <div class="">
+                                                <label class="control-label">Card CVV</label>
+                                                <div class="">
+                                                  <div class="row-fluid">
+                                                    <div class="span3">
+                                                      <input type="text" ng-model="cvv" class="input-block-level form-control" autocomplete="off" maxlength="3" pattern="\d{3}" title="Three digits at back of your card" required>
+                                                    </div>
+                                                    <div class="span8">
+                                                      <!-- screenshot may be here -->
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                              </div>
+                                           <br>
+                                            </fieldset>
+                                          </form>
+                                        </div>
+                                      </div>
+                                </div>
                             </div>
                         </div>
                         <div class="panel-footer">
-                            <button class="btn btn-primary" onclick="selectAddress()">Make Payment</button>
+                            
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4">
-                    <table class="table table-striped">
-                        <thead>
-                        <tr>
-                            <th>
-                                #
-                            </th>
-                            <th>
-                                Product
-                            </th>
-                            <th>
-                                Qty
-                            </th>
-                            <th>
-                                Price
-                            </th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td>
-                                1
-                            </td>
-                            <td>
-                                TB - Monthly
-                            </td>
-                            <td>
-                                01/04/2012
-                            </td>
-                            <td>
-                                Default
-                            </td>
-                        </tr>
-                        <tr class="active">
-                            <td>
-                                1
-                            </td>
-                            <td>
-                                TB - Monthly
-                            </td>
-                            <td>
-                                01/04/2012
-                            </td>
-                            <td>
-                                Approved
-                            </td>
-                        </tr>
-                        <tr class="success">
-                            <td>
-                                2
-                            </td>
-                            <td>
-                                TB - Monthly
-                            </td>
-                            <td>
-                                02/04/2012
-                            </td>
-                            <td>
-                                Declined
-                            </td>
-                        </tr>
-                        <tr class="warning">
-                            <td>
-                                3
-                            </td>
-                            <td>
-                                TB - Monthly
-                            </td>
-                            <td>
-                                03/04/2012
-                            </td>
-                            <td>
-                                Pending
-                            </td>
-                        </tr>
-                        <tr class="danger">
-                            <td>
-                                4
-                            </td>
-                            <td>
-                                TB - Monthly
-                            </td>
-                            <td>
-                                04/04/2012
-                            </td>
-                            <td>
-                                Call in to confirm
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                    <button type="button" class="btn btn-block btn-primary">
-                        Default
-                    </button>
+                <div class="col-md-4 summary" style="margin: 0px 15px 0px 0px !important;">
+                   
+                        <div class="summaryHeader">
+                            Order Summary
+                        </div>
+
+                        <div>
+                            <table class="table">
+                                <thead>
+                                    <th>Item</th>
+                                    <th>Name</th>
+                                    <th>Price</th>
+
+                                    <th>Quantity</th>
+                                  
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="item in allItems track by $index">
+                                        <td><img class="imgClass" src="../images/temp/nepali-momo.png" height="50" width="50" alt="Item Photo"></td>
+                                        <td>{{item.product.name}}</td>
+                                        <td>${{item.product.price}}</td>
+
+                                        <td>{{item.quantity}}</td>
+                                    </tr>
+                                    
+                                </tbody>
+                            </table>
+                            <ul class="list-group">
+                              
+                              <li class="list-group-item" style="font-weight: bold;">
+                                <span class="badge" style="background-color: #FF5733;">{{allItems.length}}</span>Total Items on Cart
+                              </li>
+                              <li class="list-group-item" style="font-weight: bold; background-color: #f5f8fa;border-radius: 8px;">
+                                <span class="badge" style="background-color: #FF5733;">${{sum}}</span>
+                                Total Amount
+                              </li>
+                            </ul>
+                        </div>
+                        <button class="btn btn-default" name="placeBtn" ng-click="placeOrder();">Make Payment</button>
                 </div>
             </div>
         </div>
     </div>
 </div>
+</section>
+<section id="receiptSection" ng-show="receiptSection">
+            <div class="mainTitle" style="margin-top: 50px;">
+                <div class="container">
+                <h1>Order Receipt</h1>
+                </div>
+            </div>
+            <br><br>
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="text-center">
+                        <i class="fa fa-search-plus pull-left icon"></i>
+                        <h2>Order Confirmation #{{order.order_id}} </h2>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-xs-12 col-md-3 col-lg-3 pull-left">
+                            <div class="panel panel-default height">
+                                <div class="panel-heading">Billing Details</div>
+                                <div class="panel-body">
+                                    <strong>{{order.customer_first_name}} {{order.customer_last_name}}:</strong><br>
+                                    {{order.customer_address}}<br>
+                                    {{order.customer_city}}<br>
+                                    {{order.customer_state}}<br>
+                                    <strong>{{order.customer_zipcode}}</strong><br>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-md-3 col-lg-3">
+                            <div class="panel panel-default height">
+                                <div class="panel-heading">Payment Information</div>
+                                <div class="panel-body">
+                                    <strong>Payment Method:</strong> {{order.payment_method}}<br>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-md-3 col-lg-3">
+                            <div class="panel panel-default height">
+                                <div class="panel-heading">Delivery Date & Time</div>
+                                <div class="panel-body">
+                                    <strong>Expected Date:</strong> {{order.delivery_date}}<br>
+                                    <strong>Expected Time:</strong> {{order.delivery_time}}<br>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-md-3 col-lg-3 pull-right">
+                            <div class="panel panel-default height">
+                                <div class="panel-heading">Shipping Address</div>
+                                <div class="panel-body">
+                                    <strong>{{order.customer_first_name}} {{order.customer_last_name}}:</strong><br>
+                                    {{order.delivery_address}}<br>
+                                    <strong>{{order.delivery_zipcode}}</strong><br>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="text-center"><strong>Order Summary</strong></h3>
+                        </div>
+                        <div class="panel-body">
+                            <div class="table-responsive">
+                                <table class="table table-condensed">
+                                    <thead>
+                                        <tr>
+                                            <td><strong>Item Name</strong></td>
+                                            <td class="text-center"><strong>Item Price</strong></td>
+                                            <td class="text-center"><strong>Item Quantity</strong></td>
+                                            <td class="text-right"><strong>Total</strong></td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="item in items">
+                                            <td>{{item.product.name}}</td>
+                                            <td class="text-center">${{item.product.price}}</td>
+                                            <td class="text-center">{{item.quantity}}</td>
+                                            <td class="text-right">${{item.product.price * item.quantity}}</td>
+                                        </tr>
+                                       
+                                        <tr>
+                                            <td class="highrow"></td>
+                                            <td class="highrow"></td>
+                                            <td class="highrow text-center"><strong>Subtotal</strong></td>
+                                            <td class="highrow text-right">${{order.amount}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="emptyrow"></td>
+                                            <td class="emptyrow"></td>
+                                            <td class="emptyrow text-center"><strong>Service Charge</strong></td>
+                                            <td class="emptyrow text-right">$5.0</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="emptyrow"><i class="fa fa-barcode iconbig"></i></td>
+                                            <td class="emptyrow"></td>
+                                            <td class="emptyrow text-center"><strong>Total</strong></td>
+                                            <td class="emptyrow text-right">${{order.amount + 5.0}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+          
+      
+</section>
+<div style="height: 10px; clear: both;"></div>
 <footer>
     <div id="refreshFooter">
         <div class="column" id="column1">
@@ -204,5 +416,7 @@
         </div>
     </div>
 </footer>
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+  <script src="/angular/controller.js"></script>
 </body>
 </html>

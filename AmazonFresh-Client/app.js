@@ -64,6 +64,7 @@ app.get('/logout', login.logout);
 app.get('/showProduct/:productId', product.showProductDescription);
 app.get('/shoppingCart', order.showShoppingCart);
 app.get('/checkout', order.checkout);
+app.get('/makePayment', order.makePayment);
 
 //POST
 app.post('/checkLogin', login.checkLogin);
@@ -72,7 +73,8 @@ app.post('/listAllProducts', product.listAllProduct);
 app.post('/addToCart', order.addToCart);
 app.post('/getShoppingCart', order.getShoppingCart);
 app.post('/removeItemFromCart', order.removeItemFromCart);
-
+app.post('/placeOrder', order.placeOrder);
+app.post('/getExistingAddress', customer.getExistingAddress);
 
 app.use(function(req, res, next) {
 	res.render('error');

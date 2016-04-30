@@ -1,6 +1,7 @@
 var amazon = angular.module('amazonFreshApp', []);
 amazon.controller('amazonCntrl', function($scope, $http) {
 	$scope.quantity = 1;
+	
 	$scope.listAllProducts = function() {
 		$http({
 			method : "POST",
@@ -89,6 +90,10 @@ amazon.controller('amazonCntrl', function($scope, $http) {
 	$scope.showShoppingCart = function() {
 		window.location.assign = "/shoppingCart";
 	};
+
+	$scope.makePayment = function() {
+		window.location.assign = "/makePayment";
+	};
 	
 	$scope.getShoppingCart = function() {
 		$http({
@@ -97,19 +102,65 @@ amazon.controller('amazonCntrl', function($scope, $http) {
 		}).success(function(data) {
 			//checking the response data for statusCode
 			if (data.statusCode === 200) {
+				$scope.emptyShoppingCart = false;
 				$scope.shoppingCart = data.shoppingCart;
 				$scope.allItems = data.shoppingCart.items;
 				$scope.sum = data.sum;
 				$scope.itemsInCart = data.shoppingCart.items.length;
+				$scope.checkoutSection = true;
+				$scope.receiptSection = false;
+				$scope.paymentMethodFlag = true;
 			}
 			else {
-				
+				$scope.emptyShoppingCart = true;
+				$scope.itemsInCart = 0;
+				$scope.allItems = [];
+				$scope.sum = 0.0;
+				$scope.msg = data.msg;
+				$scope.checkoutSection = true;
+				$scope.receiptSection = false;
+				$scope.paymentMethodFlag = true;
 			}
 		}).error(function(error) {
 			
 		});
 	};
 	
+	$scope.getExistingAddress  = function() {
+		if($scope.addressType === 'existing'){
+			$http({
+				method : "POST",
+				url : '/getExistingAddress'
+			}).success(function(data) {
+				//checking the response data for statusCode
+				if (data.statusCode === 200) {
+					$scope.address = data.address;
+					$scope.zipcode = data.zipcode;
+					document.getElementById('address').disabled = true;
+					document.getElementById('zipcode').disabled = true;
+				}
+				else {
+					
+				}
+			}).error(function(error) {
+				
+			});
+		} else {
+			document.getElementById('address').disabled = false;
+			document.getElementById('zipcode').disabled = false;
+		}
+		
+	};
+	
+	
+	$scope.showPaymentMethod  = function() {
+		if($scope.paymentMethod === 'card'){
+			$scope.paymentMethodFlag = false;
+		} else {
+			$scope.paymentMethodFlag = true;
+		}
+		
+	};
 	
 	$scope.removeItemFromCart = function(index) {
 		$http({
@@ -128,6 +179,40 @@ amazon.controller('amazonCntrl', function($scope, $http) {
 			}
 			else {
 				
+			}
+		}).error(function(error) {
+			
+		});
+	};
+	
+	$scope.placeOrder = function() {
+	
+		$http({
+			method : "POST",
+			url : '/placeOrder',
+			data : {
+				"address" : $scope.address,
+				"zipcode" : $scope.zipcode,
+				"deliveryDate" : $scope.deliveryDate,
+				"deliveryTime" : $scope.deliveryTime,
+				"paymentMethod" : $scope.paymentMethod,
+				"nameOnCard" : $scope.nameOnCard,
+				"cardNumber" : $scope.cardNumber1 + $scope.cardNumber2 + $scope.cardNumber3 + $scope.cardNumber4,
+				"expiryMonth" : $scope.expiryMonth,
+				"expiryYear" : $scope.expiryYear,
+				"cvv" : $scope.cvv
+			}
+		}).success(function(data) {
+			//checking the response data for statusCode
+			if (data.statusCode === 200) {
+				$scope.itemsInCart = 0;
+				$scope.order = data.order;
+				$scope.items = data.order.shoppingCart.items;
+				$scope.checkoutSection = false;
+				$scope.receiptSection = true;
+			}
+			else {
+				window.location.assign('/');
 			}
 		}).error(function(error) {
 			
