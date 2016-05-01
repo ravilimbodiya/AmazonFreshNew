@@ -53,3 +53,49 @@ exports.placeOrder = function(msg, callback){
 		});
   });	
 };
+
+exports.getAllOrders = function(msg, callback){
+	
+	mongo.connect(mongoURL, function() {
+		var json_responses;
+		console.log('Connected to mongo at: ' + mongoURL);
+		var coll = mongo.collection('orders');
+		console.log("order retrival ");
+		
+			coll.find({}, function(err1, result) {
+			  if(err1){
+					json_responses = { statusCode: 401 };
+					callback(null, json_responses);
+				}
+				else 
+				{
+					json_responses = {"statusCode" : 200, orders: result };
+					console.log(json_responses);
+					callback(null, json_responses);
+				}
+		});
+  });	
+};
+
+exports.getAllOrdersByCustId = function(msg, callback){
+	
+	mongo.connect(mongoURL, function() {
+		var json_responses;
+		console.log('Connected to mongo at: ' + mongoURL);
+		var coll = mongo.collection('orders');
+		console.log("order retrival ");
+		
+			coll.find({cust_id: msg.cust_id}, function(err1, result) {
+			  if(err1){
+					json_responses = { statusCode: 401 };
+					callback(null, json_responses);
+				}
+				else 
+				{
+					json_responses = {"statusCode" : 200, orders: result };
+					console.log(json_responses);
+					callback(null, json_responses);
+				}
+		});
+  });	
+};

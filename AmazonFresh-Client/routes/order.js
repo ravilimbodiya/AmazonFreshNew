@@ -121,3 +121,26 @@ exports.placeOrder = function placeOrder(req, res) {
 			res.send({'statusCode': 401});
 		}
 };
+
+exports.viewPurchaseHistory = function viewPurchaseHistory(req, res) {
+	res.render('viewPurchaseHistory');
+};
+
+exports.getAllOrders = function getAllOrders(req, res) {
+		    mq_client.make_request('getAllOrders_queue', '', function (err, results) {
+		        if (err) {
+		            console.log('Err: ' + err);
+		            res.send({'statusCode': 401});
+		            throw err;
+		        } else {
+		            if (results.statusCode === 200) {
+		                console.log('All orders retrived.');
+		                console.log(results);
+		            	res.send(results);
+		            } else {
+		                console.log('Error Occured!');
+		                res.send({'statusCode': 401});
+		            }
+		        }
+		    });
+};

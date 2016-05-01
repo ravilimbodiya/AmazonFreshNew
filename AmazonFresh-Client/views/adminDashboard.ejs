@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Amazon Fresh Admin Dashboard</title>
+    <meta name="description" content="Source code generated using layoutit.com">
+    <meta name="author" content="LayoutIt!">
+
+	<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script> 
+    <script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script> 
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <script src="http://code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>  
+   
+    <link rel="stylesheet" href="../stylesheets/css/style.css">
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel='stylesheet' href='/stylesheets/carousel.css' />
+
+    <link rel="stylesheet" href="../stylesheets/css/bootstrap.min.css">
+    <script src="https://code.angularjs.org/1.5.0-rc.2/angular-route.min.js"></script>
+    <script src="../angular/ng-infinite-scroll.min.js"></script>
+    <script src="../angular/adminDashboard.js"></script>
+
+    <script type="text/javascript" src="graphs/jquery.jqplot.js"></script>
+	<script type="text/javascript" src="graphs/plugins/jqplot.barRenderer.js"></script>
+<!--	<script type="text/javascript" src="src/plugins/jqplot.bubbleRenderer.js"></script> -->
+	<script type="text/javascript" src="graphs/plugins/jqplot.highlighter.js"></script>
+	<script type="text/javascript" src="graphs/plugins/jqplot.cursor.js"></script>
+	<script type="text/javascript" src="graphs/plugins/jqplot.pointLabels.js"></script>
+	<script type="text/javascript" src="graphs/plugins/jqplot.dateAxisRenderer.js"></script>
+	<script type="text/javascript" src="graphs/plugins/jqplot.categoryAxisRenderer.js"></script>
+	<!--<script type="text/javascript" src="graphs/bubblechart.js"></script>-->
+	<script type="text/javascript" src="graphs/barchart.js"></script>
+	<link rel="stylesheet" type="text/css" href="graphs/jquery.jqplot.css" />
+
+  </head>
+  <body  ng-app="adminApp" ng-controller="adminMainController"  >
+
+<!-- Header starts  here   -->
+
+ <header>
+  		<nav class="navbar navbar-default" id="headerNav">
+		  <div class="container-fluid">
+		    <div class="navbar-header"  id="freshLogo">
+			    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+			        <span class="sr-only">Toggle navigation</span>
+			        <span class="icon-bar"></span>
+			        <span class="icon-bar"></span>
+			        <span class="icon-bar"></span>
+			    </button>
+		      <a class="navbar-brand" href="/adminDashboard">
+		        <img alt="Brand" src="../images/logo.png">
+		      </a>
+		    </div>
+		    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+		    	<ul class="nav navbar-nav navbar-right">
+			        
+			        <li class="dropdown">
+			          <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="margin-right: 10px; padding: 5px;" role="button" aria-haspopup="true" aria-expanded="false"><img alt="" src="/images/user.png" class="profilePic"><span class="caret"></span></a>
+			          <ul class="dropdown-menu">
+			            <li><a href="#">User Name<br><span style="font-size: 9px;">View Profile</span></a></li>
+			            <li><a href="#">Help</a></li>
+			            <li><a href="#">Settings</a></li>
+			            <li role="separator" class="divider"></li>
+			            <li><a href="/logout">Log out</a></li>
+			          </ul>
+			        </li>
+			     </ul>
+		    </div>
+		  </div>
+		</nav>
+    	
+    </header>
+
+<!-- Header ends here   -->
+<!-- start body content from here  -->
+
+<div class="mainTitle" style="margin-top: 50px;">
+                <div class="container">
+                <h1>Admin Dashboard</h1>
+                </div>
+            </div>
+          
+    <div class="container-fluid" >	
+    	
+	<div class="row">   <!-- start horizonal section 1 -->
+		<div class="">
+			<ul class="nav nav-tabs" style="style="background-color: #7db641;" " id="myTab">
+	    		<!-- <li class="active"><a data-toggle="tab" href="#homeTab">HOME</a></li> -->
+	    		<li class="active"><a data-toggle="tab" href="#farmerTab">FARMERS</a></li>
+	    		<li><a data-toggle="tab" href="#customerTab">CUSTOMERS</a></li>
+	    		<li><a data-toggle="tab" href="#productTab">PRODUCTS</a></li>
+	    		<li><a data-toggle="tab" href="#billsTab">BILLS</a></li>
+	    		<li><a data-toggle="tab" href="#statisticsTab">STATISTICS</a></li>
+			</ul>
+			<div class="tab-content" style=" background-color: #fff;">
+	    		<div id="homeTab" class="tab-pane fade in active">
+	    		</div>
+	    		<div id="farmerTab" class="tab-pane fade">
+	    	    	<span class="adminSearch">
+						<button class="btn btn-default clickShowApprovalPendingFarmers" href="javascript:void(0)" type="button" ng-click="getFarmerApprovalPendingList();">Farmer Approval Pending </button> 
+						<button class="btn btn-default clickShowAllFarmers" href="javascript:void(0)" type="button" ng-click="getFarmerList();">Show All Farmers </button> 				
+					</span>
+					<span class="adminSearchBy">Search By</span>
+					<span class="adminSearch">
+					<select class="btn btn-default" ng-model="fc">
+					  <option value="firstname">FirstName</option>
+					  <option value="lastname">Lastname</option>
+					  <option value="farmerID">FarmerID</option>
+					  <option value="city">City</option>
+					  <option value="state">State</option>
+					  <option value="zipcode">Zipcode</option>
+					  <option value="contact">Contact</option>
+					  <option value="email">Email</option>
+					  <option value="other">Other</option>
+					</select></span>	
+					<span class="adminSearchInput"><input type="text" class="form-control" ng-model="fq" name="searchFarmer" placeholder="Search Farmer..."></span>
+					<span class="adminSearch"><button class="btn btn-default clickSearchFarmer" href="javascript:void(0)"type="button" ng-click="searchFarmer();"><img alt="Brand" src="../images/search.png" style="width:18px;height:18px">Search Farmers </button></span>
+		    	</div>
+		    	<div id="customerTab" class="tab-pane fade">
+	    	    	<span class="adminSearch">
+		    	    	<!-- <button class="btn btn-default clickShowApprovalPendingCustomers" href="javascript:void(0)" type="button" ng-click="getCustomerApprovalPendingList();">Customer Approval Pending </button> --> 
+						<button class="btn btn-default clickShowAllCustomers" href="javascript:void(0)"  type="button" ng-click="getCustomerList();">Show All Customers </button> 
+					</span>
+					<span class="adminSearchBy">Search By</span>
+					<span class="adminSearch">
+					<select class="btn btn-default" ng-model="cc">
+					  <option value="first_name">FirstName</option>
+					  <option value="last_name">Lastname</option>
+					  <option value="customer_id">CustomerID</option>
+					  <option value="city">City</option>
+					  <option value="state">State</option>
+					  <option value="zipcode">Zipcode</option>
+					  <option value="contact">Contact</option>
+					  <option value="email">Email</option>
+					  <option value="other">Other</option>
+					</select>	
+					</span>
+					<span class="adminSearchInput"><input type="text" class="form-control" ng-model="cq" name="searchCustomer" placeholder="Enter Search value.."></span>
+					<span class="adminSearch"><button class="btn btn-default clickSearchCustomer" href="javascript:void(0)"type="button" ng-click="searchCustomer();"><img alt="Brand" src="../images/search.png" style="width:18px;height:18px">Search Customers </button> </span>
+		    	</div>
+		    	<div id="productTab" class="tab-pane fade">
+	    	    	<span class="adminSearch">
+						<button class="btn btn-default clickShowApprovalPendingProducts" href="javascript:void(0)" type="button" ng-click="getProductApprovalPendingList();">Product Approval Pending </button> 
+						<button class="btn btn-default clickShowAllProducts" href="javascript:void(0)" type="button" ng-click="showProductList();">Show All Products </button> 
+					</span>
+					<span class="adminSearchBy">Search By</span>
+					<span class="adminSearch">
+					<select class="btn btn-default">
+					<option value="">Select Criteria To Search</option>
+					  <option value="productID">ProductID</option>
+					  <option value="farmerID">FarmerID</option>
+					</select>	
+					</span>
+					<span class="adminSearchInput"><input type="text" class="form-control" name="searchProduct" placeholder="Enter Search value.."></span>
+					<span class="adminSearch"><button class="btn btn-default clickSearchProduct" href="javascript:void(0)" type="button"><img alt="Brand" src="../images/search.png" style="width:18px;height:18px">Search Products </button></span> 
+					
+		    	</div>
+		    	<div id="billsTab" class="tab-pane fade">
+	    	    	<span class="adminSearch">
+						<button class="btn btn-default clickShowBills" href="javascript:void(0)" type="button" ng-click="showBillingList();">Show All Bills </button> 
+					</span>
+					<span class="adminSearchBy">Search By</span>
+					<span class="adminSearch">
+						<select class="btn btn-default">
+						<option value="">Select Criteria To Search</option>
+						  <option value="billId">Bill ID</option>
+						  <option value="billDate">Bill Date</option>
+						</select>	
+					</span>
+					<span class="adminSearchInput"><input type="text" class="form-control" name="searchBill" placeholder="Enter Search value.."></span>
+					<span class="adminSearch"><button class="btn btn-default clickSearchBill" href="javascript:void(0)"type="button"><img alt="Brand" src="../images/search.png" style="width:18px;height:18px">Search Bill </button></span> 
+		    	</div>
+		    	<div id="statisticsTab" class="tab-pane fade">
+	    	    	<span class="adminSearch">
+						<button class="btn btn-default clickRevenuePerDay" href="javascript:void(0)" type="button">Show Reveue Per Day </button> 
+						<button class="btn btn-default clickDeliveryAreawise" href="javascript:void(0)" type="button">Show Delivery - Area wise </button> 
+						<button class="btn btn-default clickRidesPerArea" href="javascript:void(0)" type="button">Show Rides Per Area </button> 
+						<button class="btn btn-default clickRidesPerDriver" href="javascript:void(0)" type="button">Show Rides Per Driver </button> 
+						<button class="btn btn-default clickRidesPerCustomer" href="javascript:void(0)" type="button">Show Rides Per Customer </button> 
+					</span>
+		    	</div>
+			</div>   <!-- end class tab-content-->
+		</div>	
+	</div></br>  <!-- end  horizonal section 1 -->
+
+	<div class="row " >  <!-- start farmer section for list display -->
+		<div class="col-md-12 farmerSection showAllFarmers" infinite-scroll="loadMoreF1()" infinite-scroll-distance="0" infinite-scroll-disabled="{{f1_stopLoading}}" >
+			<table class="table table-hover table-condensed table-bordered"  >
+			<caption> List of Farmers  {{f1_count}}</caption>
+			<thead>
+				<tr>
+					<th>#</th>
+					<th>Farmer ID</th><th>Firstname</th><th>Lastname</th>
+					<th>City</th><th>State</th><th>Zip Code</th>
+					<th>Contact</th><th>Email</th><th>Rating</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr class="active" ng-repeat= "f in f1	">
+					<td>{{$index+1}}</td>
+					<td>{{f.farmer_id}}</td><td>{{f.first_name}}</td><td>{{f.last_name}}</td>
+					<td>{{f.city}}</td><td>{{f.state}}</td><td>{{f.zipcode}}</td>
+					<td>{{f.contact}}</td><td>{{f.email}}</td><td>{{f.rating}}</td>
+				</tr>
+			</tbody></table>
+			<button type="submit" class="btn btn-default" ng-click="loadMoreF1();" >Load More</button>
+		</div>
+
+		<div class="col-md-12 farmerSection showFarmerApprovalPending" infinite-scroll="loadMoreF2()" infinite-scroll-distance="0" infinite-scroll-disabled="{{f2_stopLoading}}" >
+			<table class="table table-hover table-condensed table-bordered">
+			<caption> Farmer Approval Pending {{f2_count}}</caption>
+			<thead>
+				<tr>
+					<th>#</th>
+					<th>Farmer ID</th><th>Firstname</th><th>Lastname</th>
+					<th>City</th><th>State</th><th>Zip Code</th>
+					<th>Contact</th><th>Email</th><th>Approve</th><th>Dis-Approve</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr class="active" ng-repeat= "f in f2">
+					<td>{{$index+1}}</td>
+					<td>{{f.farmer_id}}</td><td>{{f.first_name}}</td><td>{{f.last_name}}</td>
+					<td>{{f.city}}</td><td>{{f.state}}</td><td>{{f.zipcode}}</td>
+					<td>{{f.contact}}</td><td>{{f.email}}</td>
+					<td><button ng-click="approveFarmer(f);" ng-disabled="f.approve" class="btn btn-default">Approve</button></td>
+					<td><button ng-click="disApproveFarmer(f);" ng-disabled="f.disapprove" class="btn btn-danger">Dis Approve</button></td>
+				</tr>
+			</tbody></table>
+			<button type="submit" class="btn btn-default" ng-click="loadMoreF2();" >Load More</button></td>
+		</div>
+
+		<div class="col-md-12 farmerSection showSearchFarmerList" infinite-scroll="loadMoreF3();" infinite-scroll-distance="0" infinite-scroll-disabled="{{f3_stopLoading}}" >
+			<table class="table table-hover table-condensed table-bordered"  >
+			<caption> List of Farmers for your search result  {{f3_count}}</caption>
+			<thead>
+				<tr>
+					<th>#</th>
+					<th>Farmer ID</th><th>Firstname</th><th>Lastname</th>
+					<th>City</th><th>State</th><th>Zip Code</th>
+					<th>Contact</th><th>Email</th><th>Rating</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr class="active" ng-repeat= "f in f3	">
+					<td>{{$index+1}}</td>
+					<td>{{f.farmer_id}}</td><td>{{f.first_name}}</td><td>{{f.last_name}}</td>
+					<td>{{f.city}}</td><td>{{f.state}}</td><td>{{f.zipcode}}</td>
+					<td>{{f.contact}}</td><td>{{f.email}}</td><td>{{f.rating}}</td>
+				</tr>
+			</tbody></table>
+			<button type="submit" class="btn btn-default" ng-click="loadMoreF3();" >Load More</button></td>
+		</div>
+	</div>	<!-- end farmer section  for list display -->
+
+
+	<div class="row">  <!-- start customer section for list display -->
+		<div class="col-md-12 customerSection showAllCustomers" infinite-scroll="loadMoreC1();" infinite-scroll-distance="0" infinite-scroll-disabled="{{c1_stopLoading}}">
+			<table class="table table-hover table-condensed table-bordered">
+			<caption> List of Customers  {{c1_count}}</caption>
+			<thead>
+				<tr>
+					<th>#</th>
+					<th>Customer ID</th><th>Firstname</th><th>Lastname</th>
+					<th>City</th><th>State</th><th>Zip Code</th><th>Contact</th><th>Email</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr class="active" ng-repeat= "c in c1">
+					<td>{{$index+1}}</td>
+					<td>{{c.customer_id}}</td><td>{{c.first_name}}</td><td>{{c.last_name}}</td>
+					<td>{{c.city}}</td><td>{{c.state}}</td><td>{{c.zipcode}}</td>
+					<td>{{c.contact}}</td><td>{{c.email}}</td>
+				</tr>
+			</tbody></table>
+		</div>
+
+		<div class="col-md-12 customerSection showCustomerApprovalPending" infinite-scroll="loadMoreC2();" infinite-scroll-distance="0" infinite-scroll-disabled="{{c2_stopLoading}}">
+			<table class="table table-hover table-condensed table-bordered">
+			<caption> Customer Approval Pending {{c2_count}}</caption>
+			<thead>
+				<tr>
+					<th>#</th>
+					<th>Customer ID</th><th>Firstname</th><th>Lastname</th>
+					<th>City</th><th>State</th><th>Zip Code</th>
+					<th>Contact</th><th>Email</th><th>Approve</th><th>Disapprove</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr class="active" ng-repeat= "c in c2">
+					<td>{{$index+1}}</td>
+					<td>{{c.customer_id}}</td><td>{{c.first_name}}</td><td>{{c.last_name}}</td>
+					<td>{{c.city}}</td><td>{{c.state}}</td><td>{{c.zipcode}}</td>
+					<td>{{c.phoneNumber}}</td><td>{{c.email}}</td>
+					<td><button ng-click="approveCustomer(c);" ng-disabled="c.disabled" class="btn btn-default">Approve</button></td>
+					<td><button ng-click="disApproveCustomer(c);"ng-disabled="c.disabled" class="btn btn-danger">Disapprove</button></td>
+				</tr>
+			</tbody></table>
+		</div>
+
+		<div class="col-md-12 customerSection showSearchCustomerList" infinite-scroll="loadMoreC3();" infinite-scroll-distance="0" infinite-scroll-disabled="{{c3_stopLoading}}">
+			<table class="table table-hover table-condensed table-bordered">
+			<caption> List of Customers for your search result {{c3_count}}</caption>
+			<thead>
+				<tr>
+					<th>#</th>
+					<th>Customer ID</th><th>Firstname</th><th>Lastname</th>
+					<th>City</th><th>State</th><th>Zip Code</th><th>Contact</th><th>Email</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr class="active" ng-repeat= "c in c3">
+					<td>{{$index+1}}</td>
+					<td>{{c.customer_id}}</td><td>{{c.first_name}}</td><td>{{c.last_name}}</td>
+					<td>{{c.city}}</td><td>{{c.state}}</td><td>{{c.zipcode}}</td>
+					<td>{{c.contact}}</td><td>{{c.email}}</td>
+				</tr>
+			</tbody></table>
+		</div>
+	</div>	<!-- end customersection  for list display -->
+
+
+	<div class="row ">  <!-- start product section for list display -->
+		<div class="col-md-12 productSection  showAllProducts" infinite-scroll="loadMoreP1();" infinite-scroll-distance="0" infinite-scroll-disabled="{{p1_stopLoading}}">
+			<table class="table table-hover table-condensed table-bordered">
+			<caption> List of Products  {{p1_count}}</caption>
+			<thead>
+				<tr>
+					<th>#</th>
+					<th>Product ID</th><th>Farmer ID</th><th>Product Name</th>
+					<th>Price</th><th>Description</th><th>Rating</th><th>Reviews</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr class="active" ng-repeat= "p in p1">
+					<td>{{$index+1}}</td>
+					<td>{{p.product_ID}}</td><td>{{p.farmer_ID}}</td><td>{{p.name}}</td>
+					<td>$ {{p.price}}</td><td>{{p.description}}</td><td>{{p.ratings}}</td>
+					<td>{{p.reviews}}</td>
+				</tr>
+			</tbody></table>
+		</div>
+
+		<div class="col-md-12 productSection showProductApprovalPending" infinite-scroll="loadMoreP2();" infinite-scroll-distance="0" infinite-scroll-disabled="{{p2_stopLoading}}">
+			<table class="table table-hover table-condensed table-bordered">
+			<caption> Product Approval Pending {{p_count}}</caption>
+			<thead>
+				<tr>
+					<th>#</th>
+					<th>Product ID</th><th>Farmer ID</th><th>Product Name</th>
+					<th>Price</th><th>Description</th><th>Approve</th><th>Disapprove</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr class="active" ng-repeat= "p in p2">
+					<td>{{$index+1}}</td>
+					<td>{{p.product_ID}}</td><td>{{p.farmer_ID}}</td><td>{{p.name}}</td>
+					<td>$ {{p.price}}</td><td>{{p.description}}</td>
+					<td><button ng-click="approveProduct(c);" ng-disabled="p.disabled" class="btn btn-default">Approve</button></td>
+					<td><button ng-click="disApproveProduct(c);"ng-disabled="p.disabled" class="btn btn-danger">Disapprove</button></td>
+				</tr>
+			</tbody></table>
+		</div>
+
+		<div class="col-md-12 productSection  showSearchProductList" infinite-scroll="loadMoreP3();" infinite-scroll-distance="0" infinite-scroll-disabled="{{p3_stopLoading}}">
+			<table class="table table-hover table-condensed table-bordered">
+			<caption> List of Products for your search result: {{p3_count}}</caption>
+			<thead>
+				<tr>
+					<th>#</th>
+					<th>Product ID</th><th>Farmer ID</th><th>Product Name</th>
+					<th>Price</th><th>Description</th><th>Rating</th><th>Reviews</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr class="active" ng-repeat= "p in p3">
+					<td>{{$index+1}}</td>
+					<td>{{p.product_ID}}</td><td>{{p.farmer_ID}}</td><td>{{p.name}}</td>
+					<td>$ {{p.price}}</td><td>{{p.description}}</td><td>{{p.ratings}}</td>
+					<td>{{p.reviews}}</td>
+				</tr>
+			</tbody></table>
+		</div>
+	</div>	<!-- end productsection  for list display -->
+	
+
+	<div class="row ">  <!-- start billing section for list display -->
+		<div class="col-md-12 billingSection  showAllBills" infinite-scroll="loadMoreB1();" infinite-scroll-distance="0" infinite-scroll-disabled="{{b1_stopLoading}}">
+			<table class="table table-hover table-condensed table-bordered">
+			<caption> List of Bills  {{b1_count}}</caption>
+			<thead>
+				<tr>
+					<th>#</th>
+					<th>Billing ID</th><th>Date</th><th>Expected Delivery Date</th>
+					<th>Price</th><th>Product ID</th><th>Source</th><th>Destination</th>
+					<th>DriverID</th><th>CustomerID</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr class="active" ng-repeat= "b in b1">
+					<td>{{$index+1}}</td>
+					<td>{{b.product_ID}}</td><td>{{b.farmer_ID}}</td><td>{{b.name}}</td>
+					<td>$ {{b.price}}</td><td>{{b.description}}</td><td>{{b.ratings}}</td>
+					<td>{{b.reviews}}</td>
+				</tr>
+			</tbody></table>
+		</div>
+		
+		<div class="col-md-12 billingSection  showSearchBillingList" infinite-scroll="loadMoreB2();" infinite-scroll-distance="0" infinite-scroll-disabled="{{b2_stopLoading}}">
+			<table class="table table-hover table-condensed table-bordered">
+			<caption> List of Bills for your search result: {{b2_count}}</caption>
+			<thead>
+				<tr>
+					<th>#</th>
+					<th>Billing ID</th><th>Date</th><th>Expected Delivery Date</th>
+					<th>Price</th><th>Product ID</th><th>Source</th><th>Destination</th>
+					<th>DriverID</th><th>CustomerID</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr class="active" ng-repeat= "b in b2">
+					<td>{{$index+1}}</td>
+					<td>{{b.product_ID}}</td><td>{{b.farmer_ID}}</td><td>{{b.name}}</td>
+					<td>$ {{b.price}}</td><td>{{b.description}}</td><td>{{b.ratings}}</td>
+					<td>{{b.reviews}}</td>
+				</tr>
+			</tbody></table>
+		</div>
+	</div>  <!-- end billingsection  for list display -->
+
+
+	<div class="row statSection">  <!-- start statisticssection for chart display -->
+		<div class="row  statSection  showRevenuePerDay">
+		<div class ="col-md-7 col-md-offset-1 showBubbleGraph" id ="chart1" style="width:65%; height:300px"></div>		
+			<div class="col-md-2 ">
+				<form name="myForm" >
+				    <label for="exampleInput">Select a date</label>
+				    <input type="date" id="exampleInput" name="input" ng-model="example.value"
+				       placeholder="yyyy-MM-dd" min="2016-01-01" max="{{dmax}}"required />
+				    <div role="alert">
+				     <span class="error" ng-show="myForm.input.$error.required">Required!</span>
+				     <span class="error" ng-show="myForm.input.$error.date">Not a valid date!</span>
+				    </div>
+				    <tt id="revenueDate">{{example.value | date: "yyyy-MM-dd"}}</tt><br/>
+				    <tt>{{myForm.input.$valid}}</tt><br/>
+				    <tt>{{myForm.input.$error}}</tt><br/>
+				    <tt>{{myForm.$valid}}</tt><br/>
+				    <tt>{{!!myForm.$error.required}}</tt><br/>
+				    <p id="ff"> shiva</p>
+				</form>
+				<button class="btn btn-default clickRevenuePerDay" href="javascript:void(0)" type="button">Show Reveue Per Day </button>
+				<button class="testClick">test</button>
+				<p>Date: <input type="text" id="datepicker"></p>
+			</div>
+		</div>
+		
+
+		<div class="col-md-12 statSection  showDeliveryAreawise">
+			Stat section: showDeliveryAreawise
+		</div>
+
+		<div class="col-md-12 statSection  showRidesPerArea">
+			Stat section: showRidesPerArea
+		</div>
+
+		<div class="col-md-12 statSection  showRidesPerDriver">
+			Stat section: showRidesPerDriver
+		</div>
+
+		<div class="col-md-12 statSection  showRidesPerCustomer">
+			Stat section: showRidesPerCustomer
+		</div>
+
+	</div>  <!-- end statisticssection for chart display -->
+
+
+</div>  <!-- end class container-fluid -->
+
+    <footer style="padding: 0;">
+    	<div id="refreshFooter">
+		    <div class="column" id="column1">
+		        <a id="lnk-gbl-help" href="#">Help</a>
+			    <a href="#">Conditions of Use</a>
+			    <a href="#">Privacy Notice</a>
+		    </div>
+		    <div class="column" id="column2">
+		        <a href="#">About</a>
+		        <a href="#">Careers</a>
+		    </div>
+			<div id="copyrightAndDisclaimer">
+		        &copy; 2016 AmazonFresh, LLC or its affiliates&nbsp;
+		        All items sold by and ship from AmazonFresh unless otherwise specified.
+    		</div>
+		</div>
+    </footer>
+</body>
+<script>
+        $(document).ready(function () {
+        	
+        	$(".testClick").on("click", function () {
+        		var d = $("#revenueDate").text();
+				//alert(d);
+			});
+
+        	
+
+        		$('.farmerSection').show();
+        		$('.customerSection').show();
+        		$('.productSection').show();
+        		$('.billingSection').show();
+        		$('.statSection').show();
+        		
+        	$(".clickShowAllFarmers").on("click", function () {
+                $('.farmerSection').show();
+                $('.customerSection').hide();$('.productSection').hide();
+        		$('.billingSection').hide();$('.statSection').hide();
+        		$('.showFarmerApprovalPending').hide();$('.showSearchFarmerList').hide();
+        		$(window).scroll(function () {
+        			if ($(document).height() <= $(window).scrollTop() + $(window).height()) {
+            		alert("End Of The Page");
+            		$('.loadMoreF1 ()');
+        			}
+    			});
+            });
+			$(".clickShowApprovalPendingFarmers").on("click", function () {
+                $('.farmerSection').show();
+                $('.customerSection').hide();$('.productSection').hide();
+        		$('.billingSection').hide();$('.statSection').hide();
+        		$('.showAllFarmers').hide();$('.showSearchFarmerList').hide();
+        		/*$(window).scroll(function () {
+        			if ($(document).height() <= $(window).scrollTop() + $(window).height()) {
+            		$('.loadMoreF2 ()');
+        			}
+    			});*/
+            });
+			$(".clickSearchFarmer").on("click", function () {
+                $('.farmerSection').show();
+                $('.customerSection').hide();$('.productSection').hide();
+        		$('.billingSection').hide();$('.statSection').hide();
+        		$('.showAllFarmers').hide();$('.showFarmerApprovalPending').hide();
+            });
+
+			$(".clickShowAllCustomers").on("click", function () {
+                $('.customerSection').show();
+                $('.farmerSection').hide();$('.productSection').hide();
+        		$('.billingSection').hide();$('.statSection').hide();
+        		$('.showCustomerApprovalPending').hide();$('.showSearchCustomerList').hide();
+            });
+			$(".clickShowApprovalPendingCustomers").on("click", function () {
+                $('.customerSection').show();
+                $('.farmerSection').hide();$('.productSection').hide();
+        		$('.billingSection').hide();$('.statSection').hide();
+        		$('.showAllCustomers').hide();$('.showSearchCustomerList').hide();
+            });
+			$(".clickSearchCustomer").on("click", function () {
+                $('.customerSection').show();
+                $('.farmerSection').hide();$('.productSection').hide();
+        		$('.billingSection').hide();$('.statSection').hide();
+        		$('.showAllCustomers').hide();$('.showCustomerApprovalPending').hide();
+            });
+
+			$(".clickShowAllProducts").on("click", function () {
+                $('.productSection').show();
+                $('.farmerSection').hide();$('.customerSection').hide();
+        		$('.billingSection').hide();$('.statSection').hide();
+        		$('.showProductApprovalPending').hide();$('.showSearchProductList').hide();
+            });
+			$(".clickShowApprovalPendingProducts").on("click", function () {
+                $('.productSection').show();
+                $('.farmerSection').hide();$('.customerSection').hide();
+        		$('.billingSection').hide();$('.statSection').hide();
+        		$('.showAllProducts').hide();$('.showSearchProductList').hide();
+            });
+			$(".clickSearchProduct").on("click", function () {
+                $('.productSection').show();
+                $('.farmerSection').hide();$('.customerSection').hide();
+        		$('.billingSection').hide();$('.statSection').hide();
+        		$('.showAllProducts').hide();$('.showProductApprovalPending').hide();
+            });
+
+			$(".clickShowBills").on("click", function () {
+                $('.billingSection').show();
+                $('.farmerSection').hide();$('.customerSection').hide();
+                $('.productSection').hide();$('.statSection').hide();
+        		$('.showSearchBillingList').hide();
+            });
+            $(".clickSearchBill").on("click", function () {
+                $('.billingSection').show();
+                $('.farmerSection').hide();$('.customerSection').hide();
+                $('.productSection').hide();$('.statSection').hide();
+        		$('.showAllBills').hide();
+            });
+              
+            $(".clickRevenuePerDay").on("click", function () {
+                $('.statSection').show();
+                $('.farmerSection').hide();$('.customerSection').hide();
+                $('.productSection').hide();$('.billingSection').hide();
+                $('.showRidesPerCustomer').hide();$('.showDeliveryAreawise').hide();
+                $('.showRidesPerArea').hide();$('.showRidesPerDriver').hide();
+            });
+            $(".clickDeliveryAreawise").on("click", function () {
+                $('.statSection').show();
+                $('.farmerSection').hide();$('.customerSection').hide();
+                $('.productSection').hide();$('.billingSection').hide();
+                $('.showRevenuePerDay').hide();$('.showRidesPerArea').hide();
+                $('.showRidesPerDriver').hide();$('.showRidesPerCustomer').hide();
+            });
+            $(".clickRidesPerArea").on("click", function () {
+                $('.statSection').show();
+                $('.farmerSection').hide();$('.customerSection').hide();
+                $('.productSection').hide();$('.billingSection').hide();
+               	$('.showRevenuePerDay').hide();$('.showDeliveryAreawise').hide();
+                $('.showRidesPerDriver').hide();$('.showRidesPerCustomer').hide();
+            });
+            $(".clickRidesPerDriver").on("click", function () {
+                $('.statSection').show();
+                $('.farmerSection').hide();$('.customerSection').hide();
+                $('.productSection').hide();$('.billingSection').hide();
+                $('.showRevenuePerDay').hide();$('.showDeliveryAreawise').hide();
+                $('.showRidesPerArea').hide();$('.showRidesPerCustomer').hide();
+            });
+            $(".clickRidesPerCustomer").on("click", function () {
+                $('.statSection').show();
+                $('.farmerSection').hide();$('.customerSection').hide();
+                $('.productSection').hide();$('.billingSection').hide();
+                $('.showRevenuePerDay').hide();$('.showDeliveryAreawise').hide();
+                $('.showRidesPerArea').hide();$('.showRidesPerDriver').hide();
+            });
+});
+</script>
+</html>

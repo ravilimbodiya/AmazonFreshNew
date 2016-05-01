@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html ng-app="amazonFreshApp" ng-controller="amazonCntrl">
+  <head>
+    <title>Welcome | AmazonFresh</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel='stylesheet' href='/stylesheets/carousel.css' />
+ 
+	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://code.jquery.com/jquery.js"></script>
+     <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+  	<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+  	<script	src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+  	<script src="/js/prefixfree.min.js"></script>
+  </head>
+  <body ng-init="getAllOrders();">
+  	<header>
+  		<nav class="navbar navbar-default" id="headerNav">
+		  <div class="container-fluid">
+		    <div class="navbar-header"  id="freshLogo">
+			    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+			        <span class="sr-only">Toggle navigation</span>
+			        <span class="icon-bar"></span>
+			        <span class="icon-bar"></span>
+			        <span class="icon-bar"></span>
+			    </button>
+		      <a class="navbar-brand" href="/">
+		        <img alt="Brand" src="../images/logo.png">
+		      </a>
+		    </div>
+		    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+		    	<ul class="nav navbar-nav navbar-right">
+			        <li style="cursor: pointer;"><a style="color: #fff; padding: 0;" href="/shoppingCart"><i class="glyphicon glyphicon-shopping-cart cart"><span class="cartItems">{{itemsInCart}}</span></i></a>
+
+			        </li>
+			        <li class="dropdown">
+			          <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="margin-right: 10px; padding: 5px;" role="button" aria-haspopup="true" aria-expanded="false"><img alt="" src="/images/user.png" class="profilePic"><span class="caret"></span></a>
+			          <ul class="dropdown-menu">
+			            <li><a href="#">User Name<br><span style="font-size: 9px;">View Profile</span></a></li>
+			            <li><a href="#">Help</a></li>
+			            <li><a href="#">Settings</a></li>
+			            <li role="separator" class="divider"></li>
+			            <li><a href="/logout">Log out</a></li>
+			          </ul>
+			        </li>
+			     </ul>
+		    </div>
+		  </div>
+		</nav>
+    	
+    </header>
+
+    <div class="container" style="margin-top: 5%;">
+    	<section class="decoration">
+	    	<div class="row">
+		    	<div class="col-md-2">
+		    		<div class="dropdown">
+					  <button class="btn btn-default dropdown-toggle" style="width: 90%;" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+					    Shop
+					    <span class="caret"></span>
+					  </button>
+					  <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+					    <li><a href="#">Produce</a></li>
+					    <li><a href="#">Perishables</a></li>
+					    <li><a href="#">Prepared Foods</a></li>
+					    <li><a href="#">Pantry</a></li>
+					    <li><a href="#">Speciality</a></li>
+					  </ul>
+					</div>
+		    	</div>
+		    	<div class="col-md-10">
+		    		<div class="input-group">
+				      <input type="text" class="form-control" placeholder="Amazon Fresh Search">
+				      <span class="input-group-btn">
+				        <button class="btn btn-default" type="button">Go!</button>
+				      </span>
+				    </div>
+		  		</div>
+	    	</div>
+    	</section>
+    	<br>
+    	<div class="mainTitle">
+				<div class="container">
+				<h1>Purchase History</h1>
+				</div>
+			</div>
+			<br><br>
+
+    	<section class="col-md-7 items" style="min-height: 300px;" id="menu">
+    		
+	    	<table class="table">
+	    		<thead>
+	    			<th>Item</th>
+	    			<th>Name</th>
+	    			<th>Price</th>
+
+	    			<th>Quantity</th>
+	    			<th>Remove</th>
+	    		</thead>
+	    		<tbody>
+	    			<div class="alert alert-warning" ng-show="emptyShoppingCart"> {{msg}}</div>
+	    			<tr ng-repeat="item in allItems track by $index">
+	    				<td><img class="imgClass" src="../images/temp/nepali-momo.png" height="50" width="50" alt="Item Photo"></td>
+	    				<td>{{item.product.name}}</td>
+	    				<td>${{item.product.price}}</td>
+
+	    				<td>{{item.quantity}}</td>
+	    				<td><i class="glyphicon glyphicon-remove" style="color: red; cursor: pointer;" ng-click="removeItemFromCart($index);"></i></td>
+	    			</tr>
+	    			
+	    		</tbody>
+	    	</table>
+	    </section>
+	   <section class="col-md-4 summary" id="summary">
+	    	<div class="summaryHeader">
+	    		Order Summary
+	    	</div>
+	    	<div>
+	    		<ul class="list-group">
+				  
+				  <li class="list-group-item" style="font-weight: bold;">
+				    <span class="badge" style="background-color: #FF5733;">{{allItems.length}}</span>Total Items on Cart
+				  </li>
+				  <li class="list-group-item" style="font-weight: bold; background-color: #f5f8fa;border-radius: 8px;">
+				    <span class="badge" style="background-color: #FF5733;">${{sum}}</span>
+				    Total Amount
+				  </li>
+				</ul>
+	    	</div>
+	    	<a href="/" class="btn btn-primary" style="float: left;">Continue Shopping</a>
+	    	<a href="/checkout" class="btn btn-default" style="float: right;">Proceed to Checkout</a>
+	    </section>
+    </div>
+
+    <footer style="padding: 0;">
+    	<div id="refreshFooter">
+		    <div class="column" id="column1">
+		        <a id="lnk-gbl-help" href="#">Help</a>
+			    <a href="#">Conditions of Use</a>
+			    <a href="#">Privacy Notice</a>
+		    </div>
+		    <div class="column" id="column2">
+		        <a href="#">About</a>
+		        <a href="#">Careers</a>
+		    </div>
+			<div id="copyrightAndDisclaimer">
+		        &copy; 2016 AmazonFresh, LLC or its affiliates&nbsp;
+		        All items sold by and ship from AmazonFresh unless otherwise specified.
+    		</div>
+		</div>
+    </footer>
+    <script src="/js/holder.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+  <script src="/angular/controller.js"></script>
+  
+  </body>
+</html>

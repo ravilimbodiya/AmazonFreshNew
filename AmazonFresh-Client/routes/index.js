@@ -52,3 +52,37 @@ exports.signUp = function signUp(req,res) {
 	   }
    });
 };
+
+exports.adminSignIn = function adminSignIn(req,res) {
+
+	ejs.renderFile('./views/adminSignin.ejs',function(err, result) {
+	   // render on success
+	   if (!err) {
+	            res.end(result);
+	   }
+	   // render or error
+	   else {
+	            res.end('An error occurred');
+	            console.log(err);
+	   }
+   });
+};
+
+exports.checkAdminLogin = function checkAdminLogin(req,res) {
+	var json_response;
+	if(req.param('email') === 'admin@gmail.com' && req.param('password') === '123' && req.param('adminKey') === '123'){
+		var admin = {name: "Shivakumar"};
+		req.session.adminUser = admin;
+		json_response = {statusCode: 200};
+	    res.send(json_response);
+	} else {
+		json_response = {statusCode: 401, errMsg: "Invalid Credentials"};
+	    res.send(json_response);
+	}
+};
+
+exports.adminDashboard = function adminDashboard(req,res) {
+	res.render("adminDashboard", {
+		adminUser : req.session.adminUser
+	});
+};

@@ -219,6 +219,26 @@ amazon.controller('amazonCntrl', function($scope, $http) {
 		});
 	};
 	
+	
+	$scope.getAllOrders = function() {
+		
+		$http({
+			method : "POST",
+			url : '/getAllOrders'
+		}).success(function(data) {
+			//checking the response data for statusCode
+			if (data.statusCode === 200) {
+				//$scope.itemsInCart = 0;
+				$scope.orders = data.orders;
+			}
+			else {
+				window.location.assign('/');
+			}
+		}).error(function(error) {
+			
+		});
+	};
+	
 	//Start Add Product
 	$scope.renderAddProduct = function(type) {
 		

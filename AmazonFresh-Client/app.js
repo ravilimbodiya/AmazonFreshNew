@@ -17,6 +17,7 @@ var express = require('express')
   , trips = require('./routes/trips')
   , sessionMgmt = require('./routes/sessionMgmt')
   , farmer = require('./routes/farmer')
+  , admin = require('./routes/admin') 
   , product = require('./routes/product');
 
 //URL for the sessions collections in mongoDB
@@ -57,6 +58,7 @@ if ('development' == app.get('env')) {
 
 
 //GET
+// Customer Module
 app.get('/', routes.index); 
 app.get('/signin',index.signIn);
 app.get('/signup', index.signUp);
@@ -66,11 +68,7 @@ app.get('/showProduct/:productId', product.showProductDescription);
 app.get('/shoppingCart', order.showShoppingCart);
 app.get('/checkout', order.checkout);
 app.get('/makePayment', order.makePayment);
-app.get('/farmerDashboard', farmer.farmerDashboard);
-app.get('/addProduct', farmer.addProduct);
-app.get('/loadProducts', farmer.loadProducts);
-
-//POST
+app.get('/viewPurchaseHistory', order.viewPurchaseHistory);
 app.post('/checkLogin', login.checkLogin);
 app.post('/register', user.register);
 app.post('/listAllProducts', product.listAllProduct);
@@ -79,8 +77,31 @@ app.post('/getShoppingCart', order.getShoppingCart);
 app.post('/removeItemFromCart', order.removeItemFromCart);
 app.post('/placeOrder', order.placeOrder);
 app.post('/getExistingAddress', customer.getExistingAddress);
+app.post('/getAllOrders', order.getAllOrders);
+
+//Farmer module
+app.get('/farmerDashboard', farmer.farmerDashboard);
+app.get('/addProduct', farmer.addProduct);
+app.get('/loadProducts', farmer.loadProducts);
 app.post('/renderAddProduct', farmer.renderAddProduct);
 app.post('/submitAddProduct', farmer.submitAddProduct);
+
+//Admin module
+app.get('/admin', index.adminSignIn);
+app.post('/adminLogin', index.checkAdminLogin);
+app.get('/adminDashboard', index.adminDashboard);
+app.get('/adminGetFarmerList', admin.adminGetFarmerList);
+app.get('/adminGetFarmerApprovalPendingList', admin.adminGetFarmerApprovalPendingList);
+app.get('/adminApproveFarmer', admin.adminApproveFarmer);
+app.get('/adminDisapproveFarmer', admin.adminDisapproveFarmer);
+app.get('/adminGetFarmerSearchList', admin.adminGetFarmerSearchList);
+app.get('/adminGetCustomerList', admin.adminGetCustomerList);
+app.get('/adminGetCustomerApprovalPendingList', admin.adminGetCustomerApprovalPendingList);
+app.get('/adminApproveCustomer', admin.adminApproveCustomer);
+app.get('/adminDisapproveCustomer', admin.adminDisapproveCustomer);
+app.get('/adminGetCustomerSearchList', admin.adminGetCustomerSearchList);
+app.get('/testGraph', admin.testGraph);
+
 
 
 app.use(function(req, res, next) {

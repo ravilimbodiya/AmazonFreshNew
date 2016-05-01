@@ -11,6 +11,7 @@ var trip = require('./services/trips');
 var truck = require('./services/trucks');
 var cart = require('./services/cart');
 var order = require('./services/order');
+var admin   = require('./services/admin');
 
 var express = require('express');
 var http = require('http');
@@ -521,6 +522,22 @@ cnn.on('ready', function () {
         });
     });
     
+    cnn.queue('getAllOrders_queue', function (q) {
+        q.subscribe(function (message, headers, deliveryInfo, m) {
+            util.log(util.format(deliveryInfo.routingKey, message));
+            util.log("Message: " + JSON.stringify(message));
+            util.log("DeliveryInfo: " + JSON.stringify(deliveryInfo));
+            order.getAllOrders(message, function (err, res) {
+
+                //return index sent
+                cnn.publish(m.replyTo, res, {
+                    contentType: 'application/json',
+                    contentEncoding: 'utf-8',
+                    correlationId: m.correlationId
+                });
+            });
+        });
+    });
     cnn.queue('createFarmer_queue', function (q) {
         q.subscribe(function (message, headers, deliveryInfo, m) {
             util.log(util.format(deliveryInfo.routingKey, message));
@@ -574,5 +591,154 @@ cnn.on('ready', function () {
             });
         });
     });
+    
+////*******    start admin farmer module  *****  /////
+	cnn.queue('adminFarmer_queue', function(q){
+		console.log("listening on adminFarmer_queue");		
+		q.subscribe(function(message, headers, deliveryInfo, m){
+			util.log(util.format( deliveryInfo.routingKey, message));
+			util.log("Message: "+JSON.stringify(message));
+			util.log("DeliveryInfo: "+JSON.stringify(deliveryInfo));
+
+			switch (message.func) {
+				case "getFarmerList":
+					admin.handle_request_getFarmerList(message, function(err,res){
+						util.log("Correlation ID: " + m.correlationId);
+						// return index sent
+						cnn.publish(m.replyTo, res, {
+							contentType: 'application/json',
+							contentEncoding: 'utf-8',
+							correlationId: m.correlationId
+					});
+				});
+				break;
+
+				case "getFarmerApprovalPendingList":
+					admin.handle_request_getFarmerApprovalPendingList(message, function(err,res){
+						util.log("Correlation ID: " + m.correlationId);
+						// return index sent
+						cnn.publish(m.replyTo, res, {
+							contentType: 'application/json',
+							contentEncoding: 'utf-8',
+							correlationId: m.correlationId
+					});
+				});
+				break;
+
+				case "approveFarmer":
+					admin.handle_request_approveFarmer(message, function(err,res){
+						util.log("Correlation ID: " + m.correlationId);
+						// return index sent
+						cnn.publish(m.replyTo, res, {
+							contentType: 'application/json',
+							contentEncoding: 'utf-8',
+							correlationId: m.correlationId
+					});
+				});
+				break; 
+
+				case "disApproveFarmer":
+					admin.handle_request_disApproveFarmer(message, function(err,res){
+						util.log("Correlation ID: " + m.correlationId);
+						// return index sent
+						cnn.publish(m.replyTo, res, {
+							contentType: 'application/json',
+							contentEncoding: 'utf-8',
+							correlationId: m.correlationId
+					});
+				});
+				break; 
+
+				case "getFarmerSearchList":
+					admin.handle_request_getFarmerSearchList(message, function(err,res){
+						util.log("Correlation ID: " + m.correlationId);
+						// return index sent
+						cnn.publish(m.replyTo, res, {
+							contentType: 'application/json',
+							contentEncoding: 'utf-8',
+							correlationId: m.correlationId
+					});
+				});
+				break;
+
+			}
+		});
+	});   // end  adminFarmer_queue
+
+//// *******    end admin Farmer module  *****  /////
+
+//// *******    start admin Customer module  *****  /////
+	cnn.queue('adminCustomer_queue', function(q){
+		console.log("listening on adminCustomer_queue");		
+		q.subscribe(function(message, headers, deliveryInfo, m){
+			util.log(util.format( deliveryInfo.routingKey, message));
+			util.log("Message: "+JSON.stringify(message));
+			util.log("DeliveryInfo: "+JSON.stringify(deliveryInfo));
+
+			switch (message.func) {
+				case "getCustomerList":
+					admin.handle_request_getCustomerList(message, function(err,res){
+						util.log("Correlation ID: " + m.correlationId);
+						// return index sent
+						cnn.publish(m.replyTo, res, {
+							contentType: 'application/json',
+							contentEncoding: 'utf-8',
+							correlationId: m.correlationId
+					});
+				});
+				break;
+
+				case "getCustomerApprovalPendingList":
+					admin.handle_request_getCustomerApprovalPendingList(message, function(err,res){
+						util.log("Correlation ID: " + m.correlationId);
+						// return index sent
+						cnn.publish(m.replyTo, res, {
+							contentType: 'application/json',
+							contentEncoding: 'utf-8',
+							correlationId: m.correlationId
+					});
+				});
+				break;
+
+				case "approveCustomer":
+					admin.handle_request_approveCustomer(message, function(err,res){
+						util.log("Correlation ID: " + m.correlationId);
+						// return index sent
+						cnn.publish(m.replyTo, res, {
+							contentType: 'application/json',
+							contentEncoding: 'utf-8',
+							correlationId: m.correlationId
+					});
+				});
+				break; 
+
+				case "disApproveCustomer":
+					admin.handle_request_disApproveCustomer(message, function(err,res){
+						util.log("Correlation ID: " + m.correlationId);
+						// return index sent
+						cnn.publish(m.replyTo, res, {
+							contentType: 'application/json',
+							contentEncoding: 'utf-8',
+							correlationId: m.correlationId
+					});
+				});
+				break; 
+
+				case "getCustomerSearchList":
+					admin.handle_request_getCustomerSearchList(message, function(err,res){
+						util.log("Correlation ID: " + m.correlationId);
+						// return index sent
+						cnn.publish(m.replyTo, res, {
+							contentType: 'application/json',
+							contentEncoding: 'utf-8',
+							correlationId: m.correlationId
+					});
+				});
+				break;
+
+			}
+		});
+	});   // end  adminCustomer_queue
+//// *******    end  admin Customer module  *****  /////
 
 });

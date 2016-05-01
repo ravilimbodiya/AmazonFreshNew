@@ -342,3 +342,31 @@ textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[ty
 	height		: 400px;
 	font-size	: 11px;
 }
+
+/* admin module */
+.nav-tabs{
+  background-color:#161616;
+}
+.tab-content{
+    background-color:#303136;
+    color:#fff;
+    padding:5px
+}
+.nav-tabs > li > a{
+  border: medium none;
+}
+.nav-tabs > li > a:hover{
+  background-color: #303136 !important;
+    border: medium none;
+    border-radius: 0;
+    color:#fff;
+}
+.adminSearch{
+	float: left;
+}
+.adminSearchBy{
+	float: left;  padding: 7px 5px 0 50px;color: #000;
+}
+.adminSearchInput{
+	float: left;margin-left: 10px;width: 30%;
+}

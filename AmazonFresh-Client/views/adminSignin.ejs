@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html ng-app="adminApp" ng-controller="adminMainController">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel='stylesheet' href='/stylesheets/bootstrap.min.css' />
+    <link href="stylesheets/style.css" rel="stylesheet">
+   <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://code.jquery.com/jquery.js"></script>
+     <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+  	<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+	<!-- Latest compiled JavaScript --> 
+	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+	<!-- AngularJs library --> 	
+	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+	<script src="https://code.angularjs.org/1.5.0-rc.2/angular-route.min.js"></script>
+	<script src="../angular/ng-infinite-scroll.min.js"></script>
+    <script src="../angular/adminDashboard.js"></script>
+    
+  </head>
+  <body style="overflow-x: hidden;">
+
+  <!-- Header-->
+	<header>
+	<div id="headerNav">
+		<ul class="sidelist">
+            <li id="freshLogo">
+                <a id="fresh_logo_link" href="/"><img alt="AmazonFresh Home" src="../images/logo.png">
+                <span></span></a>
+            </li>
+            <li class="first">
+                <span id="greeting" class="greeting">
+                    Already an AmazonFresh customer? <a id="signInLink" href="/signIn">Sign in</a>.
+                </span>
+            </li>
+    	</ul>
+	</div>
+	</header>
+	
+	<div class="row">
+		<div class="col-md-4"></div>
+		
+		<div class="col-md-4">
+			<!-- Sign In-->
+			<form role="form">		
+				
+				<div class="form-group" style="margin-top: 100px;">
+					<h2>Admin Login</h2>
+					<p id="error" ng-hide="invalidCredentials" style="color: red;">
+						<strong>{{errMsg}}</strong>
+					</p>
+					<p>E-mail</p>
+					<input class="form-control" type="email" name="email" ng-model="email" autofocus required="" placeholder="Email">
+					<br>
+					
+				</div>
+		
+				<div class="form-group" style="margin-top: 10px;">
+					<p>Password</p>
+					<input class="form-control" type="password" name="password" ng-model="password" placeholder="Password">
+					
+					<span class="small" style="float:right"><a style="color:#004B91">Forgot Password?</a></span>
+					<br>
+					
+				</div>
+
+				<div class="form-group" style="margin-top: 10px;">
+					<p>Password</p>
+					<input class="form-control" type="password" name="adminKey" ng-model="adminKey" placeholder="Admin Key">
+					
+					<br>
+					
+				</div>
+				
+				<input type="button" class=" form-control" style="background-color: #669900; color:white; font-size: medium;" ng-click="adminLoginSubmit();" value="Sign In" />
+					
+			</form>				
+		
+		</div>
+		
+		<div class="col-md-4"></div>
+	</div>
+	
+	<!-- Footer-->
+	<footer style="float:bottom;bottom:0" class="navbar-fixed-bottom">
+	<div id="refreshFooter">
+	    <div class="column" id="column1">
+	        <a id="lnk-gbl-help" href="#">Help</a>
+		    <a href="#">Conditions of Use</a>
+		    <a href="#">Privacy Notice</a>
+	    </div>
+	    <div class="column" id="column2">
+	        <a href="#">About</a>
+	        <a href="#">Careers</a>
+	    </div>
+		<div id="copyrightAndDisclaimer">
+	        &copy; 2016 AmazonFresh, LLC or its affiliates&nbsp;
+	        All items sold by and ship from AmazonFresh unless otherwise specified.
+		</div>
+	</div>
+	</footer>
+
+
+
+  </body>
+</html>
