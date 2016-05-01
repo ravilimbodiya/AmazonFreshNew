@@ -7,14 +7,15 @@ CREATE TABLE `product` (
   `product_id` int(11) NOT NULL AUTO_INCREMENT,
   `farmer_id` varchar(255) NOT NULL,
   `name` varchar(255) DEFAULT NULL,
-  `price` int(11) NOT NULL,
+  `price` varchar(255) NOT NULL,
+  `quantity` varchar(255) DEFAULT NULL,
   `description` varchar(255) DEFAULT NULL,
   `ratings` int(11) DEFAULT NULL,
   `image_url` varchar(500) DEFAULT NULL,
   `product_type` varchar(500) DEFAULT NULL,
-  `prod_id` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`product_id`)
 );
+
 
 CREATE TABLE `customers` (
   `cust_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -32,8 +33,10 @@ CREATE TABLE `customers` (
   `cvv` int(11) DEFAULT NULL,
   `hash` longblob,
   `salt` varchar(1000) DEFAULT NULL,
+  `contact` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`cust_id`)
 );
+
 
 CREATE TABLE `farmers` (
   `far_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -52,8 +55,10 @@ CREATE TABLE `farmers` (
   `approved` int(11) DEFAULT '0',
   `hash` longblob,
   `salt` varchar(1000) DEFAULT NULL,
+  `contact` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`far_id`)
 );
+
 
   CREATE TABLE amazonfresh.trip
   (

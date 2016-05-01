@@ -78,6 +78,8 @@ app.post('/removeItemFromCart', order.removeItemFromCart);
 app.post('/placeOrder', order.placeOrder);
 app.post('/getExistingAddress', customer.getExistingAddress);
 app.post('/getAllOrders', order.getAllOrders);
+app.post('/getAllOrdersByCustId', order.getAllOrdersByCustId);
+
 
 //Farmer module
 app.get('/farmerDashboard', farmer.farmerDashboard);

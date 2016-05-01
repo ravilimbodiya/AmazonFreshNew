@@ -56,15 +56,15 @@ exports.submitAddProduct = function(msg, callback){
 	var ratings = 0;
 	var imgFile = msg.imgFile;	
 	var prodType = msg.prodType;
-	var prodId = msg.prodId;
+	//var prodId = msg.prodId;
 	
 	
 	//server side validation
-	if(farmerId!="" && prodType!="" && prodName!="" && price!="" && description!="" && prodId!="" && quantity!=""){
+	if(farmerId!="" && prodType!="" && prodName!="" && price!="" && description!="" && quantity!=""){
 	
 		// insert product into DBs		
-		var query = "INSERT INTO product (farmer_id, name, price, quantity, description, ratings, image_url, product_type, prod_id) " +
-		"VALUES ('" + farmerId + "','" + prodName + "','" + price + "','" + quantity + "','" +	description + "','" + ratings + "','" + imgFile + "','" + prodType + "','" + prodId +"')";
+		var query = "INSERT INTO product (farmer_id, name, price, quantity, description, ratings, image_url, product_type) " +
+		"VALUES ('" + farmerId + "','" + prodName + "','" + price + "','" + quantity + "','" +	description + "','" + ratings + "','" + imgFile + "','" + prodType + "')";
 		
 		var json_responses;
 		console.log("Query is: " + query);

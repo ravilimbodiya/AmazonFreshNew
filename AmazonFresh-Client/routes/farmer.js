@@ -1,6 +1,6 @@
 var mq_client = require('../rpc/client');
 var ejs = require("ejs");
-
+/*
 //Generate Random Ids to insert as prod_id in database
 function IDGenerator() {
 	 
@@ -23,7 +23,7 @@ function IDGenerator() {
 		 
 		 return id;
 	 };	 
-}
+}*/
 
 
 exports.farmerDashboard = function farmerDashboard(req,res) {
@@ -75,8 +75,8 @@ exports.submitAddProduct = function(req, res)
 {
 	console.log("inside submitAddProduct in routes");
 	console.log("Product type: " + req.session.prodType);
-	var prodId = IDGenerator();
-	alert("ProductId: " + prodId);
+	//var prodId = this.IDGenerator();
+	//alert("ProductId: " + prodId);
 	var msg_payload = {
 						farmerId 	 : req.session.fmr_id,
 						prodType 	 : req.session.prodType,
@@ -84,7 +84,6 @@ exports.submitAddProduct = function(req, res)
 						price 	 	 : req.param("price"),
 						description  : req.param("description"),
 						imgFile  	 : req.param("imgFile") || null,
-						prodId   	 : prodId,
 						quantity	 : req.param("quantity")
 	};
 	

@@ -18,7 +18,7 @@
   	<script	src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
   	<script src="/js/prefixfree.min.js"></script>
   </head>
-  <body ng-init="getAllOrders();">
+  <body ng-init="getAllOrdersByCustId();">
   	<header>
   		<nav class="navbar navbar-default" id="headerNav">
 		  <div class="container-fluid">
@@ -91,52 +91,43 @@
 			</div>
 			<br><br>
 
-    	<section class="col-md-7 items" style="min-height: 300px;" id="menu">
+    	<section class="col-md-12 items" style="min-height: 300px;" id="menu">
     		
 	    	<table class="table">
 	    		<thead>
-	    			<th>Item</th>
-	    			<th>Name</th>
-	    			<th>Price</th>
+	    			<th>#</th>
+	    			<th>Order Number</th>
+	    			<th>Amount</th>
 
-	    			<th>Quantity</th>
-	    			<th>Remove</th>
+	    			<th>No. of Products</th>
+	    			<th>Track Order</th>
 	    		</thead>
 	    		<tbody>
 	    			<div class="alert alert-warning" ng-show="emptyShoppingCart"> {{msg}}</div>
-	    			<tr ng-repeat="item in allItems track by $index">
-	    				<td><img class="imgClass" src="../images/temp/nepali-momo.png" height="50" width="50" alt="Item Photo"></td>
-	    				<td>{{item.product.name}}</td>
-	    				<td>${{item.product.price}}</td>
+	    			<tr ng-repeat="order in orders track by $index">
+	    				<td>{{$index + 1}}</td>
+	    				<td>{{order.order_id}}</td>
+	    				<td>${{order.amount}}</td>
 
-	    				<td>{{item.quantity}}</td>
-	    				<td><i class="glyphicon glyphicon-remove" style="color: red; cursor: pointer;" ng-click="removeItemFromCart($index);"></i></td>
+	    				<td>{{order.shoppingCart.items.length}}</td>
+	    				<td><button class="btn btn-default" ng-click="showMap(order);">Show Trip</button></td>
 	    			</tr>
 	    			
 	    		</tbody>
 	    	</table>
+	    	<div style="" id="map"></div>
+	    	<br>
+	    	<br>
+	    	<br>
 	    </section>
-	   <section class="col-md-4 summary" id="summary">
-	    	<div class="summaryHeader">
-	    		Order Summary
-	    	</div>
-	    	<div>
-	    		<ul class="list-group">
-				  
-				  <li class="list-group-item" style="font-weight: bold;">
-				    <span class="badge" style="background-color: #FF5733;">{{allItems.length}}</span>Total Items on Cart
-				  </li>
-				  <li class="list-group-item" style="font-weight: bold; background-color: #f5f8fa;border-radius: 8px;">
-				    <span class="badge" style="background-color: #FF5733;">${{sum}}</span>
-				    Total Amount
-				  </li>
-				</ul>
-	    	</div>
-	    	<a href="/" class="btn btn-primary" style="float: left;">Continue Shopping</a>
-	    	<a href="/checkout" class="btn btn-default" style="float: right;">Proceed to Checkout</a>
-	    </section>
+
+
+		  
     </div>
 
+	    <script async defer
+	    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB86L2RKXHDHNPfHJEWpbW2LMQ8QSTYmcM&callback=">
+	    </script>
     <footer style="padding: 0;">
     	<div id="refreshFooter">
 		    <div class="column" id="column1">

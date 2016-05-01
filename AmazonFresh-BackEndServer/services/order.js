@@ -85,7 +85,7 @@ exports.getAllOrdersByCustId = function(msg, callback){
 		var coll = mongo.collection('orders');
 		console.log("order retrival ");
 		
-			coll.find({cust_id: msg.cust_id}, function(err1, result) {
+			coll.find({cust_id: msg.cust_id}).toArray(function(err1, result) {
 			  if(err1){
 					json_responses = { statusCode: 401 };
 					callback(null, json_responses);

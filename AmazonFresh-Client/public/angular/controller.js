@@ -239,6 +239,94 @@ amazon.controller('amazonCntrl', function($scope, $http) {
 		});
 	};
 	
+	$scope.getAllOrdersByCustId = function() {
+		
+		$http({
+			method : "POST",
+			url : '/getAllOrdersByCustId'
+		}).success(function(data) {
+			//checking the response data for statusCode
+			if (data.statusCode === 200) {
+				//$scope.itemsInCart = 0;
+				$scope.orders = data.orders;
+			}
+			else {
+				window.location.assign('/');
+			}
+		}).error(function(error) {
+			
+		});
+	};
+	
+	$scope.showMap = function(order) {
+		var farmerLat;
+		var farmerLong;
+		var custLat;
+		var custLong;
+		
+		document.getElementById('map').style = "height: 600px;";
+		var map = new google.maps.Map(document.getElementById('map'), {
+            center: {lat: 37.3456227, lng: -121.8847222},
+            zoom: 10,
+            mapTypeId: google.maps.MapTypeId.TERRAIN
+          });
+		var lineSymbol = {
+                path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
+                scale: 5,
+                strokeColor: '#393'
+              };
+		
+		
+		for(var i = 0; i < order.shoppingCart.items.length; i++){
+			$http({
+				method : "GET",
+				url : 'http://maps.googleapis.com/maps/api/geocode/json?address='+order.shoppingCart.items[i].farmer.zipcode
+			
+			}).success(function(data) {
+				farmerLat = Number(data.results[0].geometry.location.lat);
+				farmerLong = Number(data.results[0].geometry.location.lng);
+				
+				$http({
+					method : "GET",
+					url : 'http://maps.googleapis.com/maps/api/geocode/json?address='+order.customer_zipcode
+				
+				}).success(function(data) {
+					custLat = Number(data.results[0].geometry.location.lat);
+					custLong = Number(data.results[0].geometry.location.lng);
+					
+					var line = new google.maps.Polyline({
+			            path: [{lat: farmerLat, lng: farmerLong}, {lat: custLat, lng: custLong}],
+			            icons: [{
+			              icon: lineSymbol,
+			              offset: '100%'
+			            }],
+			            map: map
+			          });
+					var count = 0;
+			        window.setInterval(function() {
+				          count = (count + 1) % 200;
+				
+				          var icons = line.get('icons');
+				          icons[0].offset = (count / 2) + '%';
+				          line.set('icons', icons);
+				      }, 300);
+				}).error(function(error) {
+				});
+			}).error(function(error) {
+			});
+			
+			
+			
+			
+			
+			
+		}
+		
+		
+		
+        
+	};
+	
 	//Start Add Product
 	$scope.renderAddProduct = function(type) {
 		

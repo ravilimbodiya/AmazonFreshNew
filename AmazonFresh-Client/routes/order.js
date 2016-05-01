@@ -144,3 +144,25 @@ exports.getAllOrders = function getAllOrders(req, res) {
 		        }
 		    });
 };
+
+exports.getAllOrdersByCustId = function getAllOrdersByCustId(req, res) {
+	var msg_Payload = {
+			'cust_id' : req.session.user[0].cust_id
+	    };
+    mq_client.make_request('getAllOrdersByCustId_queue', msg_Payload, function (err, results) {
+        if (err) {
+            console.log('Err: ' + err);
+            res.send({'statusCode': 401});
+            throw err;
+        } else {
+            if (results.statusCode === 200) {
+                console.log('All orders retrived.');
+                console.log(results);
+            	res.send(results);
+            } else {
+                console.log('Error Occured!');
+                res.send({'statusCode': 401});
+            }
+        }
+    });
+};
