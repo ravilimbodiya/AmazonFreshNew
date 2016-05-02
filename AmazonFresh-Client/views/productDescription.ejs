@@ -16,7 +16,7 @@
   	<script	src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
   	<script src="/js/prefixfree.min.js"></script>
   </head>
-  <body>
+  <body ng-init="getProductReviewsByProductId('<%=selectedProduct.product_id%>');">
   	<header>
   		<nav class="navbar navbar-default" id="headerNav">
 		  <div class="container-fluid">
@@ -96,22 +96,23 @@
     	<section>
     	<section class="decoration">
 	    	<div class="row">
-		    	<div><h2>Product Rating: <span style="color: #7db641;"><%=selectedProduct.rating%> Star</span></h2></div>
+		    	<div><h2>Product Rating: <span style="color: #7db641;">{{avgRating}} Star</span></h2></div>
 		    	<div class="col-md-8">
 
 					<span><h4>Please write Review for this product:<h4></span>
 		    		<span>
-		    			<textarea name="reviewComment" class="form-control" placeholder="Your Review..."></textarea>
+		    			<textarea name="reviewComment" ng-model="reviewComment" class="form-control" placeholder="Your Review..."></textarea>
 		    		</span>
 		    	</div>
 		    	<div class="col-md-4">
 		    		<span><h4>Please Rate this product:<h4></span>
 		    		<fieldset class="rating">
-					    <input type="radio" id="star5" name="rating" value="5" /><label style="margin-right: 10px;" for="star5" class="glyphicon glyphicon-star" title="Rocks!">5 stars</label>
-					    <input type="radio" id="star4" name="rating" value="4" /><label style="margin-right: 10px;" for="star4"class="glyphicon glyphicon-star"  title="Pretty good">4 stars</label>
-					    <input type="radio" id="star3" name="rating" value="3" /><label style="margin-right: 10px;" for="star3"class="glyphicon glyphicon-star"  title="Meh">3 stars</label>
-					    <input type="radio" id="star2" name="rating" value="2" /><label style="margin-right: 10px;" for="star2"class="glyphicon glyphicon-star"  title="Kinda bad">2 stars</label>
-					    <input type="radio" id="star1" name="rating" value="1" /><label style="margin-right: 10px;" for="star1"class="glyphicon glyphicon-star"  title="Sucks big time">1 star</label>
+					    <input type="radio" id="star5" name="rating" ng-click="postReviewRating('5', '<%=selectedProduct.farmer_id%>', '<%=selectedProduct.product_id%>');" value="5" /><label style="margin-right: 10px;" for="star5" class="glyphicon glyphicon-star" title="Rocks!">5 stars</label>
+					    <input type="radio" id="star4" name="rating" ng-click="postReviewRating('5', '<%=selectedProduct.farmer_id%>', '<%=selectedProduct.product_id%>');" value="4" /><label style="margin-right: 10px;" for="star4"class="glyphicon glyphicon-star"  title="Pretty good">4 stars</label>
+					    <input type="radio" id="star3" name="rating" ng-click="postReviewRating('5', '<%=selectedProduct.farmer_id%>', '<%=selectedProduct.product_id%>');" value="3" /><label style="margin-right: 10px;" for="star3"class="glyphicon glyphicon-star"  title="Meh">3 stars</label>
+					    <input type="radio" id="star2" name="rating" ng-click="postReviewRating('5', '<%=selectedProduct.farmer_id%>', '<%=selectedProduct.product_id%>');" value="2" /><label style="margin-right: 10px;" for="star2"class="glyphicon glyphicon-star"  title="Kinda bad">2 stars</label>
+					    <input type="radio" id="star1" name="rating" ng-click="postReviewRating('5', '<%=selectedProduct.farmer_id%>', '<%=selectedProduct.product_id%>');" value="1" /><label style="margin-right: 10px;" for="star1"class="glyphicon glyphicon-star"  title="Sucks big time">1 star</label>
+					    
 					</fieldset>
 		    		
 		    	</div>
@@ -121,36 +122,17 @@
     	<section class="decoration">
 	    	<div class="row">
 		    	<div><h2>Product Reviews</h2></div>
-		    	<div>
+		    	<div ng-repeat="rev in reviews track by $index">
 		    		<div class="panel panel-success">
 					  <div class="panel-heading" >
-					    <h3 class="panel-title">Review 1</h3>
+					    <h3 class="panel-title">Review {{$index + 1}}</h3>
 					  </div>
 					  <div class="panel-body">
-					    Review Comment: Good product!
+					    Review Comment: {{rev.review}}
 					  </div>
 					</div>
 		    	</div>
-		    	<div>
-		    		<div class="panel panel-success">
-					  <div class="panel-heading" >
-					    <h3 class="panel-title">Review 2</h3>
-					  </div>
-					  <div class="panel-body">
-					    Review Comment: Good product!
-					  </div>
-					</div>
-		    	</div>
-		    	<div>
-		    		<div class="panel panel-success">
-					  <div class="panel-heading" >
-					    <h3 class="panel-title">Review 3</h3>
-					  </div>
-					  <div class="panel-body">
-					    Review Comment: Good product!
-					  </div>
-					</div>
-		    	</div>
+		    	
 	    	</div>
     	<section>
     </div>

@@ -134,3 +134,45 @@ exports.showProductDescription = function showProductDescription(req,res) {
         }
     });
 };
+
+
+exports.getProductReviewsByProductId = function getProductReviewsByProductId(req,res) {
+
+	var msg_payLoad = {'prod_id': req.param('prodId')};
+
+    mq_client.make_request('getAllReviewsByProductId_queue', msg_payLoad, function (err, results) {
+        if (err) {
+            console.log("Err: " + err);
+            res.send('error');
+            throw err;
+        } else {
+            if (results.statusCode === 200) {
+                res.send(results);
+            } else {
+                console.log('Error Occured!');
+                res.send('error');
+            }
+        }
+    });
+};
+
+
+exports.postReviewRating = function postReviewRating(req,res) {
+
+	var msg_payLoad = {'prodId': req.param('prodId'), 'farmerId': req.param('farmerId'), 'reviewComment': req.param('reviewComment'), 'rating': req.param('rating'), 'cust_id': req.session.user[0].cust_id};
+
+    mq_client.make_request('postReviewRating_queue', msg_payLoad, function (err, results) {
+        if (err) {
+            console.log("Err: " + err);
+            res.send('error');
+            throw err;
+        } else {
+            if (results.statusCode === 200) {
+                res.send(results);
+            } else {
+                console.log('Error Occured!');
+                res.send('error');
+            }
+        }
+    });
+};

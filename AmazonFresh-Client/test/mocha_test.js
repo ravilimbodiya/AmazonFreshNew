@@ -22,7 +22,7 @@ describe('check signup', function () {
         request.post('http://localhost:3000/register',
             {
                 form: {
-                    'ssn': "1234567890",
+                    'ssn': "123-45-6789",
                     'firstName': "Ram",
                     'lastName': "Singh",
                     'email': "singh.sahab@email.com",

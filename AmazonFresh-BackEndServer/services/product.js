@@ -4,6 +4,8 @@
 
 var ejs = require("ejs");
 var mysql = require('./mysql');
+var mongo = require("./mongo");
+var mongoURL = "mongodb://localhost:27017/Amazonfresh";
 
 
 exports.createProduct = function(msg, callback){
@@ -186,3 +188,52 @@ exports.displayProduct = function(msg, callback){
 
 };
 
+
+exports.getAllReviewsByProductId = function(msg, callback){
+
+	mongo.connect(mongoURL, function() {
+		var json_responses;
+		console.log('Connected to mongo at: ' + mongoURL);
+		var coll = mongo.collection('reviews_rating');
+		console.log("getting reviews and ratings");
+		
+			coll.find({product_id: msg.prod_id}, function(err1, result) {
+			  if(err1){
+					json_responses = { statusCode: 401 };
+					callback(null, json_responses);
+				}
+				else 
+				{
+					json_responses = {"statusCode" : 200, reviews: result };
+					console.log(json_responses);
+					callback(null, json_responses);
+				}
+		});
+  });	
+
+};
+
+
+exports.postReviewRating = function(msg, callback){
+
+	mongo.connect(mongoURL, function() {
+		var json_responses;
+		console.log('Connected to mongo at: ' + mongoURL);
+		var coll = mongo.collection('reviews_rating');
+		console.log("inserting reviews and ratings");
+			var q = {customer_id: msg.cust_id, ratings: msg.rating, review: msg.reviewComment};
+			coll.update({product_id: msg.prodId}, {product_id: msg.prodId, farmer_id: msg.farmerId, $push : {feedback : {customer_id: msg.cust_id, ratings: msg.rating, review: msg.reviewComment}}}, {upsert: true}, function(err1, result) {
+			  if(err1){
+					json_responses = { statusCode: 401 };
+					callback(null, json_responses);
+				}
+				else 
+				{
+					json_responses = {"statusCode" : 200};
+					console.log(json_responses);
+					callback(null, json_responses);
+				}
+		});
+  });	
+
+};

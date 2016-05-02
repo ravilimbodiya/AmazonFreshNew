@@ -81,7 +81,7 @@ app.post('/getAllOrders',  sessionMgmt.restrict, order.getAllOrders);
 app.post('/getAllOrdersByCustId',  sessionMgmt.restrict, order.getAllOrdersByCustId);
 app.get('/searchProduct/:keyword',  sessionMgmt.restrict, product.displayProductSearchResult);
 app.post('/searchProductByAttribute',  sessionMgmt.restrict, product.searchProductByAttribute);
-
+app.post('/postReviewRating',  sessionMgmt.restrict, product.postReviewRating);
 
 //Farmer module
 app.get('/farmerDashboard',  sessionMgmt.restrict, farmer.farmerDashboard);

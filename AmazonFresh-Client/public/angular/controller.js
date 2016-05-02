@@ -28,6 +28,62 @@ amazon.controller('amazonCntrl', function($scope, $http) {
 		});
 	};
 	
+	$scope.getProductReviewsByProductId = function(prodId) {
+		$http({
+			method : "POST",
+			url : '/getProductReviewsByProductId',
+			data : {
+				"prodId": prodId
+			}
+		}).success(function(data) {
+			//checking the response data for statusCode
+			if (data.statusCode === 200) {
+				var rat = 0.0;
+				$scope.reviews = data.reviews.feedback;
+				for(var i = 0; i < $scope.reviews.length; i++){
+					rat += $scope.reviews[i].ratings;
+				}
+				$scope.avgRating = rat;
+			}
+			else {
+				$scope.invalid_login = false;
+				$scope.unexpected_error = true;
+				$scope.errLogin = data.msg;
+				$scope.errUnexp = data.msg;
+			}
+		}).error(function(error) {
+			$scope.unexpected_error = false;
+			$scope.invalid_login = true;
+		});
+	};
+	
+	$scope.postReviewRating = function(rating, farmerId, prodId) {
+		$http({
+			method : "POST",
+			url : '/postReviewRating',
+			data : {
+				"rating": rating,
+				"reviewComment": $scope.reviewComment,
+				"farmerId": farmerId,
+				"prodId": prodId
+			}
+		}).success(function(data) {
+			//checking the response data for statusCode
+			if (data.statusCode === 200) {
+				
+			}
+			else {
+				$scope.invalid_login = false;
+				$scope.unexpected_error = true;
+				$scope.errLogin = data.msg;
+				$scope.errUnexp = data.msg;
+			}
+		}).error(function(error) {
+			$scope.unexpected_error = false;
+			$scope.invalid_login = true;
+		});
+	};
+	
 	$scope.listAllProductsByCategory = function(category) {
 		var oneCatProducts = [];
 		for(var i = 0; i < $scope.allProducts.length; i++){
