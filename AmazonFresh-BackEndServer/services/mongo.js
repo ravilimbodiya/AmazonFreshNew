@@ -31,9 +31,6 @@ var createConnectionPool = function createConnectionPool(){
 
 createConnectionPool();
 
-*//**
- * Connects to the MongoDB Database with the provided URL
- *//*
 exports.connect = function(url, callback){
 	console.log('CONNECTION POOL : '+connPool.length);
 	if(connPool.length > 0){
