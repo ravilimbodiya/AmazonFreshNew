@@ -35,13 +35,16 @@ exports.register = function(req, res){
 	        if (err) {
 	            console.log('Err: ' + err);
 	            res.send(results);
-	            throw err;
+	            //throw err;
 	        } else {
 	            if (results.statusCode == 200) {
 	                console.log('Successful creation of User!');
 	                res.send(results);
+	            } else if (results.statusCode == 402) {
+	                console.log('User already exist.');
+	                res.send(results);
 	            } else {
-	                console('Error Occured!');
+	                console.log('Error Occured!');
 	                res.send(results);
 	            }
 	        }

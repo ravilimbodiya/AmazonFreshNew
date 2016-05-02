@@ -72,7 +72,7 @@ exports.checkAdminLogin = function checkAdminLogin(req,res) {
 	var json_response;
 	if(req.param('email') === 'admin@gmail.com' && req.param('password') === '123' && req.param('adminKey') === '123'){
 		var admin = {name: "Shivakumar"};
-		req.session.adminUser = admin;
+		req.session.user = admin;
 		json_response = {statusCode: 200};
 	    res.send(json_response);
 	} else {
@@ -83,6 +83,6 @@ exports.checkAdminLogin = function checkAdminLogin(req,res) {
 
 exports.adminDashboard = function adminDashboard(req,res) {
 	res.render("adminDashboard", {
-		adminUser : req.session.adminUser
+		adminUser : req.session.user
 	});
 };

@@ -158,7 +158,7 @@ cnn.on('ready', function () {
             util.log(util.format(deliveryInfo.routingKey, message));
             util.log("Message: " + JSON.stringify(message));
             util.log("DeliveryInfo: " + JSON.stringify(deliveryInfo));
-            product.searchProduct(message, function (err, res) {
+            product.searchProductbyattribute(message, function (err, res) {
 
                 //return index sent
                 cnn.publish(m.replyTo, res, {

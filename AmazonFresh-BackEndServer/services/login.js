@@ -39,23 +39,35 @@ exports.checkLogin = function(msg, callback) {
 					    	callback(null, json_responses);
 					    }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
 					    if (hash.toString() == rows[0].hash){
-					    	mongo.connect(mongoURL, function() {
-					    		var coll = mongo.collection('shopping_cart');
-					    		coll.findOne({"cust_id" : jsonParse[0].cust_id}, function(err1,results1){
-					    			if(err1){
-					    				console.log("ERROR: "+err1);
-					    				json_responses = {"statusCode" : 401, "msg": "Some error occurred in fetching shopping cart.", "userType": msg.userType};
-					    				callback(null, json_responses);
-					    			}
-					    			else 
-					    			{
-					    				//console.log(result);
-							        	console.log(jsonParse);
-						                json_responses = {"statusCode" : 200, "userObj" : jsonParse, "shoppingCart":results1, "userType": msg.userType};
-						                callback(null, json_responses);
-					    			}  
-					    		});
-					    	});
+					    	if(msg.userType === 'farmer'){
+					    		if(jsonParse[0].approved === 1){
+					    			console.log(jsonParse);
+					                json_responses = {"statusCode" : 200, "userObj" : jsonParse, "userType": msg.userType};
+					                callback(null, json_responses);
+					    		} else {
+					    			console.log("ERROR: "+err);
+				    				json_responses = {"statusCode" : 401, "msg": "Farmer request is not approved by the Admin yet. Please try later.", "userType": msg.userType};
+				    				callback(null, json_responses);
+					    		}
+		    				} else {
+						    	mongo.connect(mongoURL, function() {
+						    		var coll = mongo.collection('shopping_cart');
+						    		coll.findOne({"cust_id" : jsonParse[0].cust_id}, function(err1,results1){
+						    			if(err1){
+						    				console.log("ERROR: "+err1);
+						    				json_responses = {"statusCode" : 401, "msg": "Some error occurred in fetching shopping cart.", "userType": msg.userType};
+						    				callback(null, json_responses);
+						    			}
+						    			else 
+						    			{
+						    				//console.log(result);
+								        	console.log(jsonParse);
+							                json_responses = {"statusCode" : 200, "userObj" : jsonParse, "shoppingCart":results1, "userType": msg.userType};
+							                callback(null, json_responses);
+						    			}  
+						    		});
+						    	});
+					    	}
 					    } else {
 					    	json_responses = {"statusCode" : 401, "msg" : "Email/Password combination is Invalid.", "userType": msg.userType};
 					    	callback(null, json_responses);

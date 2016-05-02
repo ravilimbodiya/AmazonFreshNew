@@ -39,7 +39,7 @@
 		
 		<div class="col-md-4">
 			<!-- Sign In-->
-			<form role="form">		
+			<form role="form" name="form">		
 				
 				<div class="form-group" style="margin-top: 100px;">
 					<h2>Login</h2>
@@ -47,10 +47,10 @@
 						<strong>{{errMsg}}</strong>
 					</p>
 					<p>E-mail</p>
-					<input class="form-control" type="email" name="email" ng-model="email" autofocus required="" placeholder="Email">
+					<input class="form-control" type="email" name="email" ng-model="email" ng-pattern="emailRegex" autofocus required="" placeholder="Email">
 					<br>
-					<p id="error" ng-hide="invalidEmail" style="float:right;color: red;">
-						<strong>Incorrect Email</strong>
+					<p id="error" ng-show="emailerror" style="float:right;color: red;">
+						<strong>Invalid Email</strong>
 					</p>
 				</div>
 		
@@ -60,8 +60,8 @@
 					
 					<span class="small" style="float:right"><a style="color:#004B91">Forgot Password?</a></span>
 					<br>
-					<p id="error" ng-hide="invalidPassword" style="float:right; color: red;">
-						<strong>Incorrect password</strong>
+					<p id="error" ng-show="pwderror" style="float:right; color: red;">
+						<strong>Password required to login.</strong>
 					</p>
 				</div>
 				
@@ -72,6 +72,9 @@
 					<div class="col-md-6">
 						
 						Signing As...<br>
+						<p id="uterror" ng-show="uterror" style="color: red;">
+							<strong>Please select valid User Type.</strong>
+						</p>
 						<select class="form-control" style="background-color: #669900; color:white; font-size: medium;margin-top:12px; width: 150px;" ng-model="userType" required>
 						  <option value="customer" ng-click="login();">Customer</option>
 						  <option value="farmer" ng-click="login();">Farmer</option>

@@ -2,11 +2,13 @@
 <html ng-app="amazonFreshApp" ng-controller="amazonCntrl">
   <head>
     <title>Welcome | AmazonFresh</title>
-    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <!-- Latest compiled and minified CSS -->
 	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
 	<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
-	<link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel='stylesheet' href='/stylesheets/style.css' />
     <link rel='stylesheet' href='/stylesheets/carousel.css' />
  
 	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
@@ -16,7 +18,7 @@
   	<script	src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
   	<script src="/js/prefixfree.min.js"></script>
   </head>
-  <body>
+  <body ng-init="searchProductByAttribute('<%=key%>');">
   	<header>
   		<nav class="navbar navbar-default" id="headerNav">
 		  <div class="container-fluid">
@@ -68,95 +70,48 @@
 		  		</div>
 	    	</div>
     	</section>
-    	<section class="decoration">
-    		<div style="margin-top: 70px;"></div>
-	    	<div class="row">
-		    	<div class="col-md-3">
-		    		<img id="prodImage" src="../images/user.jpg">
-		    	</div>
-		    	<div class="col-md-9" style="padding-left: 5%;">
-		    		<div class="prodDesc">
-		    			<span><%=selectedProduct.name%></span><br>
-		    			<span><%=selectedProduct.description%></span>
-		    		</div>
-		    		<div>
-		    			<span>Other Products by <a href="#" style="color: blue;"><%=selectedProduct.farmer_id%></a></span>
-		    		</div>
-		    		<br><br><br>
-		    		<div>
-		    			<span><label class="price">$<%=selectedProduct.price%></label></span>
-		    		</div>
-		    		<br>
-		    		<div>
-		    			<span style="width: 10%; float: left;"><input type="number" ng-model="quantity" name="quantity" value="1" class="form-control" required/></span>
-		    			<span class="add-to-cart"><button class="prodDescAddToCart btn btn-default" ng-click="addToCart('selectedProd', quantity, 'prodImage');" role="button" >Add to cart</button></span>
-		    		</div>
-		  		</div>
-	    	</div>
+    	
     	<section>
-    	<section class="decoration">
-	    	<div class="row">
-		    	<div><h2>Product Rating: <span style="color: #7db641;"><%=selectedProduct.rating%> Star</span></h2></div>
-		    	<div class="col-md-8">
+    	<div class="container marketing" style="width: 100%;">
+			
 
-					<span><h4>Please write Review for this product:<h4></span>
-		    		<span>
-		    			<textarea name="reviewComment" class="form-control" placeholder="Your Review..."></textarea>
-		    		</span>
-		    	</div>
-		    	<div class="col-md-4">
-		    		<span><h4>Please Rate this product:<h4></span>
-		    		<fieldset class="rating">
-					    <input type="radio" id="star5" name="rating" value="5" /><label style="margin-right: 10px;" for="star5" class="glyphicon glyphicon-star" title="Rocks!">5 stars</label>
-					    <input type="radio" id="star4" name="rating" value="4" /><label style="margin-right: 10px;" for="star4"class="glyphicon glyphicon-star"  title="Pretty good">4 stars</label>
-					    <input type="radio" id="star3" name="rating" value="3" /><label style="margin-right: 10px;" for="star3"class="glyphicon glyphicon-star"  title="Meh">3 stars</label>
-					    <input type="radio" id="star2" name="rating" value="2" /><label style="margin-right: 10px;" for="star2"class="glyphicon glyphicon-star"  title="Kinda bad">2 stars</label>
-					    <input type="radio" id="star1" name="rating" value="1" /><label style="margin-right: 10px;" for="star1"class="glyphicon glyphicon-star"  title="Sucks big time">1 star</label>
-					</fieldset>
-		    		
-		    	</div>
-	    	</div>
-    	<section>
-    	<hr>
-    	<section class="decoration">
-	    	<div class="row">
-		    	<div><h2>Product Reviews</h2></div>
-		    	<div>
-		    		<div class="panel panel-success">
-					  <div class="panel-heading" >
-					    <h3 class="panel-title">Review 1</h3>
-					  </div>
-					  <div class="panel-body">
-					    Review Comment: Good product!
-					  </div>
+		    <!-- Carousel
+		    ================================================== -->
+		    <div ng-show="searchResSection">
+				<div class="mainTitle">
+					<div class="container">
+						<h1>Search Result</h1>
 					</div>
-		    	</div>
-		    	<div>
-		    		<div class="panel panel-success">
-					  <div class="panel-heading" >
-					    <h3 class="panel-title">Review 2</h3>
-					  </div>
-					  <div class="panel-body">
-					    Review Comment: Good product!
-					  </div>
+				</div>
+
+
+				<div class="highlightSection">
+					<div class="container" style="padding: 0; width: 90%;">
+						<div class="row">
+							<div class="col-lg-4" ng-repeat="product in allProducts track by $index" style="margin-bottom: 15px;">
+								<div class="media">
+								  <img id="{{product.product_id}}" class="img-circle" src="../images/temp/nepali-momo.png" width="250" height="200" alt="Generic placeholder image">
+						          <h2>{{product.name}}</h2>
+						          <p>{{product.description}}</p>
+						          
+						          <span style="width: 20%; float: left;"><input type="number" ng-model="quantity" name="quantity" value="1" class="form-control" required/></span>
+						          <span style="width: 60%;" class="add-to-cart"><button class="btn btn-default" ng-click="addToCart(product, quantity, product.product_id);" role="button" >&dollar;<b>{{product.price}}</b> Add to cart &raquo;</button></span>
+						          <span><a class="btn" role="button" target="_blank" href="/showProduct/{{product.product_id}}" style="float: right; color: #7db641;">[+] Details</a></span>
+								</div>
+							</div>
+						
+						</div>
+				
 					</div>
-		    	</div>
-		    	<div>
-		    		<div class="panel panel-success">
-					  <div class="panel-heading" >
-					    <h3 class="panel-title">Review 3</h3>
-					  </div>
-					  <div class="panel-body">
-					    Review Comment: Good product!
-					  </div>
-					</div>
-		    	</div>
-	    	</div>
-    	<section>
+		        </div>
+		    </div>
+
+
+
+    	</section>
     </div>
 
-
-    <footer>
+    <footer style="padding: 0;">
     	<div id="refreshFooter">
 		    <div class="column" id="column1">
 		        <a id="lnk-gbl-help" href="#">Help</a>
@@ -176,5 +131,6 @@
     <script src="/js/holder.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
   <script src="/angular/controller.js"></script>
+  
   </body>
 </html>

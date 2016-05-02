@@ -9,6 +9,8 @@ amazon.controller('amazonCntrl', function($scope, $http) {
 		}).success(function(data) {
 			//checking the response data for statusCode
 			if (data.statusCode === 200) {
+				$scope.allCatSection = true;
+				$scope.oneCatSection = false;
 				$scope.allProducts = data.result;
 				//$scope.itemsInCart = data.shoppingCart.items.length;
 			}
@@ -23,6 +25,49 @@ amazon.controller('amazonCntrl', function($scope, $http) {
 			$scope.invalid_login = true;
 			$scope.errLogin = data.msg;
 			$scope.errUnexp = data.msg;
+		});
+	};
+	
+	$scope.listAllProductsByCategory = function(category) {
+		var oneCatProducts = [];
+		for(var i = 0; i < $scope.allProducts.length; i++){
+			if($scope.allProducts[i].product_type === category){
+				oneCatProducts.push($scope.allProducts[i]);
+			}
+		}
+		$scope.oneCatProducts = oneCatProducts;
+		$scope.category = category;
+		$scope.allCatSection = false;
+		$scope.oneCatSection = true;
+	};
+	
+	
+	$scope.searchProductByAttribute = function(key) {
+		$http({
+			method : "POST",
+			url : '/searchProductByAttribute',
+			data:	{
+				'key': key
+			}
+		}).success(function(data) {
+			//checking the response data for statusCode
+			if (data.statusCode === 200) {
+				$scope.searchResSection = true;
+				//$scope.oneCatSection = false;
+				$scope.allProducts = data.result;
+				//$scope.itemsInCart = data.shoppingCart.items.length;
+			}
+			else {
+				$scope.invalid_login = false;
+				$scope.unexpected_error = true;
+				$scope.errLogin = data.msg;
+				$scope.errUnexp = data.msg;
+			}
+		}).error(function(error) {
+			$scope.unexpected_error = false;
+			$scope.invalid_login = true;
+			//$scope.errLogin = data.msg;
+			//$scope.errUnexp = data.msg;
 		});
 	};
 	

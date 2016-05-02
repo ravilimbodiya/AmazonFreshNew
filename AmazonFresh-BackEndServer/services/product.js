@@ -124,7 +124,7 @@ exports.updateProduct = function(msg, callback){
 
 exports.searchProductbyattribute = function(msg, callback){
 
-    var query="select * from product where name like '%?%' OR farmer_id like '%?%' OR price like '%?%' OR description like '%?%' OR reviews like '%?%' OR ratings like '%?%' OR prod_id like '%?%'";
+    var query="select * from product where name like '%"+msg.keyword+"%' OR description like '%"+msg.keyword+"%'";
     var json_responses;
     console.log("Query is:"+query);
 
@@ -150,7 +150,7 @@ exports.searchProductbyattribute = function(msg, callback){
                 callback(null, json_responses);
             }
         }
-    }, query, [msg.keyword,msg.keyword,msg.keyword,msg.keyword,msg.keyword,msg.keyword,msg.keyword]);
+    }, query);
 
 };
 

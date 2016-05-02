@@ -41,12 +41,12 @@
 			        <li class="dropdown">
 			          <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="margin-right: 10px; padding: 5px;" role="button" aria-haspopup="true" aria-expanded="false"><img alt="" src="/images/user.png" class="profilePic"><span class="caret"></span></a>
 			          <ul class="dropdown-menu">
-			            <li><a href="#">User Name<br><span style="font-size: 9px;">View Profile</span></a></li>
-			            <li><a href="/viewPurchaseHistory">Purchase History</a></li>
-			            <li><a href="#">Help</a></li>
-			            <li><a href="#">Settings</a></li>
+			            <li style="padding: 10px;"><a href="#">User Name<br><span style="font-size: 9px;">View Profile</span></a></li>
+			            <li style="padding: 10px;"><a href="/viewPurchaseHistory">Purchase History</a></li>
+			            <li style="padding: 10px;"><a href="#">Help</a></li>
+			            <li style="padding: 10px;"><a href="#">Settings</a></li>
 			            <li role="separator" class="divider"></li>
-			            <li><a href="/logout">Log out</a></li>
+			            <li style="padding: 10px;"><a href="/logout">Log out</a></li>
 			          </ul>
 			        </li>
 			     </ul>
@@ -66,19 +66,19 @@
 					    <span class="caret"></span>
 					  </button>
 					  <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-					    <li><a href="#">Produce</a></li>
-					    <li><a href="#">Perishables</a></li>
-					    <li><a href="#">Prepared Foods</a></li>
-					    <li><a href="#">Pantry</a></li>
-					    <li><a href="#">Speciality</a></li>
+					    <li><span ng-click="listAllProductsByCategory('produce');" style="padding: 15px;">Produce</span></li>
+					    <li><span ng-click="listAllProductsByCategory('perishable');" style="padding: 15px;">Perishables</span></li>
+					    <li><span ng-click="listAllProductsByCategory('preparedfoods');" style="padding: 15px;">Prepared Foods</span></li>
+					    <li><span ng-click="listAllProductsByCategory('pantry');" style="padding: 15px;">Pantry</span></li>
+					    <li><span ng-click="listAllProductsByCategory('speciality');" style="padding: 15px;">Speciality</span></li>
 					  </ul>
 					</div>
 		    	</div>
 		    	<div class="col-md-10">
 		    		<div class="input-group">
-				      <input type="text" class="form-control" placeholder="Amazon Fresh Search">
+				      <input type="text" class="form-control" ng-model="searchKeyword" placeholder="Amazon Fresh Search">
 				      <span class="input-group-btn">
-				        <button class="btn btn-default" type="button">Go!</button>
+				        <a class="btn btn-default" href="/searchProduct/{{searchKeyword}}" type="button">Go!</a>
 				      </span>
 				    </div>
 		  		</div>
@@ -157,40 +157,65 @@
 
 		    <!-- Carousel
 		    ================================================== -->
-
-			<div class="mainTitle">
-			<div class="container">
-			<h1>Shop All Categories</h1>
-			</div>
-			</div>
-
-		    <!-- Marketing messaging and featurettes
-		    ================================================== -->
-		 
-			
-			
-
-			
-
-			<div class="highlightSection">
-			<div class="container" style="padding: 0; width: 90%;">
-			<div class="row">
-				<div class="col-lg-4" ng-repeat="product in allProducts track by $index" style="margin-bottom: 15px;">
-					<div class="media">
-					  <img id="{{product.product_id}}" class="img-circle" src="../images/temp/nepali-momo.png" width="250" height="200" alt="Generic placeholder image">
-			          <h2>{{product.name}}</h2>
-			          <p>{{product.description}}</p>
-			          
-			          <span style="width: 20%; float: left;"><input type="number" ng-model="quantity" name="quantity" value="1" class="form-control" required/></span>
-			          <span style="width: 60%;" class="add-to-cart"><button class="btn btn-default" ng-click="addToCart(product, quantity, product.product_id);" role="button" >&dollar;<b>{{product.price}}</b> Add to cart &raquo;</button></span>
-			          <span><a class="btn" role="button" target="_blank" href="/showProduct/{{product.product_id}}" style="float: right; color: #7db641;">[+] Details</a></span>
+		    <div ng-show="allCatSection">
+				<div class="mainTitle">
+					<div class="container">
+						<h1>Shop All Categories</h1>
 					</div>
 				</div>
-			
-			</div>
-		
-			</div>
-	      
+
+
+				<div class="highlightSection">
+					<div class="container" style="padding: 0; width: 90%;">
+						<div class="row">
+							<div class="col-lg-4" ng-repeat="product in allProducts track by $index" style="margin-bottom: 15px;">
+								<div class="media">
+								  <img id="{{product.product_id}}" class="img-circle" src="../images/temp/nepali-momo.png" width="250" height="200" alt="Generic placeholder image">
+						          <h2>{{product.name}}</h2>
+						          <p>{{product.description}}</p>
+						          
+						          <span style="width: 20%; float: left;"><input type="number" ng-model="quantity" name="quantity" value="1" class="form-control" required/></span>
+						          <span style="width: 60%;" class="add-to-cart"><button class="btn btn-default" ng-click="addToCart(product, quantity, product.product_id);" role="button" >&dollar;<b>{{product.price}}</b> Add to cart &raquo;</button></span>
+						          <span><a class="btn" role="button" target="_blank" href="/showProduct/{{product.product_id}}" style="float: right; color: #7db641;">[+] Details</a></span>
+								</div>
+							</div>
+						
+						</div>
+				
+					</div>
+		        </div>
+		    </div>
+
+
+		     <div ng-show="oneCatSection">
+				<div class="mainTitle">
+					<div class="container">
+						<h1>Shop {{category}} Category</h1>
+					</div>
+				</div>
+
+
+				<div class="highlightSection">
+					<div class="container" style="padding: 0; width: 90%;">
+						<div class="row">
+							<div class="col-lg-4" ng-repeat="prod in oneCatProducts track by $index" style="margin-bottom: 15px;">
+								<div class="media">
+								  <img id="{{prod.product_id}}" class="img-circle" src="../images/temp/nepali-momo.png" width="250" height="200" alt="Generic placeholder image">
+						          <h2>{{prod.name}}</h2>
+						          <p>{{prod.description}}</p>
+						          
+						          <span style="width: 20%; float: left;"><input type="number" ng-model="quantity" name="quantity" value="1" class="form-control" required/></span>
+						          <span style="width: 60%;" class="add-to-cart"><button class="btn btn-default" ng-click="addToCart(prod, quantity, prod.product_id);" role="button" >&dollar;<b>{{prod.price}}</b> Add to cart &raquo;</button></span>
+						          <span><a class="btn" role="button" target="_blank" href="/showProduct/{{prod.product_id}}" style="float: right; color: #7db641;">[+] Details</a></span>
+								</div>
+							</div>
+						
+						</div>
+				
+					</div>
+		        </div>
+		    </div>
+
 
     	</section>
     </div>

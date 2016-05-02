@@ -64,45 +64,47 @@ app.get('/signin',index.signIn);
 app.get('/signup', index.signUp);
 app.get('/homepage', login.redirectToHomepage);
 app.get('/logout', login.logout);
-app.get('/showProduct/:productId', product.showProductDescription);
-app.get('/shoppingCart', order.showShoppingCart);
-app.get('/checkout', order.checkout);
-app.get('/makePayment', order.makePayment);
-app.get('/viewPurchaseHistory', order.viewPurchaseHistory);
+app.get('/showProduct/:productId', sessionMgmt.restrict, product.showProductDescription);
+app.get('/shoppingCart',  sessionMgmt.restrict, order.showShoppingCart);
+app.get('/checkout',  sessionMgmt.restrict, order.checkout);
+app.get('/makePayment',  sessionMgmt.restrict, order.makePayment);
+app.get('/viewPurchaseHistory',  sessionMgmt.restrict, order.viewPurchaseHistory);
 app.post('/checkLogin', login.checkLogin);
 app.post('/register', user.register);
-app.post('/listAllProducts', product.listAllProduct);
-app.post('/addToCart', order.addToCart);
-app.post('/getShoppingCart', order.getShoppingCart);
-app.post('/removeItemFromCart', order.removeItemFromCart);
-app.post('/placeOrder', order.placeOrder);
-app.post('/getExistingAddress', customer.getExistingAddress);
-app.post('/getAllOrders', order.getAllOrders);
-app.post('/getAllOrdersByCustId', order.getAllOrdersByCustId);
+app.post('/listAllProducts',  sessionMgmt.restrict, product.listAllProduct);
+app.post('/addToCart',  sessionMgmt.restrict, order.addToCart);
+app.post('/getShoppingCart',  sessionMgmt.restrict, order.getShoppingCart);
+app.post('/removeItemFromCart',  sessionMgmt.restrict, order.removeItemFromCart);
+app.post('/placeOrder',  sessionMgmt.restrict, order.placeOrder);
+app.post('/getExistingAddress',  sessionMgmt.restrict, customer.getExistingAddress);
+app.post('/getAllOrders',  sessionMgmt.restrict, order.getAllOrders);
+app.post('/getAllOrdersByCustId',  sessionMgmt.restrict, order.getAllOrdersByCustId);
+app.get('/searchProduct/:keyword',  sessionMgmt.restrict, product.displayProductSearchResult);
+app.post('/searchProductByAttribute',  sessionMgmt.restrict, product.searchProductByAttribute);
 
 
 //Farmer module
-app.get('/farmerDashboard', farmer.farmerDashboard);
-app.get('/addProduct', farmer.addProduct);
-app.get('/loadProducts', farmer.loadProducts);
-app.post('/renderAddProduct', farmer.renderAddProduct);
-app.post('/submitAddProduct', farmer.submitAddProduct);
+app.get('/farmerDashboard',  sessionMgmt.restrict, farmer.farmerDashboard);
+app.get('/addProduct',  sessionMgmt.restrict, farmer.addProduct);
+app.get('/loadProducts',  sessionMgmt.restrict, farmer.loadProducts);
+app.post('/renderAddProduct',  sessionMgmt.restrict, farmer.renderAddProduct);
+app.post('/submitAddProduct',  sessionMgmt.restrict, farmer.submitAddProduct);
 
 //Admin module
 app.get('/admin', index.adminSignIn);
 app.post('/adminLogin', index.checkAdminLogin);
-app.get('/adminDashboard', index.adminDashboard);
-app.get('/adminGetFarmerList', admin.adminGetFarmerList);
-app.get('/adminGetFarmerApprovalPendingList', admin.adminGetFarmerApprovalPendingList);
-app.get('/adminApproveFarmer', admin.adminApproveFarmer);
-app.get('/adminDisapproveFarmer', admin.adminDisapproveFarmer);
-app.get('/adminGetFarmerSearchList', admin.adminGetFarmerSearchList);
-app.get('/adminGetCustomerList', admin.adminGetCustomerList);
-app.get('/adminGetCustomerApprovalPendingList', admin.adminGetCustomerApprovalPendingList);
-app.get('/adminApproveCustomer', admin.adminApproveCustomer);
-app.get('/adminDisapproveCustomer', admin.adminDisapproveCustomer);
-app.get('/adminGetCustomerSearchList', admin.adminGetCustomerSearchList);
-app.get('/testGraph', admin.testGraph);
+app.get('/adminDashboard',  sessionMgmt.restrict, index.adminDashboard);
+app.get('/adminGetFarmerList',  sessionMgmt.restrict, admin.adminGetFarmerList);
+app.get('/adminGetFarmerApprovalPendingList',  sessionMgmt.restrict, admin.adminGetFarmerApprovalPendingList);
+app.get('/adminApproveFarmer',  sessionMgmt.restrict, admin.adminApproveFarmer);
+app.get('/adminDisapproveFarmer',  sessionMgmt.restrict, admin.adminDisapproveFarmer);
+app.get('/adminGetFarmerSearchList',  sessionMgmt.restrict, admin.adminGetFarmerSearchList);
+app.get('/adminGetCustomerList',  sessionMgmt.restrict, admin.adminGetCustomerList);
+app.get('/adminGetCustomerApprovalPendingList',  sessionMgmt.restrict, admin.adminGetCustomerApprovalPendingList);
+app.get('/adminApproveCustomer',  sessionMgmt.restrict, admin.adminApproveCustomer);
+app.get('/adminDisapproveCustomer',  sessionMgmt.restrict, admin.adminDisapproveCustomer);
+app.get('/adminGetCustomerSearchList',  sessionMgmt.restrict, admin.adminGetCustomerSearchList);
+app.get('/testGraph',  sessionMgmt.restrict, admin.testGraph);
 
 
 

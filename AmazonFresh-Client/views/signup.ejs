@@ -42,39 +42,57 @@
 		<div class="col-md-4"></div>
 		
 		<div class="col-md-4" id="contentArea">
-		<form name="form">
+		<form name="form" id="profileForm">
 			<!-- Sign Up-->
-			<div>		
-				<label align="left" style="margin-top: 20px;"><h1>Create New Account</h1></label>{{form.firstName.$valid}}
+			<div ng-hide="personalInfoSection1">		
+				<label align="left" style="margin-top: 20px;"><h1>Create New Account</h1></label>
 				<div class="row" style="margin-top: 20px;">	
 					<div class="col-md-6">
 						<p id="fnerror" ng-show="fnerror" style="color: red;">
 							<strong>Invalid First Name</strong>
 						</p>
-						<input class="form-control" type="text" name="firstName" ng-model="firstName" autofocus placeholder="Your First Name" required ng-pattern="firstNameRegex">
+						<input class="form-control" type="text" name="firstName" ng-model="firstName" autofocus placeholder="Your First Name"  ng-pattern="firstNameRegex">
 					</div>
 					<div class="col-md-6">
-						<input class="form-control" type="text" name="lastName" ng-model="lastName" pattern="\w+.*" placeholder="Your Last Name" required>
+						<p id="lnerror" ng-show="lnerror" style="color: red;">
+							<strong>Invalid Last Name</strong>
+						</p>
+						<input class="form-control" type="text" name="lastName" ng-model="lastName" ng-pattern="lastNameRegex" placeholder="Your Last Name" >
 					</div>	
 				</div>
 				
-				<div class="form-group" style="margin-top: 10px;">				
-					<input class="form-control" type="email" name="email" ng-model="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$" placeholder="Email" required>					
+				<div class="form-group" style="margin-top: 10px;">	
+					<p id="emailerror" ng-show="emailerror" style="color: red;">
+							<strong>Invalid Email.</strong>
+						</p>			
+					<input class="form-control" type="email" name="email" ng-model="email" ng-pattern="emailRegex" placeholder="Email" >					
 				</div>
 				
-				<div class="form-group" style="margin-top: 10px;">				
-					<input class="form-control" type="password" name="password" ng-model="password" placeholder="Password" required>					
+				<div class="form-group" style="margin-top: 10px;">	
+					<p id="pwderror" ng-show="pwderror" style="color: red;">
+							<strong>Invalid Password</strong>
+						</p>			
+					<input class="form-control" type="password" name="password" ng-model="password" placeholder="Password" ng-pattern="passwordRegex" >					
 				</div>
 				
-				<div class="form-group" style="margin-top: 10px;">				
-					<input class="form-control" type="password" name="cpassword" ng-model="cpassword" placeholder="Confirm Password" required>					
+				<div class="form-group" style="margin-top: 10px;">	
+					<p id="cnfpasserror" ng-show="cnfpasserror" style="color: red;">
+							<strong>Confirm Password does not match.</strong>
+						</p>			
+					<input class="form-control" type="password" name="cpassword" ng-model="cpassword" placeholder="Confirm Password" ng-pattern="cnfPasswordRegex" >					
 				</div>
 				
-				<div class="form-group" style="margin-top: 10px;">				
-					<input class="form-control" type="text" name="ssn" ng-model="ssn" pattern="^\d{3}-\d{2}-\d{4}$" placeholder="Your SSN (Example: 000-00-0000)" required>					
+				<div class="form-group" style="margin-top: 10px;">	
+					<p id="ssnerror" ng-show="ssnerror" style="color: red;">
+							<strong>Invalid SSN. Must be in XXX-XX-XXXX format.</strong>
+						</p>			
+					<input class="form-control" type="text" name="ssn" ng-model="ssn" ng-pattern="ssnRegex" placeholder="Your SSN (Example: XXX-XX-XXXX)" >					
 				</div>
 				Registering As...<br>
-				<select class="form-control" style="margin-top: 5px;" ng-model="userType" required>
+					<p id="uterror" ng-show="uterror" style="color: red;">
+							<strong>Please select valid User Type.</strong>
+						</p>
+				<select class="form-control" style="margin-top: 5px;" ng-model="userType" ng-pattern="userTypeRegex" >
 				  <option value="customer">Customer</option>
 				  <option value="farmer">Farmer</option>
 				</select>
@@ -89,23 +107,32 @@
 					<h3 align="left" style="margin-top: 10px;">Enter Address</h3>
 					
 					<div class="form-group" style="margin-top: 10px;">
-						
-						<input class="form-control" type="text" name="address" ng-model="address" placeholder="Address" required>					
+						<p id="adderror" ng-show="adderror" style="color: red;">
+							<strong>Invalid Address</strong>
+						</p>
+						<input class="form-control" type="text" name="address" ng-model="address" ng-pattern="addressRegex" placeholder="Address" >					
 					</div>
 					<div class="form-group" style="margin-top: 10px;">			
-						
-						<span  style="width: 70%; float: left; margin-right: 10px;"><input class="form-control" type="text" name="Zipcode" ng-model="zipcode" placeholder="Zipcode" required></span>
+						<p id="ziperror" ng-show="ziperror" style="color: red;">
+							<strong>Invalid Zipcode</strong>
+						</p>
+						<span  style="width: 70%; float: left; margin-right: 10px;"><input class="form-control" type="text" ng-pattern="zipcodeRegex" name="zipcode" ng-model="zipcode" placeholder="Zipcode (Example: XXXXX)" ></span>
 						<span  style="width: 20%"><button class="btn btn-success" ng-click="getCityState(zipcode);">Lookup</button></span>
 					</div>
 					
 					<div class="form-group" style="margin-top: 10px;">		
-						
-						<input class="form-control" type="text" name="city" ng-model="city" placeholder="City" required>
+						<p id="cityerror" ng-show="cityerror" style="color: red;">
+							<strong>Invalid City Name</strong>
+						</p>
+						<input class="form-control" type="text" name="city" ng-pattern="cityRegex" ng-model="city" placeholder="City" >
 					</div>
 					
 					
-					<div class="form-group">	
-						<input type="text" ng-model="state" class="date form-control" placeholder="State (Example: CA)">
+					<div class="form-group">
+						<p id="stateerror" ng-show="stateerror" style="color: red;">
+							<strong>Invalid State Name</strong>
+						</p>	
+						<input type="text" ng-model="state" class="date form-control" ng-pattern="stateRegex" placeholder="State (Example: CA)">
 					</div>
 					
 					
@@ -121,24 +148,33 @@
 						<h3 align="left" style="margin-top: 10px;">Enter Card Details</h3>
 						
 						<div class="form-group" style="margin-top: 10px;">
-							
-							<input class="form-control" type="text" name="cardNumber" ng-model="cardNumber" placeholder="Card Number" required>					
+							<p id="ccnoerror" ng-show="ccnoerror" style="color: red;">
+								<strong>Invalid Card Number</strong>
+							</p>
+							<input class="form-control" type="text" name="cardNumber" ng-pattern="ccnoRegex" ng-model="cardNumber" placeholder="Card Number" >					
 						</div>
 						
 						
 						<div class="form-group" style="margin-top: 10px;">		
-							
-							<input class="form-control" type="text" name="nameOnCard" ng-model="nameOnCard" placeholder="Name on Card" required>
+							<p id="nocerror" ng-show="nocerror" style="color: red;">
+								<strong>Invalid Name</strong>
+							</p>
+							<input class="form-control" type="text" name="nameOnCard" ng-pattern="nameOnCardRegex" ng-model="nameOnCard" placeholder="Name on Card" >
 						</div>
 						
 						
-						<div class="form-group">	
-							<input type="text" id='datepicker' ng-model="expiry" class="date form-control" placeholder="Expiration date (mm/dd/yyyy)">
+						<div class="form-group">
+							<p id="expdateerror" ng-show="expdateerror" style="color: red;">
+								<strong>Invalid Expiry Date</strong>
+							</p>	
+							<input type="text" id='datepicker' name = "expiry" ng-model="expiry" ng-pattern="expiryRegex" class="date form-control" placeholder="Expiration date (mm/dd/yyyy)">
 						</div>
 					    
 					    <div class="form-group" style="margin-top: 10px;">
-					    	
-							<input class="form-control" type="number" name="cvv" ng-model="cvv" placeholder="CVV" required>
+					    	<p id="cvverror" ng-show="cvverror" style="color: red;">
+								<strong>Invalid CVV</strong>
+							</p>
+							<input class="form-control" type="number" name="cvv" ng-pattern="cvvRegex" ng-model="cvv" placeholder="3 Digit CVV" >
 						</div>
 							<br>
 					    <br>
@@ -185,6 +221,22 @@
 		</div>
 	</div>
 	</footer>
+	<script>
+		var dateToday = new Date();
+		var dates = $("#datepicker").datepicker({
+		    defaultDate: "+1w",
+		    changeMonth: true,
+		    numberOfMonths: 2,
+		    minDate: dateToday,
+		    onSelect: function(selectedDate) {
+		        var option = this.id == "datepicker" ? "minDate" : "maxDate",
+		            instance = $(this).data("datepicker"),
+		            date = $.datepicker.parseDate(instance.settings.dateFormat || $.datepicker._defaults.dateFormat, selectedDate, instance.settings);
+		        dates.not(this).datepicker("option", option, date);
+		    }
+		});
+		</script>
+
 	<!-- AngularJs library --> 	
 	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
 	<!-- AngularJs library --> 	

@@ -78,7 +78,7 @@ exports.submitAddProduct = function(req, res)
 	//var prodId = this.IDGenerator();
 	//alert("ProductId: " + prodId);
 	var msg_payload = {
-						farmerId 	 : req.session.fmr_id,
+						farmerId 	 : req.session.user[0].farmer_id,
 						prodType 	 : req.session.prodType,
 						prodName 	 : req.param("prodName"),
 						price 	 	 : req.param("price"),

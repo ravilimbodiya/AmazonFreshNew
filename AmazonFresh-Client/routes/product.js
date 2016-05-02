@@ -83,9 +83,13 @@ exports.updateProduct = function updateProduct(req, res) {
     });
 };
 
+exports.displayProductSearchResult = function displayProductSearchResult(req, res) {
+	res.render('searchResult', {key: req.param('keyword')});
+};
+
 exports.searchProductByAttribute = function searchProductByAttribute(req, res) {
     var msg_Payload = {
-        'keyword': req.param('keyword')
+        'keyword': req.param('key')
     };
 
     mq_client.make_request('product_searchProduct', msg_Payload, function (err, results) {
