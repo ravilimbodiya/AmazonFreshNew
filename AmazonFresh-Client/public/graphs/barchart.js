@@ -1,22 +1,15 @@
   $(document).ready(function () {
     
-    $(".clickRevenuePerDay").on("click", function () {
+    $(".ShowRevenuePerWeek").on("click", function () {
+    $('#chart1').empty();   // reload the chart
     var d = $("#revenueDate").text();
     alert(d);
     var param = { date: "2008-08-10",
                   days: 7}
     $.getJSON("\ testGraph",  param, function(res){
         
-    //    var s1 = res.s1;
+    var r1 = res.s1;
     
-    var r1 = [['2008-08-10 1:00PM', 112], ['2008-08-11 1:00PM', 122], ['2008-08-12 1:00PM', 104], 
-              ['2008-08-13 1:00PM', 121],  ['2008-08-14 1:00PM', 161],  ['2008-08-15 1:00PM', 173], 
-              ['2008-08-16 1:00PM', 173]];
-    
-    var r2 = [['2008-08-10', 112], ['2008-08-11', 122], ['2008-08-12', 104], 
-              ['2008-08-13', 121],  ['2008-08-14', 161],  ['2008-08-15', 173], ['2008-08-16', 173]];
-
- 
     plot1 = $.jqplot("chart1", [r1, r1], {
         // Turns on animatino for all series in this plot.
         animate: true,
@@ -67,7 +60,7 @@
         axes: {
             // These options will set up the x axis like a category axis.
             xaxis: {
-                label: "Revenue For one week ",
+                label: "Date",
                 tickInterval: "1 day",
                 drawMajorGridlines: false,
                 drawMinorGridlines: true,
@@ -112,4 +105,146 @@
     });
     });
     });
+
+//////////////***************      Start showRidesPerArea ***************///////////////////////////
+        
+        $(".getStatesAndGenerateGraph").on("click", function () {
+        $('#chart2').empty();       // reload the chart
+        i=0;
+        var ticks =[];
+        $('.states_checkbox:checked').each(function () {
+           ticks[i++] = "'"+$(this).val()+"'";
+       });
+        alert(ticks);
+        var param = ticks;
+        $.getJSON("\ testGraph_3",  param, function(res){
+        var s1 = res.s1;
+         
+        plot2 = $.jqplot('chart2', [s1], {
+            title : "Total Rides Per Area",
+            animateReplot: true,
+            seriesDefaults: {
+                renderer:$.jqplot.BarRenderer,
+                pointLabels: { show: true }
+            },
+            axes: {
+                xaxis: {
+                    label: "States",
+                    renderer: $.jqplot.CategoryAxisRenderer,
+                    ticks: ticks
+                },
+                yaxis: {
+                label: "Total Rides"
+
+            }}
+        });
+     
+        $('#chart2').bind('jqplotDataHighlight', 
+            function (ev, seriesIndex, pointIndex, data) {
+                $('#info2').html('series: '+seriesIndex+', point: '+pointIndex+', data: '+data[1]);
+            }
+        );
+             /*
+        $('#chart2').bind('jqplotDataUnhighlight', 
+            function (ev) {
+                $('#info2').html('Nothing');
+            }
+        );*/}
+    });
+
+//////////////***************      end  showRidesPerArea ***************///////////////////////////
+//////////////***************      Start showRidesPerDriver ***************///////////////////////////
+        
+        $(".getDriverMonthAndGenerateGraph").on("click", function () {
+        $('#chart3').empty();       // reload the chart
+        i=0;
+        var ticks =[];
+        $('.Driver_month_checkbox:checked').each(function () {
+           ticks[i++] = "'"+$(this).val()+"'";
+       });
+        alert(ticks);
+        $.getJSON("\ testGraph_3",  param, function(res){
+
+        var s1 = res.s1;
+         
+        plot2 = $.jqplot('chart3', [s1], {
+            title : "Total Rides Per Driver",
+            animateReplot: true,
+            seriesDefaults: {
+                renderer:$.jqplot.BarRenderer,
+                pointLabels: { show: true }
+            },
+            axes: {
+                xaxis: {
+                    label: "Month",
+                    renderer: $.jqplot.CategoryAxisRenderer,
+                    ticks: ticks
+                },
+                yaxis: {
+                label: "Total Rides"
+
+            }}
+        });
+     
+        $('#chart3').bind('jqplotDataHighlight', 
+            function (ev, seriesIndex, pointIndex, data) {
+                $('#info3').html('series: '+seriesIndex+', point: '+pointIndex+', data: '+data[1]);
+            }
+        );
+             /*
+        $('#chart2').bind('jqplotDataUnhighlight', 
+            function (ev) {
+                $('#info3').html('Nothing');
+            }
+        );*/}
+    });
+
+//////////////***************      end  showRidesPerDriver ***************///////////////////////////
+//////////////***************      Start showRidesPerCustomer ***************///////////////////////////
+        
+        $(".getCustomerMonthAndGenerateGraph").on("click", function () {
+        $('#chart4').empty();       // reload the chart
+        i=0;
+        var ticks =[];
+        $('.Customer_month_checkbox:checked').each(function () {
+           ticks[i++] = "'"+$(this).val()+"'";
+       });
+        alert(ticks);
+        $.getJSON("\ testGraph_3",  param, function(res){
+        var s1 =res.s1
+         
+        plot2 = $.jqplot('chart4', [s1], {
+            title : "Total Rides Per Customer",
+            animateReplot: true,
+            seriesDefaults: {
+                renderer:$.jqplot.BarRenderer,
+                pointLabels: { show: true }
+            },
+            axes: {
+                xaxis: {
+                    label: "Month",
+                    renderer: $.jqplot.CategoryAxisRenderer,
+                    ticks: ticks
+                },
+                yaxis: {
+                label: "Total Rides"
+
+            }}
+        });
+     
+        $('#chart4').bind('jqplotDataHighlight', 
+            function (ev, seriesIndex, pointIndex, data) {
+                $('#info4').html('series: '+seriesIndex+', point: '+pointIndex+', data: '+data[1]);
+            }
+        );
+             /*
+        $('#chart2').bind('jqplotDataUnhighlight', 
+            function (ev) {
+                $('#info4').html('Nothing');
+            }
+        );*/}
+    });
+
+//////////////***************      end  showRidesPerCustomer ***************///////////////////////////
+
 });

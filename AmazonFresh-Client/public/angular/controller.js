@@ -503,4 +503,125 @@ amazon.controller('amazonCntrl', function($scope, $http) {
 		});
 	};
 	//End Add Product
+	
+	
+});
+
+var editProfile = angular.module('editProfile', []);
+
+editProfile.controller('editProfileCntrl', function($scope, $http) {
+
+	$scope.user=[];
+	$scope.editprofile = function(){
+
+		//alert('reached edit profile controller');
+		$http({
+			url: '/editProfilefarmer',
+			method:'POST',
+			data:{
+				user: $scope.user
+			}
+		}).success(function () {
+
+				//alert('edit profile success final');
+		}).error(function(error){
+			//alert('edit profile success');
+		});
+	};
+
+	$scope.getcurrentfarmer = function(){
+
+		$http({
+			url: '/getcurrentfarmer',
+			method:'POST',
+			data:{}
+		}).success(function (user) {
+
+			//alert('edit profile success');
+			//alert(user.first_name);
+			$scope.user = user.user;
+		}).error(function(error){
+
+			//alert("Unexpected Error: " + error);
+		});
+	};
+
+	var prodName;
+	
+	//Start Add Product
+	$scope.viewFeedback = function(pid) {
+		//alert("Inside view feedback" + pid);
+		var prodDetails = pid.split("-");
+		var prid = prodDetails[0];
+		prodName = prodDetails[1];
+		var allFeedbacks = [];
+		
+		$http({
+			method : "POST",
+			url    : '/viewFeedback',
+			data   : {prodId : prid}
+		}).success(function(data) {
+			//checking the response data for statusCode
+			if (data.statusCode == 200) {			
+			console.log("Data: " + JSON.stringify(data));	
+
+			$scope.prod = prodName;
+			for(var i=0; i<data.feedback.length; i++){
+				allFeedbacks.push(data.feedback[i]);		
+			}//end for i
+
+			$scope.allFeedbacks = allFeedbacks;							
+			}
+			else {
+
+				window.location.assign("/farmerDashboard");
+			}
+		}).error(function(error) {
+
+				window.location.assign("/farmerDashboard");
+		});
+	};
+	//End Add Product
+});
+
+
+var editProfileCustomer = angular.module('editProfilecustomer', []);
+
+editProfileCustomer.controller('editProfilecustomerCntrl', function($scope, $http) {
+
+	$scope.user=[];
+	$scope.editprofile = function(){
+
+		//alert('reached edit profile controller');
+		$http({
+			url: '/editProfilecustomer2',
+			method:'POST',
+			data:{
+				user: $scope.user
+			}
+		}).success(function () {
+
+			//alert('edit profile success final');
+		}).error(function(error){
+			//alert('edit profile success');
+		});
+	};
+
+	$scope.getcurrentcustomer = function(){
+
+		$http({
+			url: '/getcurrentcustomer',
+			method:'POST',
+			data:{}
+		}).success(function (user) {
+
+			//alert('edit profile success');
+			//alert(user.first_name);
+			$scope.user = user.user;
+		}).error(function(error){
+
+			//alert("Unexpected Error: " + error);
+		});
+	};
+
 });

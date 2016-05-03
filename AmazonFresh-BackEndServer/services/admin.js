@@ -170,7 +170,8 @@ exports.handle_request_getFarmerSearchList = function (msg, callback){
 }; 	// end handle_request_getFarmerSearchList
 
 //// *******    End admin Farmer module  ******** /////
-//// *******    start admin Customer module  ******** /////
+
+//////////// **************    Start admin Customer module  ******************* ////////////////////
 exports.handle_request_getCustomerList = function (msg, callback){
 	var res = {};
 	var limit = 250;
@@ -334,4 +335,213 @@ exports.handle_request_getCustomerSearchList = function (msg, callback){
 		}  
 	}, customerList);
 }; 	// end handle_request_getCustomerSearchList
-//// *******    end  admin Customer module  ******** /////
+//////////// **************    end  admin Customer module  ******************* ////////////////////
+
+//////////// **************    Start admin Product module  ******************* ////////////////////
+exports.handle_request_getProductList = function (msg, callback){
+	var res = {};
+	var limit = 250;
+	var offset = msg.startPosition;
+	console.log("In handle_request_getProductList:");
+	//var username = msg.username;
+	var productList = "SELECT product_id, farmer_id, name, price, quantity, product_type, description FROM product LIMIT " + offset + "," + limit + ";";
+	console.log("Query is:"+ productList);
+	mysql.fetchData(function(err,results){
+		if(err){
+			throw err;
+		}
+		else 
+		{
+			if(results.length > 0){
+				var jsonString = JSON.stringify(results);
+				var jsonParse = JSON.parse(jsonString);
+				res.productList = jsonParse;
+				res.count = results.length;
+				res.Status = 200;
+				console.log("Rabbit Backend: productList  count:"+ results.length );
+				//res.send(resInfo);
+			}
+			else {    
+				console.log("No product found in database");
+			}
+			callback(null, res);
+		}  
+	},productList);
+}; 	// end handle_request_getProductList
+
+exports.handle_request_getProductApprovalPendingList = function (msg, callback){
+	var res = {};
+	var limit = 250;
+	var offset = msg.startPosition;
+	console.log("In handle_request_getProductApprovalPendingList:");
+	var productList = "SELECT product_id, farmer_id, name, price, quantity, product_type, description FROM product where approved " + "=0" + " LIMIT " + offset + "," + limit + ";";
+	//var productList = "SELECT cust_id, customer_id, first_name, last_name, city, state, zipcode, email  FROM customers where approved = 0 LIMIT " + offset + "," + limit + ";";
+	console.log("Query is:"+ productList);
+	mysql.fetchData(function(err,results){
+		if(err){
+			throw err;
+		}
+		else 
+		{
+			if(results.length > 0){
+				var jsonString = JSON.stringify(results);
+				var jsonParse = JSON.parse(jsonString);
+				res.productList = jsonParse;
+				res.count = results.length;
+				res.Status = 200;
+				console.log("Rabbit Backend: pending productList  count:"+ results.length );
+				//res.send(resInfo);
+			}
+			else {    
+				res.message = "No pending product found in database";
+				console.log("No pending product found in database");
+			}
+			callback(null, res);
+		}  
+	},productList);
+}; 	// end handle_request_getProductApprovalPendingList
+
+exports.handle_request_approveProduct = function (msg, callback){
+	var res = {};
+	console.log("In handle_request_approveProduct:");
+	var productID = msg.product;
+	var query = "UPDATE product SET approved = 1 WHERE product_id = " + productID + ";";
+	console.log("Query is:"+ query);
+	mysql.fetchData(function(err,results){
+		if(err){
+			throw err;
+		}
+		else 
+		{
+			console.log("Product request is approved");
+			res.Status = 202;
+			res.Message = "Product request is approved";
+			console.log("Productr request is approved");
+			callback(null, res);
+		}  
+	},query);
+}; 	// end handle_request_approveProduct
+
+exports.handle_request_disApproveProduct = function (msg, callback){
+	var res = {};
+	console.log("In handle_request_disApproveProduct:");
+	var productID = msg.product;
+	var query = "UPDATE product SET approved = 0 WHERE product_id = " + productID + ";";
+	console.log("Query is:"+ query);
+	mysql.fetchData(function(err,results){
+		if(err){
+			throw err;
+		}
+		else 
+		{
+			res.Status = 202;
+			res.Message = "Product request is rejected";
+			console.log("Product request is rejected");
+			callback(null, res);
+		}  
+	},query);
+}; 	// end handle_request_disApproveProduct
+
+exports.handle_request_getProductSearchList = function (msg, callback){
+	var res = {};
+	var limit = 250;
+	var offset = msg.startPosition;
+	var searchCriteria = msg.searchCriteria;
+	var q = msg.q;
+	var productList;
+	console.log("In handle_request_getProductSearchList: "+ searchCriteria + ":"+q);
+	switch (searchCriteria){
+		case"product_id":
+			productList = "SELECT product_id, farmer_id, name, price, quantity, product_type FROM product where product_id =" + '"' + q +'"' +"  LIMIT " + offset + "," + limit + ";";
+
+		break;
+		case "famrer_id":
+			productList = "SELECT cust_id, customer_id, first_name, last_name, city, state, zipcode, email  FROM customers where last_name =" + '"' + q +'"' +" LIMIT " + offset + "," + limit + ";";
+		break;
+		case "name":
+			productList = "SELECT cust_id, customer_id, first_name, last_name, city, state, zipcode, email  FROM customers where customer_id =" + '"' + q +'"' +" LIMIT " + offset + "," + limit + ";";
+		break;
+		case "product_type" :
+			productList = "SELECT cust_id, customer_id, first_name, last_name, city, state, zipcode, email  FROM customers where contact =" + '"' + q +'"' +" LIMIT " + offset + "," + limit + ";";
+		break;
+		default:
+			productList = "SELECT cust_id, customer_id, first_name, last_name, city, state, zipcode, email  FROM customers where customer_id like '%"+q+"%' or first_name like '%"+q+"%' or last_name like '%"+q+"%' or address like '%"+q+"%' or city like '%"+q+"%' or state like '%"+q+"%' or zipcode like '%"+q+"%' or email like '%"+q+"%' or contact like '%"+q+"%' LIMIT " + offset + "," + limit + ";";
+	}
+	
+	console.log("Query is:"+ productList);
+	mysql.fetchData(function(err,results){
+		if(err){
+			throw err;
+		}
+		else 
+		{
+			if(results.length > 0){
+				var jsonString = JSON.stringify(results);
+				var jsonParse = JSON.parse(jsonString);
+				res.productList = jsonParse;
+				res.count = results.length;
+				res.Status = 200;
+				console.log("Rabbit Backend: search productList  count:"+ results.length );
+			}
+			else {    
+				res.message = "End of search result";
+				console.log("End of search result");
+			}
+			callback(null, res);
+		}  
+	}, productList);
+}; 	// end handle_request_getProductSearchList
+//////////// **************    end  admin Product module  ******************* ////////////////////
+
+
+//// *******    start admin Billing module  ******** /////
+exports.handle_request_getBillingList = function (msg, callback){	
+	var res = {};
+	var limit = 250;
+	var offset = msg.startPosition;
+	console.log("In handle_request_adminGetFarmerList:");
+    res.Status  = 200;
+    res.Message = "test Billing";
+    callback(null, res);
+	/*
+	//var farmerList = "SELECT * FROM f LIMIT " + offset + "," + limit + ";";
+	var farmerList = "SELECT frm_id, farmer_id, first_name, last_name, city, state, zipcode, email, contact  FROM farmers LIMIT " + offset + "," + limit + ";";
+	console.log("Query is:"+farmerList);
+
+	mysql.fetchData(function(err,results){
+		if(err){
+			throw err;
+		}
+		else 
+		{
+			if(results.length > 0){
+				var jsonString = JSON.stringify(results);
+				var jsonParse = JSON.parse(jsonString);
+				res.farmerList = jsonParse;
+				res.count = results.length;
+				res.Status = 200;
+				console.log("Rabbit Backend: farmerList  count:"+ results.length );
+				//res.send(resInfo);
+			}
+			else {    
+				console.log("No farmers found in database");
+			}
+			callback(null, res);
+		}  
+	},farmerList); */
+
+}; 	// end handle_request_getFarmerList
+
+
+exports.handle_request_getBillingSearchList = function (msg, callback){
+	
+	var res = {};
+	var limit = 250;
+	var offset = msg.startPosition;
+	console.log("In handle_request_getBillingSearchList:");
+    res.Status  = 200;
+    res.Message = "test Billing search";
+    callback(null, res);
+
+};
+//// *******    end admin Billing module  ******** /////

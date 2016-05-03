@@ -318,7 +318,23 @@ cnn.on('ready', function () {
             });
         });
     });
+  //edit profile customer
+    cnn.queue('editprofileCustomer_queue', function (q) {
+        q.subscribe(function (message, headers, deliveryInfo, m) {
+            util.log(util.format(deliveryInfo.routingKey, message));
+            util.log("Message: " + JSON.stringify(message));
+            util.log("DeliveryInfo: " + JSON.stringify(deliveryInfo));
+            customer.editprofileCustomer(message, function (err, res) {
 
+                //return index sent
+                cnn.publish(m.replyTo, res, {
+                    contentType: 'application/json',
+                    contentEncoding: 'utf-8',
+                    correlationId: m.correlationId
+                });
+            });
+        });
+    });
     //BILLING MODULE
     cnn.queue('deleteBill_queue', function (q) {
         q.subscribe(function (message, headers, deliveryInfo, m) {
@@ -637,6 +653,42 @@ cnn.on('ready', function () {
                     contentType: 'application/json',
                     contentEncoding: 'utf-8',
                     correlationId: m.correlationId
+                });
+            });
+        });
+    });
+    
+    cnn.queue('viewFeedback_queue', function (q) {
+        q.subscribe(function (message, headers, deliveryInfo, m) {
+            util.log(util.format(deliveryInfo.routingKey, message));
+            util.log("Message: " + JSON.stringify(message));
+            util.log("DeliveryInfo: " + JSON.stringify(deliveryInfo));            
+            
+            farmer.viewFeedback(message, function (err, res) {
+
+                //return index sent
+                cnn.publish(m.replyTo, res, {
+                    contentType: 'application/json',
+                    contentEncoding: 'utf-8',
+                    correlationId: m.correlationId
+                });
+            });
+        });
+    });
+  //edit profile farmer
+    cnn.queue('editprofileFarmer_queue', function(q){
+        q.subscribe(function(message, headers, deliveryInfo, m){
+            util.log(util.format( deliveryInfo.routingKey, message));
+            util.log("Message: "+JSON.stringify(message));
+            util.log("DeliveryInfo: "+JSON.stringify(deliveryInfo));
+            console.log('reached edit farmer queue');
+            farmer.editprofileFarmer(message, function(err,res){
+                    console.log('queue success');
+                //return index sent
+                cnn.publish(m.replyTo, res, {
+                    contentType:'application/json',
+                    contentEncoding:'utf-8',
+                    correlationId:m.correlationId
                 });
             });
         });

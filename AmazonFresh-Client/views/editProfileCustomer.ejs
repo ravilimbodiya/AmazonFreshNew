@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel='stylesheet' href='/stylesheets/bootstrap.min.css' />
+    <link href="stylesheets/style.css" rel="stylesheet">
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://code.jquery.com/jquery.js"></script>
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <!-- Latest compiled JavaScript -->
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <title>Edit Proffile</title>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/scripts.js"></script>
+    <script src="/angular/login.js"></script>
+
+    <!-- AngularJs library -->
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+    <!-- AngularJs library -->
+    <script src="/angular/login.js"></script>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+
+</head>
+<!-- Header-->
+
+<body ng-app="editProfilecustomer" ng-controller="editProfilecustomerCntrl" ng-init="getcurrentcustomer()">
+<header>
+        <nav class="navbar navbar-default" id="headerNav">
+          <div class="container-fluid">
+            <div class="navbar-header"  id="freshLogo">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+              <a class="navbar-brand" href="/">
+                <img alt="Brand" src="../images/logo.png">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li style="cursor: pointer;"><a style="color: #fff; padding: 0;" href="/shoppingCart"><i class="glyphicon glyphicon-shopping-cart cart"><span class="cartItems">{{itemsInCart}}</span></i></a>
+
+                    </li>
+                    <li class="dropdown">
+                      <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="margin-right: 10px; padding: 5px;" role="button" aria-haspopup="true" aria-expanded="false"><img alt="" src="/images/user.png" class="profilePic"><span class="caret"></span></a>
+                      <ul class="dropdown-menu">
+                        <li style="padding: 10px;"><a href="#">User Name<br><span style="font-size: 9px;">View Profile</span></a></li>
+                        <li style="padding: 10px;"><a href="/viewPurchaseHistory">Purchase History</a></li>
+                        <li style="padding: 10px;"><a href="/editprofilecustomer1">Edit Profile</a></li>
+                        <li style="padding: 10px;"><a href="#">Help</a></li>
+                        <li style="padding: 10px;"><a href="#">Settings</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li style="padding: 10px;"><a href="/logout">Log out</a></li>
+                      </ul>
+                    </li>
+                 </ul>
+            </div>
+          </div>
+        </nav>
+        
+    </header>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-12">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                </div>
+                <div class="col-md-4">
+                    <form  class="form-editprofile" role="form">
+                        <div class="form-group">
+
+                            <label for="exampleInputfirstname">
+                                First Name
+                            </label>
+                            <input type="text" class="form-control" ng-model="user.first_name">
+                        </div>
+                        <div class="form-group">
+
+                            <label for="exampleInputlastname">
+                                Last Name
+                            </label>
+                            <input type="text" class="form-control" ng-model="user.last_name">
+                        </div>
+                        <div class="form-group">
+
+                            <label for="exampleInputaddress">
+                                Address
+                            </label>
+                            <input type="text" class="form-control" ng-model="user.address">
+                        </div>
+                        <div class="form-group">
+
+                            <label for="exampleInputcity">
+                                City
+                            </label>
+                            <input type="text" class="form-control" ng-model="user.city">
+                        </div>
+                        <div class="form-group">
+
+                            <label for="exampleInputstate">
+                                State
+                            </label>
+                            <input type="text" class="form-control" ng-model="user.state">
+                        </div>
+                        <div class="form-group">
+
+                            <label for="exampleInputzipcode">
+                                Zipcode
+                            </label>
+                            <input type="text" class="form-control" ng-model="user.zipcode">
+                        </div>
+                        <div class="form-group">
+
+                            <label for="exampleInputphone">
+                                Phone Number
+                            </label>
+                            <input type="text" class="form-control" ng-model="user.contact">
+                        </div>
+
+
+                        <!-- <div class="form-group">
+
+                            <label for="exampleInputFile">
+                                File input
+                            </label>
+                            <input type="file" id="exampleInputFile">
+                            <p class="help-block">
+                                Example block-level help text here.
+                            </p>
+                        </div> -->
+
+                        <button type="submit" class="btn btn-default" ng-click="editprofileCustomer()" style="margin-bottom: 30px">
+                            Submit
+                        </button>
+                    </form>
+                </div>
+                <div class="col-md-4">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Footer-->
+<footer>
+    <div id="refreshFooter">
+        <div class="column" id="column1">
+            <a id="lnk-gbl-help" href="#">Help</a>
+            <a href="#">Conditions of Use</a>
+            <a href="#">Privacy Notice</a>
+        </div>
+        <div class="column" id="column2">
+            <a href="#">About</a>
+            <a href="#">Careers</a>
+        </div>
+        <div id="copyrightAndDisclaimer">
+            &copy; 2016 AmazonFresh, LLC or its affiliates&nbsp;
+            All items sold by and ship from AmazonFresh unless otherwise specified.
+        </div>
+    </div>
+</footer>
+
+<script src="/angular/controller.js"></script>
+
+
+</body>
+</html>

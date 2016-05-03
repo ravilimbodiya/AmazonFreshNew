@@ -128,3 +128,90 @@ exports.loadProducts = function loadProducts(req, res) {
         }
     });
 };
+
+exports.redirectToeditprofile = function(req, res){
+
+	res.render("editProfile");
+};
+
+exports.editProfilefarmer = function(req, res){
+
+var user={};
+user = req.param("user");
+console.log(user);
+
+var msg_payload = {
+	farmerId 	 : req.session.user[0].far_id,
+	lastname 	 : user.last_name,
+	firstname 	 : user.first_name,
+	city		 : user.city,
+	state		 : user.state,
+	phonenumber  : user.phonenumber,
+	zipode		 : user.zipcode,
+	contact		 : user.contact
+
+
+};
+console.log(msg_payload);
+mq_client.make_request('editprofileFarmer_queue', msg_payload, function(err, results){
+
+	console.log("Result returned from server");
+	if(err){
+		throw err;
+	}
+	else
+	{
+		if(results.statusCode == 200){
+			console.log("Farmer Profile updated");
+			res.send({"statusCode":200});
+		}
+		else {
+
+			console.log("Farmer Profile was not able to update");
+			res.send({"statusCode":401});
+		}
+	}
+});
+
+
+};
+
+exports.getcurrentFarmer = function(req, res){
+
+	console.log('reached getcurrent routes');
+	console.log(req.session.user[0]);
+	res.send({"statusCode": 200, "user": req.session.user[0]});
+
+};
+
+exports.viewFeedback = function viewFeedback(req, res){
+	console.log("inside viewFeedback in routes");
+	var prodId = req.param("prodId");
+	console.log("Product Id:" + prodId);
+	var msg_payload = { 'farmerId' : req.session.user[0].farmer_id, 'prodId' : prodId};
+	
+	mq_client.make_request('viewFeedback_queue', msg_payload, function(err, results){
+		
+		
+		if(err){
+			throw err;
+		}
+		else 
+		{
+			console.log("Feedback returned from server");
+			if(results.statusCode == 200){				
+				res.send({"statusCode":200, "feedback" : results.feedback});
+			}
+			else {    
+				res.send({"statusCode":401});
+			}
+		}  
+	});
+		
+};
+
+
+exports.renderFeedback = function renderFeedback(req, res) {
+	console.log("ProdId in render feedback: " + req.param('prodId'));
+    res.render('viewFeedback',{'prodId': req.param('prodId')});
+};

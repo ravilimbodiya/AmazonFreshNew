@@ -6,7 +6,6 @@ exports.ObjectId = require('mongodb').ObjectID;
 var mongoURL = "mongodb://localhost:27017/Amazonfresh";
 var connPool = [];
 var connInUse = [];
-
 function addNewConnectionToPool(){
 	return MongoClient.connect(mongoURL, function(err, _db){
 		console.log("Creating a new connection in the pool with MongoDB at : "+mongoURL);
@@ -18,19 +17,15 @@ function addNewConnectionToPool(){
 	    console.log(connected +" is connected?");
 	  });
 } 
-
 var dbPool = {
 	"maxPoolSize": 100
 };
-
 var createConnectionPool = function createConnectionPool(){
 	for(var i = 0; i < dbPool.maxPoolSize; i++){
 		addNewConnectionToPool();
 	}
 };
-
 createConnectionPool();
-
 exports.connect = function(url, callback){
 	console.log('CONNECTION POOL : '+connPool.length);
 	if(connPool.length > 0){

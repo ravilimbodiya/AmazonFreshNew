@@ -97,6 +97,7 @@
 	    		<li><a data-toggle="tab" href="#productTab">PRODUCTS</a></li>
 	    		<li><a data-toggle="tab" href="#billsTab">BILLS</a></li>
 	    		<li><a data-toggle="tab" href="#statisticsTab">STATISTICS</a></li>
+	    		<li><a data-toggle="tab" href="#tripsTab">TRIPS</a></li>
 			</ul>
 			<div class="tab-content" style=" background-color: #fff;">
 	    		<div id="homeTab" class="tab-pane fade in active">
@@ -147,18 +148,20 @@
 		    	<div id="productTab" class="tab-pane fade">
 	    	    	<span class="adminSearch">
 						<button class="btn btn-default clickShowApprovalPendingProducts" href="javascript:void(0)" type="button" ng-click="getProductApprovalPendingList();">Product Approval Pending </button> 
-						<button class="btn btn-default clickShowAllProducts" href="javascript:void(0)" type="button" ng-click="showProductList();">Show All Products </button> 
+						<button class="btn btn-default clickShowAllProducts" href="javascript:void(0)" type="button" ng-click="getProductList();">Show All Products </button> 
 					</span>
 					<span class="adminSearchBy">Search By</span>
 					<span class="adminSearch">
-					<select class="btn btn-default">
-					<option value="">Select Criteria To Search</option>
-					  <option value="productID">ProductID</option>
-					  <option value="farmerID">FarmerID</option>
+					<select class="btn btn-default" ng-model="pc">
+					  <option value="">Select Criteria To Search</option>
+					  <option value="product_id">ProductID</option>
+					  <option value="farmer_id">FarmerID</option>
+					  <option value="name">Product Name</option>
+					  <option value="product_type">Product Type</option>
 					</select>	
 					</span>
-					<span class="adminSearchInput"><input type="text" class="form-control" name="searchProduct" placeholder="Enter Search value.."></span>
-					<span class="adminSearch"><button class="btn btn-default clickSearchProduct" href="javascript:void(0)" type="button"><img alt="Brand" src="../images/search.png" style="width:18px;height:18px">Search Products </button></span> 
+					<span class="adminSearchInput"><input type="text" class="form-control" name="searchProduct"ng-model="pq" placeholder="Enter Search value.."></span>
+					<span class="adminSearch"><button class="btn btn-default clickSearchProduct" href="javascript:void(0)" type="button" ng-click="searchProduct()"><img alt="Brand" src="../images/search.png" style="width:18px;height:18px">Search Products </button></span> 
 					
 		    	</div>
 		    	<div id="billsTab" class="tab-pane fade">
@@ -178,11 +181,15 @@
 		    	</div>
 		    	<div id="statisticsTab" class="tab-pane fade">
 	    	    	<span class="adminSearch">
-						<button class="btn btn-default clickRevenuePerDay" href="javascript:void(0)" type="button">Show Reveue Per Day </button> 
-						<button class="btn btn-default clickDeliveryAreawise" href="javascript:void(0)" type="button">Show Delivery - Area wise </button> 
+						<button class="btn btn-default clickRevenuePerWeek" href="javascript:void(0)" type="button">Show Reveue Per Week </button>
 						<button class="btn btn-default clickRidesPerArea" href="javascript:void(0)" type="button">Show Rides Per Area </button> 
 						<button class="btn btn-default clickRidesPerDriver" href="javascript:void(0)" type="button">Show Rides Per Driver </button> 
 						<button class="btn btn-default clickRidesPerCustomer" href="javascript:void(0)" type="button">Show Rides Per Customer </button> 
+					</span>
+		    	</div>
+		    	<div id="tripsTab" class="tab-pane fade">
+	    	    	<span class="adminSearch">
+						<button class="btn btn-default " href="javascript:void(0)" type="button">Show Customer Trips</button>
 					</span>
 		    	</div>
 			</div>   <!-- end class tab-content-->
@@ -198,7 +205,7 @@
 					<th>#</th>
 					<th>Farmer ID</th><th>Firstname</th><th>Lastname</th>
 					<th>City</th><th>State</th><th>Zip Code</th>
-					<th>Contact</th><th>Email</th><th>Rating</th>
+					<th>Contact</th><th>Email</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -206,7 +213,7 @@
 					<td>{{$index+1}}</td>
 					<td>{{f.farmer_id}}</td><td>{{f.first_name}}</td><td>{{f.last_name}}</td>
 					<td>{{f.city}}</td><td>{{f.state}}</td><td>{{f.zipcode}}</td>
-					<td>{{f.contact}}</td><td>{{f.email}}</td><td>{{f.rating}}</td>
+					<td>{{f.contact}}</td><td>{{f.email}}</td>
 				</tr>
 			</tbody></table>
 			<button type="submit" class="btn btn-default" ng-click="loadMoreF1();" >Load More</button>
@@ -244,7 +251,7 @@
 					<th>#</th>
 					<th>Farmer ID</th><th>Firstname</th><th>Lastname</th>
 					<th>City</th><th>State</th><th>Zip Code</th>
-					<th>Contact</th><th>Email</th><th>Rating</th>
+					<th>Contact</th><th>Email</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -252,7 +259,7 @@
 					<td>{{$index+1}}</td>
 					<td>{{f.farmer_id}}</td><td>{{f.first_name}}</td><td>{{f.last_name}}</td>
 					<td>{{f.city}}</td><td>{{f.state}}</td><td>{{f.zipcode}}</td>
-					<td>{{f.contact}}</td><td>{{f.email}}</td><td>{{f.rating}}</td>
+					<td>{{f.contact}}</td><td>{{f.email}}</td>
 				</tr>
 			</tbody></table>
 			<button type="submit" class="btn btn-default" ng-click="loadMoreF3();" >Load More</button></td>
@@ -298,8 +305,8 @@
 					<td>{{c.customer_id}}</td><td>{{c.first_name}}</td><td>{{c.last_name}}</td>
 					<td>{{c.city}}</td><td>{{c.state}}</td><td>{{c.zipcode}}</td>
 					<td>{{c.phoneNumber}}</td><td>{{c.email}}</td>
-					<td><button ng-click="approveCustomer(c);" ng-disabled="c.disabled" class="btn btn-default">Approve</button></td>
-					<td><button ng-click="disApproveCustomer(c);"ng-disabled="c.disabled" class="btn btn-danger">Disapprove</button></td>
+					<td><button ng-click="approveCustomer(c);" ng-disabled="c.approve" class="btn btn-default">Approve</button></td>
+					<td><button ng-click="disApproveCustomer(c);"ng-disabled="c.disapprove" class="btn btn-danger">Disapprove</button></td>
 				</tr>
 			</tbody></table>
 		</div>
@@ -333,18 +340,18 @@
 			<thead>
 				<tr>
 					<th>#</th>
-					<th>Product ID</th><th>Farmer ID</th><th>Product Name</th>
-					<th>Price</th><th>Description</th><th>Rating</th><th>Reviews</th>
+					<th>Product ID</th><th>Farmer ID</th><th>Product Name</th><th>Product Type</th>
+					<th>Price</th><th>Quantity</th><th>Description</th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr class="active" ng-repeat= "p in p1">
 					<td>{{$index+1}}</td>
-					<td>{{p.product_ID}}</td><td>{{p.farmer_ID}}</td><td>{{p.name}}</td>
-					<td>$ {{p.price}}</td><td>{{p.description}}</td><td>{{p.ratings}}</td>
-					<td>{{p.reviews}}</td>
+					<td>{{p.product_id}}</td><td>{{p.farmer_id}}</td><td>{{p.name}}</td><td>{{p.product_type}}</td>
+					<td>$ {{p.price}}</td><td>{{p.quantity}}</td><td>{{p.description}}</td>
 				</tr>
 			</tbody></table>
+			<button type="submit" class="btn btn-default" ng-click="loadMoreP1();" >Load More</button></td>
 		</div>
 
 		<div class="col-md-12 productSection showProductApprovalPending" infinite-scroll="loadMoreP2();" infinite-scroll-distance="0" infinite-scroll-disabled="{{p2_stopLoading}}">
@@ -353,17 +360,17 @@
 			<thead>
 				<tr>
 					<th>#</th>
-					<th>Product ID</th><th>Farmer ID</th><th>Product Name</th>
+					<th>Product ID</th><th>Farmer ID</th><th>Product Name</th><th>Product Type</th>
 					<th>Price</th><th>Description</th><th>Approve</th><th>Disapprove</th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr class="active" ng-repeat= "p in p2">
 					<td>{{$index+1}}</td>
-					<td>{{p.product_ID}}</td><td>{{p.farmer_ID}}</td><td>{{p.name}}</td>
+					<td>{{p.product_id}}</td><td>{{p.farmer_id}}</td><td>{{p.name}}</td><td>{{p.product_type}}</td>
 					<td>$ {{p.price}}</td><td>{{p.description}}</td>
-					<td><button ng-click="approveProduct(c);" ng-disabled="p.disabled" class="btn btn-default">Approve</button></td>
-					<td><button ng-click="disApproveProduct(c);"ng-disabled="p.disabled" class="btn btn-danger">Disapprove</button></td>
+					<td><button ng-click="approveProduct(p);" ng-disabled="p.approve" class="btn btn-default">Approve</button></td>
+					<td><button ng-click="disApproveProduct(p);"ng-disabled="p.disapprove" class="btn btn-danger">Disapprove</button></td>
 				</tr>
 			</tbody></table>
 		</div>
@@ -374,16 +381,15 @@
 			<thead>
 				<tr>
 					<th>#</th>
-					<th>Product ID</th><th>Farmer ID</th><th>Product Name</th>
-					<th>Price</th><th>Description</th><th>Rating</th><th>Reviews</th>
+					<th>Product ID</th><th>Farmer ID</th><th>Product Name</th><th>Product Type</th>
+					<th>Price</th><th>Quantity</th><th>Description</th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr class="active" ng-repeat= "p in p3">
 					<td>{{$index+1}}</td>
-					<td>{{p.product_ID}}</td><td>{{p.farmer_ID}}</td><td>{{p.name}}</td>
-					<td>$ {{p.price}}</td><td>{{p.description}}</td><td>{{p.ratings}}</td>
-					<td>{{p.reviews}}</td>
+					<td>{{p.product_id}}</td><td>{{p.farmer_id}}</td><td>{{p.name}}</td><td>{{p.product_type}}</td>
+					<td>$ {{p.price}}</td><td>{{p.quantity}}</td><td>{{p.description}}</td>
 				</tr>
 			</tbody></table>
 		</div>
@@ -406,7 +412,7 @@
 				<tr class="active" ng-repeat= "b in b1">
 					<td>{{$index+1}}</td>
 					<td>{{b.product_ID}}</td><td>{{b.farmer_ID}}</td><td>{{b.name}}</td>
-					<td>$ {{b.price}}</td><td>{{b.description}}</td><td>{{b.ratings}}</td>
+					<td>$ {{b.price}}</td><td>{{b.description}}</td>
 					<td>{{b.reviews}}</td>
 				</tr>
 			</tbody></table>
@@ -427,7 +433,7 @@
 				<tr class="active" ng-repeat= "b in b2">
 					<td>{{$index+1}}</td>
 					<td>{{b.product_ID}}</td><td>{{b.farmer_ID}}</td><td>{{b.name}}</td>
-					<td>$ {{b.price}}</td><td>{{b.description}}</td><td>{{b.ratings}}</td>
+					<td>$ {{b.price}}</td><td>{{b.description}}</td><td>
 					<td>{{b.reviews}}</td>
 				</tr>
 			</tbody></table>
@@ -435,54 +441,96 @@
 	</div>  <!-- end billingsection  for list display -->
 
 
-	<div class="row statSection">  <!-- start statisticssection for chart display -->
-		<div class="row  statSection  showRevenuePerDay">
-		<div class ="col-md-7 col-md-offset-1 showBubbleGraph" id ="chart1" style="width:65%; height:300px"></div>		
+	<div class="row statSection">  <!-- start statSection for chart display -->
+		
+		
+
+		<div class="col-md-12 statSection  showRevenuePerWeek">
+			<div class ="col-md-7 col-md-offset-1 showBubbleGraph" id ="chart1" style="width:65%; height:300px"></div>		
 			<div class="col-md-2 ">
 				<form name="myForm" >
 				    <label for="exampleInput">Select a date</label>
-				    <input type="date" id="exampleInput" name="input" ng-model="example.value"
-				       placeholder="yyyy-MM-dd" min="2016-01-01" max="{{dmax}}"required />
-				    <div role="alert">
-				     <span class="error" ng-show="myForm.input.$error.required">Required!</span>
-				     <span class="error" ng-show="myForm.input.$error.date">Not a valid date!</span>
-				    </div>
-				    <tt id="revenueDate">{{example.value | date: "yyyy-MM-dd"}}</tt><br/>
-				    <tt>{{myForm.input.$valid}}</tt><br/>
+				    <input type="date" id="exampleInput" name="input" ng-model="example.value" placeholder="yyyy-MM-dd" min="	2016-01-01" max="{{dmax}}"required>
+				    <!--<div role="alert"> <span class="error" ng-show="myForm.input.$error.required">Required!</span>
+				     <span class="error" ng-show="myForm.input.
+					$error.date">Not a valid date!</span>
+				    </div>--> <br>
+				    <tt id="revenueDate">{{example.value | date: "yyyy-MM-dd"}}</tt><br>
+				    <!--<tt>{{myForm.input.$valid}}</tt><br/>
 				    <tt>{{myForm.input.$error}}</tt><br/>
 				    <tt>{{myForm.$valid}}</tt><br/>
-				    <tt>{{!!myForm.$error.required}}</tt><br/>
-				    <p id="ff"> shiva</p>
+				    <tt>{{!!myForm.$error.required}}</tt><br/>-->
 				</form>
-				<button class="btn btn-default clickRevenuePerDay" href="javascript:void(0)" type="button">Show Reveue Per Day </button>
-				<button class="testClick">test</button>
-				<p>Date: <input type="text" id="datepicker"></p>
+				<button class="btn btn-default ShowRevenuePerWeek" href="javascript:void(0)" type="button">Show Reveue Per 	Day </button>
+			</div>
+		</div>
+
+		<div class="col-md-12 statSection  showRidesPerArea">
+			<div class="col-md-12 statSection ">
+				<div class="row statSection">
+					<div class=" row col-md-4">
+						<h4 align="center"> Select States for comparision</h4>
+						<div class="col-md-3 " ng-repeat= "state in states">
+							<input id="ad_Checkbox2" class="states_checkbox" type="checkbox" value={{state}} />{{state}}
+						</div>
+						<div class="col-md-12" align="center">
+							<button id="getStates" class="btn btn-default getStatesAndGenerateGraph"> Generate Graph</button>	
+						</div>
+					</div>
+					<div class ="col-md-5  showBubbleGraph" id ="chart2" style="width:60%; height:300px"></div>	
+					<div class ="col-md-5"><span id="info2"></span></div>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-md-12 statSection  showRidesPerDriver">
+			<div class="col-md-12 statSection ">
+				<div class="row statSection">
+					<div class=" row col-md-4">
+						<h4 align="center"> Select Months for comparision</h4>
+						<div class="col-md-3 " ng-repeat= "month in months">
+							<input id="ad_Checkbox2" class="Driver_month_checkbox" type="checkbox" value={{month}} />{{month}}
+						</div>
+						<div class="col-md-12" align="center">
+							<button id="getMonths" class="btn btn-default getDriverMonthAndGenerateGraph"> Generate Graph</button>	
+						</div>
+					</div>
+					<div class ="col-md-5  showBubbleGraph" id ="chart3" style="width:60%; height:300px"></div>	
+					<div class ="col-md-5"><span id="info3"></span></div>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-md-12 statSection  showRidesPerCustomer">
+			<div class="col-md-12 statSection ">
+				<div class="row statSection">
+					<div class=" row col-md-4">
+						<h4 align="center"> Select Months for comparision</h4>
+						<div class="col-md-3 " ng-repeat= "month in months">
+							<input id="ad_Checkbox2" class="Customer_month_checkbox" type="checkbox" value={{month}} />{{month}}
+						</div>
+						<div class="col-md-12" align="center">
+							<button id="getMonths" class="btn btn-default getCustomerMonthAndGenerateGraph"> Generate Graph</button>	
+						</div>
+					</div>
+					<div class ="col-md-5  showBubbleGraph" id ="chart4" style="width:60%; height:300px"></div>	
+					<div class ="col-md-5"><span id="info4"></span></div>
+				</div>
 			</div>
 		</div>
 		
 
-		<div class="col-md-12 statSection  showDeliveryAreawise">
-			Stat section: showDeliveryAreawise
-		</div>
 
-		<div class="col-md-12 statSection  showRidesPerArea">
-			Stat section: showRidesPerArea
-		</div>
 
-		<div class="col-md-12 statSection  showRidesPerDriver">
-			Stat section: showRidesPerDriver
-		</div>
+		
 
-		<div class="col-md-12 statSection  showRidesPerCustomer">
-			Stat section: showRidesPerCustomer
-		</div>
 
 	</div>  <!-- end statisticssection for chart display -->
 
 
 </div>  <!-- end class container-fluid -->
 
-    <footer style="padding: 0;">
+    <!--<footer style="padding: 0;">
     	<div id="refreshFooter">
 		    <div class="column" id="column1">
 		        <a id="lnk-gbl-help" href="#">Help</a>
@@ -498,7 +546,7 @@
 		        All items sold by and ship from AmazonFresh unless otherwise specified.
     		</div>
 		</div>
-    </footer>
+    </footer>-->
 </body>
 <script>
         $(document).ready(function () {
@@ -508,13 +556,11 @@
 				//alert(d);
 			});
 
-        	
-
-        		$('.farmerSection').show();
-        		$('.customerSection').show();
-        		$('.productSection').show();
-        		$('.billingSection').show();
-        		$('.statSection').show();
+        		$('.farmerSection').hide();
+        		$('.customerSection').hide();
+        		$('.productSection').hide();
+        		$('.billingSection').hide();
+        		$('.statSection').hide();
         		
         	$(".clickShowAllFarmers").on("click", function () {
                 $('.farmerSection').show();
@@ -597,40 +643,33 @@
         		$('.showAllBills').hide();
             });
               
-            $(".clickRevenuePerDay").on("click", function () {
+            $(".clickRevenuePerWeek").on("click", function () {
                 $('.statSection').show();
                 $('.farmerSection').hide();$('.customerSection').hide();
                 $('.productSection').hide();$('.billingSection').hide();
-                $('.showRidesPerCustomer').hide();$('.showDeliveryAreawise').hide();
                 $('.showRidesPerArea').hide();$('.showRidesPerDriver').hide();
-            });
-            $(".clickDeliveryAreawise").on("click", function () {
-                $('.statSection').show();
-                $('.farmerSection').hide();$('.customerSection').hide();
-                $('.productSection').hide();$('.billingSection').hide();
-                $('.showRevenuePerDay').hide();$('.showRidesPerArea').hide();
-                $('.showRidesPerDriver').hide();$('.showRidesPerCustomer').hide();
+                $('.showRidesPerCustomer').hide();
             });
             $(".clickRidesPerArea").on("click", function () {
                 $('.statSection').show();
                 $('.farmerSection').hide();$('.customerSection').hide();
                 $('.productSection').hide();$('.billingSection').hide();
-               	$('.showRevenuePerDay').hide();$('.showDeliveryAreawise').hide();
-                $('.showRidesPerDriver').hide();$('.showRidesPerCustomer').hide();
+               	$('.showRevenuePerWeek').hide();$('.showRidesPerDriver').hide();
+               	$('.showRidesPerCustomer').hide();
             });
             $(".clickRidesPerDriver").on("click", function () {
                 $('.statSection').show();
                 $('.farmerSection').hide();$('.customerSection').hide();
                 $('.productSection').hide();$('.billingSection').hide();
-                $('.showRevenuePerDay').hide();$('.showDeliveryAreawise').hide();
-                $('.showRidesPerArea').hide();$('.showRidesPerCustomer').hide();
+                $('.showRevenuePerWeek').hide();$('.showRidesPerArea').hide();
+                $('.showRidesPerCustomer').hide();
             });
             $(".clickRidesPerCustomer").on("click", function () {
                 $('.statSection').show();
                 $('.farmerSection').hide();$('.customerSection').hide();
                 $('.productSection').hide();$('.billingSection').hide();
-                $('.showRevenuePerDay').hide();$('.showDeliveryAreawise').hide();
-                $('.showRidesPerArea').hide();$('.showRidesPerDriver').hide();
+                $('.showRevenuePerWeek').hide();$('.showRidesPerArea').hide();
+                $('.showRidesPerDriver').hide();
             });
 });
 </script>

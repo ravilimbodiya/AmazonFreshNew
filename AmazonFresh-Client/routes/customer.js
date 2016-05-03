@@ -100,3 +100,58 @@ exports.postReviewRating = function postReviewRating(req, res) {
         }
     });
 };
+
+exports.redirectToeditprofileCustomer = function(req, res){
+
+    res.render("editProfileCustomer2");
+};
+
+exports.editProfilecustomer = function(req, res){
+
+    var user={};
+    user = req.param("user");
+    console.log(user);
+
+    var msg_payload = {
+        customerId 	 : req.session.user[0].cust_id,
+        lastname 	 : user.last_name,
+        firstname 	 : user.first_name,
+        city		 : user.city,
+        state		 : user.state,
+        phonenumber  : user.phonenumber,
+        zipode		 : user.zipcode,
+        contact		 : user.contact
+
+
+    };
+    console.log(msg_payload);
+    mq_client.make_request('editprofileCustomer_queue', msg_payload, function(err, results){
+
+        console.log("Result returned from server");
+        if(err){
+            throw err;
+        }
+        else
+        {
+            if(results.statusCode == 200){
+                console.log("customer Profile updated");
+                res.send({"statusCode":200});
+            }
+            else {
+
+                console.log("customer Profile was not able to update");
+                res.send({"statusCode":401});
+            }
+        }
+    });
+
+
+};
+
+exports.getcurrentCustomer = function(req, res){
+
+    console.log('reached getcurrent routes');
+    console.log(req.session.user[0]);
+    res.send({"statusCode": 200, "user": req.session.user[0]});
+
+};

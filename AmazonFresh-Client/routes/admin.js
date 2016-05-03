@@ -228,7 +228,180 @@ exports.adminGetCustomerSearchList = function(req, res){
 
 ////////////////////   ***** End Customer module ******* //////////////////////////////
 
+////////////////////   ***** start Product module ******* //////////////////////////////
 
+exports.adminGetProductList = function(req, res){
+    var startPosition = req.param('startPosition');
+    console.log("startPosition =" + startPosition);
+    var msg_payload = {
+        "startPosition" : startPosition,
+        "func" : "getProductList"
+    };
+    mq_client.make_request('adminProduct_queue', msg_payload, function(err,results) {
+        //console.log(results);
+        if (err) {
+            //console.log(err);
+            res.status(500).send(null);
+        } else {
+            console.log("about results" + results);
+            res.send({ productList: results.productList,
+                           Status: results.Status,
+                           count: results.count});
+        }
+    });
+};      // end adminGetProductList
+
+exports.adminGetProductApprovalPendingList = function(req, res){
+    var startPosition = req.param('startPosition');
+    console.log("startPosition =" + startPosition);    
+    var msg_payload = {
+        "startPosition" : startPosition,
+        "func" : "getProductApprovalPendingList"
+    };
+    mq_client.make_request('adminProduct_queue', msg_payload, function(err,results) {
+        if (err) {
+            res.status(500).send(null);
+        } else {
+            console.log("about results" + results);
+            res.send({ productList: results.productList,
+                           Status: results.Status,
+                           count: results.count});
+        }
+    });
+};      // end adminGetProductApprovalPendingList
+
+exports.adminApproveProduct = function(req, res){
+    var pendingProductID = req.param('product');
+    console.log("Product ID =" + pendingProductID);
+    var msg_payload = {
+        "product" : pendingProductID,
+        "func" : "approveProduct"
+    };
+    mq_client.make_request('adminProduct_queue', msg_payload, function(err,results) {
+        if (err) {
+            res.status(500).send(null);
+        } else {
+            console.log(results.Message);
+            res.send({ Message: results.Message,
+                           Status: results.Status
+                       });
+        }
+    });
+};      // end adminApproveProduct
+
+exports.adminDisapproveProduct = function(req, res){
+    var pendingProductID = req.param('product');
+    console.log("Product ID =" + pendingProductID);
+    var msg_payload = {
+        "product" : pendingProductID,
+        "func" : "disApproveProduct"
+    };
+    mq_client.make_request('adminProduct_queue', msg_payload, function(err,results) {
+        if (err) {
+            res.status(500).send(null);
+        } else {
+            console.log(results.Message);
+            res.send({ Message: results.Message,
+                           Status: results.Status
+                       });
+        }
+    });
+};      // end adminDisapproveProduct
+
+exports.adminGetProductSearchList = function(req, res){
+    var startPosition = req.param('startPosition');
+    var searchCriteria = req.param('criteria');
+    var q = req.param('q');
+    q = q.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, "");
+    console.log(searchCriteria + ":" + q );    
+    if (q === null || q === undefined || q=== ''){
+        res.send({ productList: null,
+                    Status: 400,
+                    Message: "Enter correct value"});
+    }
+    else{
+        var msg_payload = {
+            "startPosition" : startPosition,
+            "searchCriteria" : searchCriteria,
+            "q": q,
+            "func" : "getProductSearchList"
+        };
+        mq_client.make_request('adminProduct_queue', msg_payload, function(err,results) {
+            if (err) {
+                res.status(500).send(null);
+            } else {
+                console.log("about results" + results);
+                res.send({ productList: results.productList,
+                               Status: results.Status,
+                               count: results.count});
+            }
+        });
+    }
+};      // end adminGetProductSearchList
+
+////////////////////   ***** End Customer module ******* //////////////////////////////
+
+////////////////////   ***** Start Billing module ******* //////////////////////////////
+
+exports.adminGetBillingList = function(req, res){
+    var startPosition = req.param('startPosition');
+    console.log("startPosition =" + startPosition);
+    var msg_payload = {
+        "startPosition" : startPosition,
+        "func" : "getBillingList"
+    };
+    mq_client.make_request('adminBilling_queue', msg_payload, function(err,results) {
+        //console.log(results);
+        if (err) {
+            //console.log(err);
+            res.status(500).send(null);
+        } else {
+            console.log("about results" + results);
+            res.send({ //billingList: results.billingList,
+                           Status: results.Status,
+                       //    count: results.count,
+                       Message: results.Message,
+                       });
+        }
+    });
+};      // end adminGetBillingList
+
+exports.adminGetBillingSearchList = function(req, res){
+    var startPosition = req.param('startPosition');
+    var searchCriteria = req.param('criteria');
+    var q = req.param('q');
+    q = q.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, "");
+    console.log(searchCriteria + ":" + q );    
+    if (q === null || q === undefined || q=== ''){
+        res.send({ billingList: null,
+                    Status: 400,
+                    Message: "Enter correct value"});
+    }
+    else{
+        var msg_payload = {
+            "startPosition" : startPosition,
+            "searchCriteria" : searchCriteria,
+            "q": q,
+            "func" : "getBillingSearchList"
+        };
+        mq_client.make_request('adminBilling_queue', msg_payload, function(err,results) {
+            if (err) {
+                res.status(500).send(null);
+            } else {
+                console.log("about results" + results);
+                res.send({ //billingList: results.billingList,
+                               Status: results.Status,
+                               Message:results.Message,
+                               count: results.count,
+                           });
+            }
+        });
+    }
+};      // end adminGetBillingSearchList
+
+////////////////////   ***** End Billing module ******* //////////////////////////////
+
+////////////////////   ***** Start Stats module ******* //////////////////////////////
 
 exports.testGraph = function(req, res){
     console.log("testGraph");
@@ -248,3 +421,4 @@ exports.testGraph = function(req, res){
 
 };      // end testGraph
 
+////////////////////   ***** end Stats module ******* //////////////////////////////

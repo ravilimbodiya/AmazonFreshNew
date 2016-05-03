@@ -157,3 +157,33 @@ exports.postReviewRating = function(msg, callback){
 	});
 	
 };
+
+exports.editprofileCustomer = function(msg, callback){
+
+	console.log('reached edit farmer');
+	var updateprofilequery = "UPDATE customers SET first_name='"+msg.lastname+"', last_name='"+msg.firstname+"', city='"+msg.city+"', state='"+msg.state+"', zipcode='"+msg.zipcode+"', contact='"+msg.contact+"' where far_id='"+msg.customerId+"'";
+	var json_responses;
+	console.log("Query is:"+query);
+	console.log(msg.city);
+	mysql.fetchData(function(err,results){
+		if(err){
+			console.log("ERROR: "+err);
+			json_responses = {"statusCode" : 401};
+			callback(null, json_responses);
+		}
+		else
+		{
+
+			/*	var rows = results;
+			 var jsonString = JSON.stringify(results);
+			 var jsonParse = JSON.parse(jsonString);*/
+			console.log('reached else');
+			json_responses = {"statusCode" : 200};
+			//console.log(jsonParse);
+			callback(null, json_responses);
+
+		}
+	}, updateprofilequery, []);
+
+
+};

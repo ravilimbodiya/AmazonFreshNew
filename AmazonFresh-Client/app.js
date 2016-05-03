@@ -82,6 +82,9 @@ app.post('/getAllOrdersByCustId',  sessionMgmt.restrict, order.getAllOrdersByCus
 app.get('/searchProduct/:keyword',  sessionMgmt.restrict, product.displayProductSearchResult);
 app.post('/searchProductByAttribute',  sessionMgmt.restrict, product.searchProductByAttribute);
 app.post('/postReviewRating',  sessionMgmt.restrict, product.postReviewRating);
+app.post('/getcurrentcustomer', sessionMgmt.restrict, customer.getcurrentCustomer);
+app.get('/editprofilecustomer1',sessionMgmt.restrict, customer.redirectToeditprofileCustomer);
+app.post('/editProfilecustomer2',sessionMgmt.restrict, customer.editProfilecustomer);
 
 //Farmer module
 app.get('/farmerDashboard',  sessionMgmt.restrict, farmer.farmerDashboard);
@@ -89,6 +92,11 @@ app.get('/addProduct',  sessionMgmt.restrict, farmer.addProduct);
 app.get('/loadProducts',  sessionMgmt.restrict, farmer.loadProducts);
 app.post('/renderAddProduct',  sessionMgmt.restrict, farmer.renderAddProduct);
 app.post('/submitAddProduct',  sessionMgmt.restrict, farmer.submitAddProduct);
+app.get('/editprofile',sessionMgmt.restrict, farmer.redirectToeditprofile);
+app.post('/editProfilefarmer',sessionMgmt.restrict, farmer.editProfilefarmer);
+app.post('/getcurrentfarmer',sessionMgmt.restrict, farmer.getcurrentFarmer);
+app.get('/renderFeedback/:prodId', sessionMgmt.restrict, farmer.renderFeedback);
+app.post('/viewFeedback', sessionMgmt.restrict, farmer.viewFeedback);
 
 //Admin module
 app.get('/admin', index.adminSignIn);

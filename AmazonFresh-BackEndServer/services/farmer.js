@@ -143,3 +143,74 @@ exports.loadProducts = function(msg, callback){
 		}  
 	}, query);
 };
+
+exports.editprofileFarmer = function(msg, callback){
+
+	console.log('reached edit farmer');
+	var updateprofilequery = "UPDATE farmers SET first_name='"+msg.lastname+"', last_name='"+msg.firstname+"', city='"+msg.city+"', state='"+msg.state+"', zipcode='"+msg.zipcode+"', contact='"+msg.contact+"' where far_id='"+msg.farmerId+"'";
+	var json_responses;
+	console.log("Query is:"+updateprofilequery);
+	console.log(msg.city);
+	mysql.fetchData(function(err,results){
+		if(err){
+			console.log("ERROR: "+err);
+			json_responses = {"statusCode" : 401};
+			callback(null, json_responses);
+		}
+		else
+		{
+
+		/*	var rows = results;
+			var jsonString = JSON.stringify(results);
+			var jsonParse = JSON.parse(jsonString);*/
+			console.log('reached else');
+			json_responses = {"statusCode" : 200};
+			//console.log(jsonParse);
+			callback(null, json_responses);
+
+		}
+	}, updateprofilequery, []);
+
+
+};
+
+exports.viewFeedback = function(msg, callback){
+	
+	console.log("Inside view feedback server");
+	var farmerId = msg.farmerId.toString();
+	var prodId = msg.prodId;
+	
+	console.log("Farmer Id: " + farmerId);
+	console.log("prodId " + prodId);
+	
+				//To retrieve ratings and reviews for the farmer
+				mongo.connect(mongoURL, function(){
+					
+					console.log('Connected to mongo at: ' + mongoURL);					
+					var coll = mongo.collection('reviews_rating');
+
+						coll.find({$and:[{farmer_id: farmerId, product_id: prodId}]}).toArray(function(err1, rows){
+							if(err1)
+							{
+								console.log("No Feedback");
+								json_responses = {"statusCode" : 200, "feedback": null};				
+								callback(null, json_responses);
+							}
+							else
+							{
+								
+								console.log("Feedback Row: " + JSON.stringify(rows));
+								if(rows.length>0){	
+									json_responses = {"statusCode": 200, "feedback": rows[0].feedback};
+									console.log("Feedback:" + JSON.stringify(rows[0].feedback));
+									callback(null, json_responses);		
+								}
+								else{
+									json_responses = {"statusCode": 200, "feedback": null};		
+									console.log("Feedback:" + rows.feedback);
+									callback(null, json_responses);
+								}																			
+							}							
+						});//end find																				
+				}); //end mongo											
+};
