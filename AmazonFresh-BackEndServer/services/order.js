@@ -11,6 +11,7 @@ exports.placeOrder = function(msg, callback){
 		console.log("order creation ");
 		var orderNum = Math.floor((Math.random() * 10000000000));
 		var params = {	order_id: orderNum,
+						order_date: new Date(),
 						cust_id: msg.customerObj.cust_id, 
 						customer_id: msg.customerObj.customer_id, 
 						customer_first_name: msg.customerObj.first_name, 

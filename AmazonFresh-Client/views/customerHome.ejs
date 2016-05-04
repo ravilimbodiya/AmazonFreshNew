@@ -41,12 +41,12 @@
 			        <li class="dropdown">
 			          <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="margin-right: 10px; padding: 5px;" role="button" aria-haspopup="true" aria-expanded="false"><img alt="" src="/images/user.png" class="profilePic"><span class="caret"></span></a>
 			          <ul class="dropdown-menu">
-			            <li style="padding: 10px;"><a href="#">User Name<br><span style="font-size: 9px;">View Profile</span></a></li>
-			            <li style="padding: 10px;"><a href="/viewPurchaseHistory">Purchase History</a></li>
-			            <li style="padding: 10px;"><a href="#">Help</a></li>
-			            <li style="padding: 10px;"><a href="#">Settings</a></li>
+			            <li><a href="#"><%=user[0].first_name%> <%=user[0].last_name%><br><span style="font-size: 9px;">View Profile</span></a></li>
+			            <li><a href="/viewPurchaseHistory">Purchase History</a></li>
+			            <li><a href="#">Help</a></li>
+			            <li><a href="#">Settings</a></li>
 			            <li role="separator" class="divider"></li>
-			            <li style="padding: 10px;"><a href="/logout">Log out</a></li>
+			            <li><a href="/logout">Log out</a></li>
 			          </ul>
 			        </li>
 			     </ul>
@@ -66,11 +66,11 @@
 					    <span class="caret"></span>
 					  </button>
 					  <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-					    <li><span ng-click="listAllProductsByCategory('produce');" style="padding: 15px;">Produce</span></li>
-					    <li><span ng-click="listAllProductsByCategory('perishable');" style="padding: 15px;">Perishables</span></li>
-					    <li><span ng-click="listAllProductsByCategory('preparedfoods');" style="padding: 15px;">Prepared Foods</span></li>
-					    <li><span ng-click="listAllProductsByCategory('pantry');" style="padding: 15px;">Pantry</span></li>
-					    <li><span ng-click="listAllProductsByCategory('speciality');" style="padding: 15px;">Speciality</span></li>
+					    <li style="padding: 10px;"><span ng-click="listAllProductsByCategory('produce');" style="padding: 15px;">Produce</span></li>
+					    <li style="padding: 10px;"><span ng-click="listAllProductsByCategory('perishable');" style="padding: 15px;">Perishables</span></li>
+					    <li style="padding: 10px;"><span ng-click="listAllProductsByCategory('preparedfoods');" style="padding: 15px;">Prepared Foods</span></li>
+					    <li style="padding: 10px;"><span ng-click="listAllProductsByCategory('pantry');" style="padding: 15px;">Pantry</span></li>
+					    <li style="padding: 10px;"><span ng-click="listAllProductsByCategory('speciality');" style="padding: 15px;">Speciality</span></li>
 					  </ul>
 					</div>
 		    	</div>

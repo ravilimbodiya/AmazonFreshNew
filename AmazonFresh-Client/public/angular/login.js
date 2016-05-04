@@ -45,7 +45,7 @@ login.controller('login', function($scope, $http) {
 		
 	};
 	
-	$scope.login = function() {
+	$scope.login = function(userType) {
 		var allValidFlag = true;
 		
 		if(!$scope.form.email.$valid || $scope.email === undefined || $scope.email === ""){
@@ -62,7 +62,7 @@ login.controller('login', function($scope, $http) {
 			$scope.pwderror = false;
 		}
 		
-		if($scope.userType === undefined || $scope.userType === ""){
+		if(userType === undefined || userType === ""){
 			$scope.uterror = true;
 			allValidFlag = false;
 		} else {
@@ -75,7 +75,7 @@ login.controller('login', function($scope, $http) {
 				data : {
 					"email" : $scope.email,
 					"password" : $scope.password,
-					"userType": $scope.userType
+					"userType": userType
 				}
 			}).success(function(data) {
 				//checking the response data for statusCode

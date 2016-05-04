@@ -1,7 +1,43 @@
 
 var app = angular.module('adminApp', ['ngRoute', 'infinite-scroll']);
 app.controller('adminMainController', function($scope, $http, $rootScope){	
-$rootScope.test = 1000;
+	$scope.states = ["AL", "AK","AZ","AR","CA","CO","CT","DE","DC","FL",
+	                 "GA", "HI","ID","IL","IN","IA","KS","KY","LA","ME", 
+	                 "MD", "MA","MI","MN","MS","MO","MT","NE","NV","NH",
+	                 "NJ", "NM","NY","NC","ND","OH","OK","OR","PA","RI",
+	                 "SC", "SD","TN","TX","UT","VT","VA","WA","WV","WY"];
+	 $scope.months = ["Jan", "Feb","Mar","Apr","May","Jun","Jul","Aug","Sept","Oct","Nov", "Dec"];
+
+	    $scope.adminGetUniqueProductTypes = function () {
+	        $scope.productTypes = [];
+	        $http({
+	            method: "GET",
+	            url: '/adminGetUniqueProductTypes'
+	        }).success(function (response) {
+	            if (response.Status == 200) {
+	                $scope.productTypes = response.productTypes;
+	                alert(response.Message);
+	            }
+	            else {
+	                $scope.productTypes = [];
+	            }
+	        });
+	    };
+	    $scope.adminGetUniqueProducts = function () {
+	        $scope.products = [];
+	        $http({
+	            method: "GET",
+	            url: '/adminGetUniqueProducts'
+	        }).success(function (response) {
+	            if (response.Status == 200) {
+	                $scope.products = response.products;
+	                alert(response.Message);
+	            }
+	            else {
+	                $scope.products = [];
+	            }
+	        });
+	    };
 
 
 ////////*********** farmer tab functionalities start  ************//////////////
@@ -165,6 +201,7 @@ $rootScope.test = 1000;
             if (response.Status == 202) {
                 alert(response.Message);
                 f.approve =true;
+                f.disapprove =false;
             }
             else {
                 alert("Error: Unable to add farmer to the system.");
@@ -183,7 +220,49 @@ $rootScope.test = 1000;
             //alert(JSON.stringify(response));
             if (response.Status == 202) {
                 alert(response.Message);
-                f.dispprove =true;
+                f.approved =false;
+                f.disapprove =true;
+            }
+            else {
+                alert("Error");
+            }
+        });
+    };
+    
+    $scope.approveFarmerOnSearch = function (f) {
+        alert(f.far_id);
+        $http({
+            method: "GET",
+            url: '/adminApproveFarmer',
+            params: {
+             "farmer": f.far_id
+            }
+        }).success(function (response) {
+            //alert(JSON.stringify(response));
+            if (response.Status == 202) {
+                alert(response.Message);
+                f.approved1 =false;
+                //f.disapprove =false;
+            }
+            else {
+                alert("Error: Unable to add farmer to the system.");
+            }
+        });
+    };
+    $scope.disApproveFarmerOnSearch = function (f) {
+        alert(f.far_id);
+        $http({
+            method: "GET",
+            url: '/adminDisapproveFarmer',
+            params: {
+             "farmer": f.far_id
+            }
+        }).success(function (response) {
+            //alert(JSON.stringify(response));
+            if (response.Status == 202) {
+                alert(response.Message);
+                f.approved = 1;
+                //f.disapprove =true;
             }
             else {
                 alert("Error");
@@ -471,9 +550,474 @@ $rootScope.test = 1000;
     }
     };
     
-////////*********** Customer tab functionalities end  ************//////////////
+////////*********** Product tab functionalities start  ************//////////////
+    $scope.p1 =[]  // product list
+    $scope.p2 =[]  // product approval lits
+    $scope.p3 =[]  // product search list
+    $scope.pc="product_id"; // search product criteria dropdown
+    var p1_startPosition = 0;    
+    var p2_startPosition = 0;
+    var p3_startPosition = 0;
+    $scope.p1_stopLoading = false;
+    $scope.p2_stopLoading = false;
+    $scope.p3_stopLoading = false;
+
+    $scope.getProductList = function () {
+        $scope.p1 = [];
+        p1_startPosition = 0;
+        $http({
+            method: "GET",
+            url: '/adminGetProductList',
+            params: {
+                startPosition: 0
+            }
+        }).success(function (response) {
+            if (response.Status === 200) {
+                $scope.p1 = response.productList;
+                $scope.p1_count = response.count;
+                p1_startPosition = $scope.p1.length;
+            }
+            else {
+                $scope.p1 = [];
+            }
+        });
+    };
+
+    $scope.loadMoreP1 = function (){
+        console.log("P1 startPosition::::::::" + p1_startPosition);
+        if (p1_startPosition > 0  ){    
+        $http({
+            method: "GET",
+            url: '/adminGetProductList',
+            params: {
+                "startPosition": p1_startPosition
+            }
+        }).success(function (response) {
+            console.log("received count"+response.count);
+            if(response.count === undefined || response.count === 0 || response.count === null){
+                p1_startPosition = 0;
+                $scope.p1_stopLoading = true;
+            }
+            else{
+                if ($scope.p1_stopLoading === false){
+                    for (i = 0; i < response.count; i++) {
+                        $scope.p1.push(response.productList[i]);
+                    }
+                }
+            p1_startPosition = p1_startPosition + response.count;
+            $scope.p1_count =  $scope.p1_count  + response.count;
+            }
+
+        }).error(function (err) {
+            $scope.p1 = [];
+            p1_startPosition = 0;
+            $scope.p1_stopLoading = true;
+        });
+    }
+    }// end loadMoreP1 
+
+    $scope.getProductApprovalPendingList = function () {
+        $scope.p2 = [];
+        p2_startPosition = 0;
+        $http({
+            method: "GET",
+            url: '/adminGetProductApprovalPendingList',
+            params: {
+                startPosition: 0
+            }
+        }).success(function (response) {
+            if (response.Status == 200) {
+                $scope.p2 = response.productList;
+                $scope.p2_count = response.count;
+                p2_startPosition = $scope.p2.length;
+            }
+            else {
+                $scope.p2 = [];
+            }
+        });
+    };
+
+    $scope.loadMoreP2 = function () {
+        console.log("P2 startPosition:" + p2_startPosition);
+        if (p2_startPosition > 0 ){ 
+        $http({
+            method: "GET",
+            url: '/adminGetProductApprovalPendingList',
+            params: {
+                "startPosition": p2_startPosition
+            }
+        }).success(function (response) {
+            console.log("received count"+response.count);
+            if(response.count === undefined || response.count === 0 || response.count === null){
+                p2_startPosition = 0;
+                $scope.p2_stopLoading = true;
+            }
+            else{
+                
+                    for (i = 0; i < response.count; i++) {
+                        $scope.p2.push(response.productList[i]);
+                    }
+                    p2_startPosition = p2_startPosition + response.count;
+                    $scope.p2_count =  $scope.p2_count  + response.count;
+                
+            }
+        }).error(function (err) {
+            $scope.p2 = [];
+            p2_startPosition = 0;
+            $scope.p2_stopLoading = true;
+        });
+    }
+    };
+    
+    $scope.approveProduct = function (p) {
+        alert(p.product_id);
+        $http({
+            method: "GET",
+            url: '/adminApproveProduct',
+            params: {
+             "product": p.product_id
+            }
+        }).success(function (response) {
+            //alert(JSON.stringify(response));
+            if (response.Status == 202) {
+                alert(response.Message);
+                p.approve =true;
+                p.disapprove =false;
+            }
+            else {
+                alert("Error: Unable to add product to the system.");
+            }
+        });
+    };
+    $scope.disApproveProduct = function (p) {
+        alert(p.product_id);
+        $http({
+            method: "GET",
+            url: '/adminDisapproveProduct',
+            params: {
+             "product": p.product_id
+            }
+        }).success(function (response) {
+            //alert(JSON.stringify(response));
+            if (response.Status == 202) {
+                alert(response.Message);
+                p.disapprove =true;
+                p.approve =false;
+            }
+            else {
+                alert("Error");
+            }
+        });
+    };
+
+    $scope.searchProduct = function () {
+        alert($scope.pc + ":" +$scope.pq);
+        $scope.p = [];
+        p3_startPosition = 0;
+        $scope.pq = $scope.pq.replace(/[^a-z0-9A-Z@_+-]/g, "");
+        alert("refine:" +$scope.pq);
+        $http({
+            method: "GET",
+            url: '/adminGetProductSearchList',
+            params: {
+                startPosition: p3_startPosition,
+                criteria: $scope.pc,
+                q: $scope.pq
+            }
+        }).success(function (response) {
+            if (response.Status == 200) {
+                $scope.p3 = response.productList;
+                $scope.p3_count = response.count;
+            }
+            else {
+                $scope.p3 = [];
+            }
+            p3_startPosition = $scope.p3.length;
+            console.log("showProductList startPosition:" + p3_startPosition);
+        });
+    };
+
+    $scope.loadMoreP3 = function () {
+        console.log("P3 startPosition:" + p3_startPosition);
+        if (p3_startPosition > 0 ){ 
+        $http({
+            method: "GET",
+            url: '/adminGetProductSearchList',
+            params: {
+                startPosition: c3_startPosition,
+                criteria: $scope.pc,
+                q: $scope.pq
+            }
+        }).success(function (response) {
+            console.log("received count"+response.count);
+            if(response.count === undefined || response.count === 0 || response.count === null){
+                p3_startPosition = 0;
+                $scope.p3_stopLoading = true;
+            }
+            else{               
+                for (i = 0; i < response.count; i++) {
+                    $scope.p3.push(response.productList[i]);
+                }
+            p3_startPosition = p3_startPosition + response.count;
+            $scope.p3_count =  $scope.p3_count  + response.count;
+            }
+        }).error(function (err) {
+            $scope.p3 = [];
+            p3_startPosition = 0;
+            $scope.p3_stopLoading = true;
+        });
+    }
+    };
+    
+////////*********** Product tab functionalities end  ************//////////////
+    
+////////*********** admin Bills tab functionalities start  ************//////////////
+
+    $scope.b1 =[]  // billsing list
+    //$scope.b2 =[]  // billing approval lits
+    $scope.b3 =[]  // billing search list
+    $scope.bc="order_id"; // search customer criteria dropdown
+    var b1_startPosition = 0;    
+    var b2_startPosition = 0;
+    var b3_startPosition = 0;
+    $scope.b1_stopLoading = false;
+    $scope.b2_stopLoading = false;
+    $scope.b3_stopLoading = false;
+
+    $scope.getBillingList = function () {
+        $scope.b1 = [];
+        b1_startPosition = 0;
+        $http({
+            method: "GET",
+            url: '/adminGetBillingList',
+            params: {
+                startPosition: 0
+            }
+        }).success(function (response) {
+            if (response.Status == 200) {
+                alert(response.Message);
+                $scope.b1 = response.billingList;
+                $scope.b1_count = response.billingList.length;
+                b1_startPosition = $scope.b1.length;
+            }
+            else {
+                $scope.b1 = [];
+            }
+        });
+    };
+
+    $scope.loadMoreB1 = function (){
+        console.log("B1 startPosition::::::::" + b1_startPosition);
+        if (b1_startPosition > 0  ){    
+        $http({
+            method: "GET",
+            url: '/adminGetBillingList',
+            params: {
+                "startPosition": b1_startPosition
+            }
+        }).success(function (response) {
+            console.log("received count"+response.count);
+            if(response.count === undefined || response.count === 0 || response.count === null){
+                b1_startPosition = 0;
+                $scope.b1_stopLoading = true;
+            }
+            else{
+                if ($scope.b1_stopLoading === false){
+                    for (i = 0; i < response.count; i++) {
+                        $scope.b1.push(response.billingList[i]);
+                    }
+                }
+            b1_startPosition = b1_startPosition + response.count;
+            $scope.b1_count =  $scope.b1_count  + response.count;
+            }
+
+        }).error(function (err) {
+            $scope.b1 = [];
+            b1_startPosition = 0;
+            $scope.b1_stopLoading = true;
+        });
+    }
+    }// end loadMoreB1 
+
+    $scope.searchBill = function () {
+        alert($scope.bc + ":" +$scope.bq);
+        $scope.b3 = [];
+        b3_startPosition = 0;
+        $scope.bq = $scope.bq.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, "");
+        alert("Search Term: " +$scope.bq);
+        $http({
+            method: "GET",
+            url: '/adminGetBillingSearchList',
+            params: {
+                startPosition: b3_startPosition,
+                criteria: $scope.bc,
+                q: $scope.bq
+            }
+        }).success(function (response) {
+            if (response.Status == 200) {
+                $scope.b3 = response.billingList;
+                $scope.b3_count = response.billingList.length;
+            }
+            else if (response.Status == 400)
+                alert(response.Message);
+            else {
+                $scope.b3 = [];
+            }
+            b3_startPosition = $scope.b3.length;
+            console.log("showFarmerList startPosition:" + b3_startPosition);
+        });
+    };
+
+    $scope.loadMoreB3 = function () {
+        console.log("B3 startPosition:" + b3_startPosition);
+        if (b3_startPosition > 0 ){ 
+        $http({
+            method: "GET",
+            url: '/adminGetBillingSearchList',
+            params: {
+                startPosition: b3_startPosition,
+                criteria: $scope.bc,
+                q: $scope.bq
+            }
+        }).success(function (response) {
+            console.log("received count"+response.count);
+            if(response.count === undefined || response.count === 0 || response.count === null){
+                b3_startPosition = 0;
+                $scope.b3_stopLoading = true;
+            }
+            else{               
+                for (i = 0; i < response.count; i++) {
+                    $scope.b3.push(response.farmerList[i]);
+                }
+            b3_startPosition = b3_startPosition + response.count;
+            $scope.b3_count =  $scope.b3_count  + response.count;
+            }
+        }).error(function (err) {
+            $scope.b3 = [];
+            b3_startPosition = 0;
+            $scope.b3_stopLoading = true;
+        });
+    }
+    };
+
+////////*********** end admin Bills tab functionalities  ************//////////////
 
  $scope.dmax =new Date().toJSON().slice(0,10);
 
+ 	// Showing all customers trips on Map
+ 	$scope.showAllTripsOnMap = function(){
+ 		
+ 		$http({
+			method : "POST",
+			url : '/getAllOrdersForAdmin',
+			data : {}
+		}).success(function(data) {
+				//$scope.zipcodes = data.zipcodes;
+				var farmerLat;
+				var farmerLong;
+				var custLat;
+				var custLong;
+				var zips = data.zipcodes;
+				document.getElementById('map').style = "height: 600px;";
+				var map = new google.maps.Map(document.getElementById('map'), {
+		            center: {lat: 37.3456227, lng: -121.8847222},
+		            zoom: 10,
+		            mapTypeId: google.maps.MapTypeId.TERRAIN
+		          });
+				var lineSymbol = {
+		                path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
+		                scale: 3,
+		                strokeColor: '#393'
+		              };
+				var i = 0;
+				 var interval = setInterval(function() {
+					$http({
+						method : "GET",
+						url : 'http://maps.googleapis.com/maps/api/geocode/json?address='+zips[i].farmerZip
+					
+					}).success(function(data1) {
+						farmerLat = Number(data1.results[0].geometry.location.lat);
+						farmerLong = Number(data1.results[0].geometry.location.lng);
+						
+						$http({
+							method : "GET",
+							url : 'http://maps.googleapis.com/maps/api/geocode/json?address='+zips[i].customerZip
+						
+						}).success(function(data2) {
+							custLat = Number(data2.results[0].geometry.location.lat);
+							custLong = Number(data2.results[0].geometry.location.lng);
+							
+							var line = new google.maps.Polyline({
+					            path: [{lat: farmerLat, lng: farmerLong}, {lat: custLat, lng: custLong}],
+					            icons: [{
+					              icon: lineSymbol,
+					              offset: '100%'
+					            }],
+					            map: map
+					          });
+							var count = 0;
+					        window.setInterval(function() {
+						          count = (count + 1) % 200;
+						
+						          var icons = line.get('icons');
+						          icons[0].offset = (count / 2) + '%';
+						          line.set('icons', icons);
+						      }, 300);
+						}).error(function(error) {
+						});
+					}).error(function(error) {
+				});
+				i++;
+			    if(i === zips.length){
+			        clearInterval(interval);
+			    }
+			}, 3000);
+		}).error(function(error) {
+			
+		});
+ 		
+ 	};
+ 
 });
 
+
+////////*********** Start admin DynamicPricing tab functionalities ************//////////////
+
+$(document).ready(function () {
+    
+    $(".applyDPForProductType").on("click", function () {
+        i=0;
+        var productTypes =[];
+        $('.productTypes_checkbox:checked').each(function () {
+           productTypes[i++] = $(this).val();
+       });
+        var percentage = $("#DPPercentageProductType").val();
+        alert ("Applying new pricing of " + percentage +      " for the following parameters: " + productTypes );
+        var param = { productType: productTypes[0], 
+                        percentage: percentage
+                    }
+        $.getJSON("\ adminApplyDPForProductType",  param, function(res){
+           alert(res.Message);
+        });
+
+    });
+    $(".applyDPForProduct").on("click", function () {
+        i=0;
+        var products =[];
+        $('.products_checkbox:checked').each(function () {
+           products[i++] = $(this).val();
+       });
+        var percentage = $("#DPPercentageProduct").val();
+        alert ("Applying new pricing of " + percentage +      " for the following parameters: " + products );
+        var param = { product: products[0], 
+                        percentage: percentage
+                    }
+        $.getJSON("\ adminApplyDPForProduct",  param, function(res){
+           alert(res.Message);
+        });
+
+    });
+
+});
+    
+////////*********** End admin DynamicPricing tab functionalities ************//////////////

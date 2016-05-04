@@ -695,6 +695,24 @@ cnn.on('ready', function () {
     });
     
 ////*******    start admin farmer module  *****  /////
+    cnn.queue('getAllOrdersForAdmin_queue', function (q) {
+        q.subscribe(function (message, headers, deliveryInfo, m) {
+            util.log(util.format(deliveryInfo.routingKey, message));
+            util.log("Message: " + JSON.stringify(message));
+            util.log("DeliveryInfo: " + JSON.stringify(deliveryInfo));            
+            
+            admin.getAllOrdersForAdmin(message, function (err, res) {
+
+                //return index sent
+                cnn.publish(m.replyTo, res, {
+                    contentType: 'application/json',
+                    contentEncoding: 'utf-8',
+                    correlationId: m.correlationId
+                });
+            });
+        });
+    });
+    
 	cnn.queue('adminFarmer_queue', function(q){
 		console.log("listening on adminFarmer_queue");		
 		q.subscribe(function(message, headers, deliveryInfo, m){
@@ -842,5 +860,183 @@ cnn.on('ready', function () {
 		});
 	});   // end  adminCustomer_queue
 //// *******    end  admin Customer module  *****  /////
+	
+////*******    start admin Product module  *****  /////
+    cnn.queue('adminProduct_queue', function(q){
+        console.log("listening on adminProduct_queue");        
+        q.subscribe(function(message, headers, deliveryInfo, m){
+            util.log(util.format( deliveryInfo.routingKey, message));
+            util.log("Message: "+JSON.stringify(message));
+            util.log("DeliveryInfo: "+JSON.stringify(deliveryInfo));
 
+            switch (message.func) {
+                case "getProductList":
+                    admin.handle_request_getProductList(message, function(err,res){
+                        util.log("Correlation ID: " + m.correlationId);
+                        // return index sent
+                        cnn.publish(m.replyTo, res, {
+                            contentType: 'application/json',
+                            contentEncoding: 'utf-8',
+                            correlationId: m.correlationId
+                    });
+                });
+                break;
+
+                case "getProductApprovalPendingList":
+                    admin.handle_request_getProductApprovalPendingList(message, function(err,res){
+                        util.log("Correlation ID: " + m.correlationId);
+                        // return index sent
+                        cnn.publish(m.replyTo, res, {
+                            contentType: 'application/json',
+                            contentEncoding: 'utf-8',
+                            correlationId: m.correlationId
+                    });
+                });
+                break;
+
+                case "approveProduct":
+                    admin.handle_request_approveProduct(message, function(err,res){
+                        util.log("Correlation ID: " + m.correlationId);
+                        // return index sent
+                        cnn.publish(m.replyTo, res, {
+                            contentType: 'application/json',
+                            contentEncoding: 'utf-8',
+                            correlationId: m.correlationId
+                    });
+                });
+                break; 
+
+                case "disApproveProduct":
+                    admin.handle_request_disApproveProduct(message, function(err,res){
+                        util.log("Correlation ID: " + m.correlationId);
+                        // return index sent
+                        cnn.publish(m.replyTo, res, {
+                            contentType: 'application/json',
+                            contentEncoding: 'utf-8',
+                            correlationId: m.correlationId
+                    });
+                });
+                break; 
+
+                case "getProductSearchList":
+                    admin.handle_request_getProductSearchList(message, function(err,res){
+                        util.log("Correlation ID: " + m.correlationId);
+                        // return index sent
+                        cnn.publish(m.replyTo, res, {
+                            contentType: 'application/json',
+                            contentEncoding: 'utf-8',
+                            correlationId: m.correlationId
+                    });
+                });
+                break;
+
+            }
+        });
+    });   // end  adminProduct_queue
+//// *******    end  admin Product module  *****  /////
+////*******    Start  admin Billing module  *****  /////
+    cnn.queue('adminBilling_queue', function(q){
+            console.log("listening on adminBilling_queue");     
+            q.subscribe(function(message, headers, deliveryInfo, m){
+                util.log(util.format( deliveryInfo.routingKey, message));
+                util.log("Message: "+JSON.stringify(message));
+                util.log("DeliveryInfo: "+JSON.stringify(deliveryInfo));
+
+                switch (message.func) {
+                    case "getBillingList":
+                        admin.getAllOrdersForAdmin(message, function(err,res){
+                            util.log("Correlation ID: " + m.correlationId);
+                            // return index sent
+                            cnn.publish(m.replyTo, res, {
+                                contentType: 'application/json',
+                                contentEncoding: 'utf-8',
+                                correlationId: m.correlationId
+                        });
+                    });
+                    break;
+                    case "getBillingSearchListByCustId":
+                        admin.handle_request_getBillingSearchListByCustId(message, function(err,res){
+                            util.log("Correlation ID: " + m.correlationId);
+                            // return index sent
+                            cnn.publish(m.replyTo, res, {
+                                contentType: 'application/json',
+                                contentEncoding: 'utf-8',
+                                correlationId: m.correlationId
+                        });
+                    });
+                    break;
+                    case "getBillingSearchListByBillId":
+                        admin.handle_request_getBillingSearchListByBillId(message, function(err,res){
+                            util.log("Correlation ID: " + m.correlationId);
+                            // return index sent
+                            cnn.publish(m.replyTo, res, {
+                                contentType: 'application/json',
+                                contentEncoding: 'utf-8',
+                                correlationId: m.correlationId
+                        });
+                    });
+                    break;
+                }
+            });
+        });
+
+    //// *******    end   admin Billing module  *****  /////
+////*******    Start  admin Dynamic Pricing module  *****  /////
+    cnn.queue('adminDynamicPricing_queue', function(q){
+           console.log("listening on adminDynamicPricing_queue");     
+           q.subscribe(function(message, headers, deliveryInfo, m){
+               util.log(util.format( deliveryInfo.routingKey, message));
+               util.log("Message: "+JSON.stringify(message));
+               util.log("DeliveryInfo: "+JSON.stringify(deliveryInfo));
+
+               switch (message.func) {
+                   case "applyDPForProductType":
+                       admin.handle_request_applyDPForProductType(message, function(err,res){
+                           util.log("Correlation ID: " + m.correlationId);
+                           // return index sent
+                           cnn.publish(m.replyTo, res, {
+                               contentType: 'application/json',
+                               contentEncoding: 'utf-8',
+                               correlationId: m.correlationId
+                       });
+                   });
+                   break;
+                   case "applyDPForProduct":
+                       admin.handle_request_applyDPForProduct(message, function(err,res){
+                           util.log("Correlation ID: " + m.correlationId);
+                           // return index sent
+                           cnn.publish(m.replyTo, res, {
+                               contentType: 'application/json',
+                               contentEncoding: 'utf-8',
+                               correlationId: m.correlationId
+                       });
+                   });
+                   break;
+                   case "getUniqueProducts":
+                       admin.handle_request_getUniqueProducts(message, function(err,res){
+                           util.log("Correlation ID: " + m.correlationId);
+                           // return index sent
+                           cnn.publish(m.replyTo, res, {
+                               contentType: 'application/json',
+                               contentEncoding: 'utf-8',
+                               correlationId: m.correlationId
+                       });
+                   });
+                   break;
+                   case "getUniqueProductTypes":
+                       admin.handle_request_getUniqueProductTypes(message, function(err,res){
+                           util.log("Correlation ID: " + m.correlationId);
+                           // return index sent
+                           cnn.publish(m.replyTo, res, {
+                               contentType: 'application/json',
+                               contentEncoding: 'utf-8',
+                               correlationId: m.correlationId
+                       });
+                   });
+                   break;
+               }
+           });
+       });
+
+    //// *******    end   admin Billing module  *****  /////
 });

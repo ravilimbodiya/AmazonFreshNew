@@ -63,7 +63,7 @@
 			        <li class="dropdown">
 			          <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="margin-right: 10px; padding: 5px;" role="button" aria-haspopup="true" aria-expanded="false"><img alt="" src="/images/user.png" class="profilePic"><span class="caret"></span></a>
 			          <ul class="dropdown-menu">
-			            <li><a href="#">User Name<br><span style="font-size: 9px;">View Profile</span></a></li>
+			            <li><a href="#">Admin<br><span style="font-size: 9px;">View Profile</span></a></li>
 			            <li><a href="#">Help</a></li>
 			            <li><a href="#">Settings</a></li>
 			            <li role="separator" class="divider"></li>
@@ -98,13 +98,14 @@
 	    		<li><a data-toggle="tab" href="#billsTab">BILLS</a></li>
 	    		<li><a data-toggle="tab" href="#statisticsTab">STATISTICS</a></li>
 	    		<li><a data-toggle="tab" href="#tripsTab">TRIPS</a></li>
+	    		<li><a data-toggle="tab" href="#dynamicPricingTab">DYNAMIC PRICING</a></li>
 			</ul>
 			<div class="tab-content" style=" background-color: #fff;">
 	    		<div id="homeTab" class="tab-pane fade in active">
 	    		</div>
 	    		<div id="farmerTab" class="tab-pane fade">
 	    	    	<span class="adminSearch">
-						<button class="btn btn-default clickShowApprovalPendingFarmers" href="javascript:void(0)" type="button" ng-click="getFarmerApprovalPendingList();">Farmer Approval Pending </button> 
+						<button class="btn btn-default clickShowApprovalPendingFarmers" href="javascript:void(0)" type="button" ng-click="getFarmerApprovalPendingList();">Farmer Pending Approval</button> 
 						<button class="btn btn-default clickShowAllFarmers" href="javascript:void(0)" type="button" ng-click="getFarmerList();">Show All Farmers </button> 				
 					</span>
 					<span class="adminSearchBy">Search By</span>
@@ -166,18 +167,18 @@
 		    	</div>
 		    	<div id="billsTab" class="tab-pane fade">
 	    	    	<span class="adminSearch">
-						<button class="btn btn-default clickShowBills" href="javascript:void(0)" type="button" ng-click="showBillingList();">Show All Bills </button> 
+						<button class="btn btn-default clickShowBills" href="javascript:void(0)" type="button" ng-click="getBillingList();">Show All Bills </button> 
 					</span>
 					<span class="adminSearchBy">Search By</span>
 					<span class="adminSearch">
-						<select class="btn btn-default">
+						<select class="btn btn-default" ng-model="bc">
 						<option value="">Select Criteria To Search</option>
 						  <option value="billId">Bill ID</option>
-						  <option value="billDate">Bill Date</option>
+						  <option value="custId">Customer ID</option>
 						</select>	
 					</span>
-					<span class="adminSearchInput"><input type="text" class="form-control" name="searchBill" placeholder="Enter Search value.."></span>
-					<span class="adminSearch"><button class="btn btn-default clickSearchBill" href="javascript:void(0)"type="button"><img alt="Brand" src="../images/search.png" style="width:18px;height:18px">Search Bill </button></span> 
+					<span class="adminSearchInput"><input type="text" class="form-control" name="searchBill" ng-model="bq" placeholder="Enter Search value.."></span>
+					<span class="adminSearch"><button class="btn btn-default clickSearchBill" ng-click="searchBill();" href="javascript:void(0)"type="button"><img alt="Brand" src="../images/search.png" style="width:18px;height:18px">Search Bill </button></span> 
 		    	</div>
 		    	<div id="statisticsTab" class="tab-pane fade">
 	    	    	<span class="adminSearch">
@@ -188,10 +189,21 @@
 					</span>
 		    	</div>
 		    	<div id="tripsTab" class="tab-pane fade">
-	    	    	<span class="adminSearch">
-						<button class="btn btn-default " href="javascript:void(0)" type="button">Show Customer Trips</button>
-					</span>
+	    	    	<div class="adminSearch">
+						<button class="btn btn-default "  ng-click="showAllTripsOnMap();" type="button">Show Customer Trips</button>
+						
+					</div>
+					<br><br><br>
+					<div style="" id="map"></div>
 		    	</div>
+
+				<div id="dynamicPricingTab" class="tab-pane fade">
+					 <span class="adminSearch">
+						<button class="btn btn-default clickDPProductType" href="javascript:void(0)" ng-click="adminGetUniqueProductTypes();"type="submit">Apply for Product Type</button>
+						<button class="btn btn-default clickDPProduct" href="javascript:void(0)" ng-click="adminGetUniqueProducts()"; type="submit">Apply for Product</button>
+						<!-- <button class="btn btn-default clickDPFarmer" href="javascript:void(0)"type="button">Apply for Farmer</button> -->
+					</span>
+				</div>
 			</div>   <!-- end class tab-content-->
 		</div>	
 	</div></br>  <!-- end  horizonal section 1 -->
@@ -205,15 +217,17 @@
 					<th>#</th>
 					<th>Farmer ID</th><th>Firstname</th><th>Lastname</th>
 					<th>City</th><th>State</th><th>Zip Code</th>
-					<th>Contact</th><th>Email</th>
+					<th>Contact</th><th>Email</th><th>Status</th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr class="active" ng-repeat= "f in f1	">
 					<td>{{$index+1}}</td>
-					<td>{{f.farmer_id}}</td><td>{{f.first_name}}</td><td>{{f.last_name}}</td>
+					<td><a href="/farmers/{{f.farmer_id}}" style="color: blue;" target="_blank">{{f.farmer_id}}</a></td><td>{{f.first_name}}</td><td>{{f.last_name}}</td>
 					<td>{{f.city}}</td><td>{{f.state}}</td><td>{{f.zipcode}}</td>
 					<td>{{f.contact}}</td><td>{{f.email}}</td>
+					
+					<td><span ng-if="f.approved === 1" style="color: green; font-weight: bold;">Approved</span><span ng-if="f.approved === 0" style="color: orange;font-weight: bold;">Pending</span><span ng-if="f.approved === 2" style="color: red;font-weight: bold;">Rejected</span></td>
 				</tr>
 			</tbody></table>
 			<button type="submit" class="btn btn-default" ng-click="loadMoreF1();" >Load More</button>
@@ -227,17 +241,17 @@
 					<th>#</th>
 					<th>Farmer ID</th><th>Firstname</th><th>Lastname</th>
 					<th>City</th><th>State</th><th>Zip Code</th>
-					<th>Contact</th><th>Email</th><th>Approve</th><th>Dis-Approve</th>
+					<th>Contact</th><th>Email</th><th>Approve</th><th>Reject</th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr class="active" ng-repeat= "f in f2">
 					<td>{{$index+1}}</td>
-					<td>{{f.farmer_id}}</td><td>{{f.first_name}}</td><td>{{f.last_name}}</td>
+					<td><a href="/farmers/{{f.farmer_id}}" style="color: blue;" target="_blank">{{f.farmer_id}}</a></td><td>{{f.first_name}}</td><td>{{f.last_name}}</td>
 					<td>{{f.city}}</td><td>{{f.state}}</td><td>{{f.zipcode}}</td>
 					<td>{{f.contact}}</td><td>{{f.email}}</td>
-					<td><button ng-click="approveFarmer(f);" ng-disabled="f.approve" class="btn btn-default">Approve</button></td>
-					<td><button ng-click="disApproveFarmer(f);" ng-disabled="f.disapprove" class="btn btn-danger">Dis Approve</button></td>
+					<td><button ng-click="approveFarmer(f);" id="approveBtn" ng-disabled="f.approve" class="btn btn-primary">Approve</button></td>
+					<td><button ng-click="disApproveFarmer(f);" id="disApproveBtn" ng-disabled="f.disapprove" class="btn btn-danger">Reject</button></td>
 				</tr>
 			</tbody></table>
 			<button type="submit" class="btn btn-default" ng-click="loadMoreF2();" >Load More</button></td>
@@ -251,15 +265,18 @@
 					<th>#</th>
 					<th>Farmer ID</th><th>Firstname</th><th>Lastname</th>
 					<th>City</th><th>State</th><th>Zip Code</th>
-					<th>Contact</th><th>Email</th>
+					<th>Contact</th><th>Email</th><th>Approve/Reject</th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr class="active" ng-repeat= "f in f3	">
 					<td>{{$index+1}}</td>
-					<td>{{f.farmer_id}}</td><td>{{f.first_name}}</td><td>{{f.last_name}}</td>
+					<td><a href="/farmers/{{f.farmer_id}}" style="color: blue;" target="_blank">{{f.farmer_id}}</a></td><td>{{f.first_name}}</td><td>{{f.last_name}}</td>
 					<td>{{f.city}}</td><td>{{f.state}}</td><td>{{f.zipcode}}</td>
 					<td>{{f.contact}}</td><td>{{f.email}}</td>
+					<td><span ng-if="f.approved === 0"><button ng-click="approveFarmerOnSearch(f);" id="approveBtn" class="btn btn-primary">Approve</button></span>
+					<span ng-if="f.approved !== 0"><button ng-click="disApproveFarmerOnSearch(f);" id="disApproveBtn" class="btn btn-danger">Reject</button></span></td>
+					
 				</tr>
 			</tbody></table>
 			<button type="submit" class="btn btn-default" ng-click="loadMoreF3();" >Load More</button></td>
@@ -341,7 +358,7 @@
 				<tr>
 					<th>#</th>
 					<th>Product ID</th><th>Farmer ID</th><th>Product Name</th><th>Product Type</th>
-					<th>Price</th><th>Quantity</th><th>Description</th>
+					<th>Price</th><th>Quantity</th><th>Description</th><th>Status</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -349,6 +366,7 @@
 					<td>{{$index+1}}</td>
 					<td>{{p.product_id}}</td><td>{{p.farmer_id}}</td><td>{{p.name}}</td><td>{{p.product_type}}</td>
 					<td>$ {{p.price}}</td><td>{{p.quantity}}</td><td>{{p.description}}</td>
+					<td><span ng-if="p.approved === 1" style="color: green; font-weight: bold;">Approved</span><span ng-if="p.approved === 0" style="color: orange;font-weight: bold;">Pending</span><span ng-if="p.approved === 2" style="color: red;font-weight: bold;">Rejected</span></td>
 				</tr>
 			</tbody></table>
 			<button type="submit" class="btn btn-default" ng-click="loadMoreP1();" >Load More</button></td>
@@ -356,7 +374,7 @@
 
 		<div class="col-md-12 productSection showProductApprovalPending" infinite-scroll="loadMoreP2();" infinite-scroll-distance="0" infinite-scroll-disabled="{{p2_stopLoading}}">
 			<table class="table table-hover table-condensed table-bordered">
-			<caption> Product Approval Pending {{p_count}}</caption>
+			<caption> Product Pending Approval {{p_count}}</caption>
 			<thead>
 				<tr>
 					<th>#</th>
@@ -369,8 +387,8 @@
 					<td>{{$index+1}}</td>
 					<td>{{p.product_id}}</td><td>{{p.farmer_id}}</td><td>{{p.name}}</td><td>{{p.product_type}}</td>
 					<td>$ {{p.price}}</td><td>{{p.description}}</td>
-					<td><button ng-click="approveProduct(p);" ng-disabled="p.approve" class="btn btn-default">Approve</button></td>
-					<td><button ng-click="disApproveProduct(p);"ng-disabled="p.disapprove" class="btn btn-danger">Disapprove</button></td>
+					<td><button ng-click="approveProduct(p);" id="approveBtn" ng-disabled="p.approve" class="btn btn-primary">Approve</button></td>
+					<td><button ng-click="disApproveProduct(p);" id="disApproveBtn" ng-disabled="p.disapprove" class="btn btn-danger">Reject</button></td>
 				</tr>
 			</tbody></table>
 		</div>
@@ -382,7 +400,7 @@
 				<tr>
 					<th>#</th>
 					<th>Product ID</th><th>Farmer ID</th><th>Product Name</th><th>Product Type</th>
-					<th>Price</th><th>Quantity</th><th>Description</th>
+					<th>Price</th><th>Quantity</th><th>Description</th><th>Approve</th><th>Disapprove</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -390,6 +408,8 @@
 					<td>{{$index+1}}</td>
 					<td>{{p.product_id}}</td><td>{{p.farmer_id}}</td><td>{{p.name}}</td><td>{{p.product_type}}</td>
 					<td>$ {{p.price}}</td><td>{{p.quantity}}</td><td>{{p.description}}</td>
+					<td><button ng-click="approveProduct(p);" id="approveBtn" ng-disabled="p.approve" class="btn btn-primary">Approve</button></td>
+					<td><button ng-click="disApproveProduct(p);" id="disApproveBtn" ng-disabled="p.disapprove" class="btn btn-danger">Reject</button></td>
 				</tr>
 			</tbody></table>
 		</div>
@@ -403,38 +423,38 @@
 			<thead>
 				<tr>
 					<th>#</th>
-					<th>Billing ID</th><th>Date</th><th>Expected Delivery Date</th>
-					<th>Price</th><th>Product ID</th><th>Source</th><th>Destination</th>
-					<th>DriverID</th><th>CustomerID</th>
+					<th>Billing ID</th><th>Bill Date</th><th>Expected Delivery Date</th><th>Delivery At</th>
+					<th>Price</th><th>Products</th><th>Customer Last Name</th>
+					<th>CustomerID</th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr class="active" ng-repeat= "b in b1">
 					<td>{{$index+1}}</td>
-					<td>{{b.product_ID}}</td><td>{{b.farmer_ID}}</td><td>{{b.name}}</td>
-					<td>$ {{b.price}}</td><td>{{b.description}}</td>
-					<td>{{b.reviews}}</td>
+					<td>{{b.order_id}}</td><td>{{b.order_date | date:'MM/dd/yyyy @ h:mma'}}</td><td>{{b.delivery_date}}</td><td>{{b.delivery_address}}</td>
+					<td>$ {{b.amount}}</td><td>{{b.shoppingCart.items.length}}</td>
+					<td>{{b.customer_last_name}}</td><td>{{b.cust_id}}</td>
 				</tr>
 			</tbody></table>
 		</div>
 		
 		<div class="col-md-12 billingSection  showSearchBillingList" infinite-scroll="loadMoreB2();" infinite-scroll-distance="0" infinite-scroll-disabled="{{b2_stopLoading}}">
 			<table class="table table-hover table-condensed table-bordered">
-			<caption> List of Bills for your search result: {{b2_count}}</caption>
+			<caption> List of Bills for your search result: {{b3_count}}</caption>
 			<thead>
 				<tr>
 					<th>#</th>
-					<th>Billing ID</th><th>Date</th><th>Expected Delivery Date</th>
-					<th>Price</th><th>Product ID</th><th>Source</th><th>Destination</th>
-					<th>DriverID</th><th>CustomerID</th>
+					<th>Billing ID</th><th>Bill Date</th><th>Expected Delivery Date</th><th>Delivery At</th>
+					<th>Price</th><th>Products</th><th>Customer Last Name</th>
+					<th>CustomerID</th>
 				</tr>
 			</thead>
 			<tbody>
-				<tr class="active" ng-repeat= "b in b2">
+				<tr class="active" ng-repeat= "b in b3">
 					<td>{{$index+1}}</td>
-					<td>{{b.product_ID}}</td><td>{{b.farmer_ID}}</td><td>{{b.name}}</td>
-					<td>$ {{b.price}}</td><td>{{b.description}}</td><td>
-					<td>{{b.reviews}}</td>
+					<td>{{b.order_id}}</td><td>{{b.order_date | date:'MM/dd/yyyy @ h:mma'}}</td><td>{{b.delivery_date}}</td><td>{{b.delivery_address}}</td>
+					<td>$ {{b.amount}}</td><td>{{b.shoppingCart.items.length}}</td>
+					<td>{{b.customer_last_name}}</td><td>{{b.cust_id}}</td>
 				</tr>
 			</tbody></table>
 		</div>
@@ -526,7 +546,47 @@
 
 
 	</div>  <!-- end statisticssection for chart display -->
+	<div class="row dpSection">  <!-- start dynamicpricingsection  -->
+	
+		<div class="col-md-12 dpSection  showDPProductType">
+			<div class=" row col-md-12" style="word-wrap: break-word;">
+				<h4 align="center"> Select Product Type</h4>
+				<form action="">
+					<div class="col-md-3 " ng-repeat= "productType in productTypes">
+					<input  class="productTypes_checkbox" type="radio" name="DPproductType"value={{productType.product_type}} />{{productType.product_type}}
+					</div>
+				</form>
+				
+			</div>
+			<div class="col-md-12" align="center">
+				<br><input type="text" style="width :20%"class="form-control" id="DPPercentageProductType" placeholder="Enter vlaues in % .."><br>
+				<button id="getMonths" class="btn btn-default applyDPForProductType"> Apply New Price</button>	
+				<h4>{{dpPTMessage}}</h4>
+			</div>			
+		</div>
 
+		<div class="col-md-12 dpSection  showDPProduct">
+			showDPProduct
+			<div class=" row col-md-12" style="word-wrap: break-word;">
+				<h4 align="center"> Select Product</h4>
+				<form action="">
+					<div class="col-md-3 " ng-repeat= "product in products">
+					<input  class="products_checkbox" type="radio" name="DPproduct"value={{product.name}} />{{product.name}}
+					</div>
+				</form>
+				
+			</div>
+			<div class="col-md-12" align="center">
+				<br><input type="text" style="width :20%"class="form-control" id="DPPercentageProduct" placeholder="Enter vlaues in % .."><br>
+				<button id="getMonths" class="btn btn-default applyDPForProduct"> Apply New Price</button>	
+				<h4>{{dpPTMessage}}</h4>
+			</div>
+		</div>
+
+		<!-- <div class="col-md-12 dpSection  showDPFarmer">
+			showDPFarmer
+		</div> -->
+	</div>  <!-- end dpsection  -->
 
 </div>  <!-- end class container-fluid -->
 
@@ -561,6 +621,7 @@
         		$('.productSection').hide();
         		$('.billingSection').hide();
         		$('.statSection').hide();
+        		$('.dpSection').hide();
         		
         	$(".clickShowAllFarmers").on("click", function () {
                 $('.farmerSection').show();
@@ -569,7 +630,7 @@
         		$('.showFarmerApprovalPending').hide();$('.showSearchFarmerList').hide();
         		$(window).scroll(function () {
         			if ($(document).height() <= $(window).scrollTop() + $(window).height()) {
-            		alert("End Of The Page");
+            		//alert("End Of The Page");
             		$('.loadMoreF1 ()');
         			}
     			});
@@ -577,7 +638,7 @@
 			$(".clickShowApprovalPendingFarmers").on("click", function () {
                 $('.farmerSection').show();
                 $('.customerSection').hide();$('.productSection').hide();
-        		$('.billingSection').hide();$('.statSection').hide();
+        		$('.billingSection').hide();$('.statSection').hide();$('.dpSection').hide();
         		$('.showAllFarmers').hide();$('.showSearchFarmerList').hide();
         		/*$(window).scroll(function () {
         			if ($(document).height() <= $(window).scrollTop() + $(window).height()) {
@@ -588,89 +649,111 @@
 			$(".clickSearchFarmer").on("click", function () {
                 $('.farmerSection').show();
                 $('.customerSection').hide();$('.productSection').hide();
-        		$('.billingSection').hide();$('.statSection').hide();
+        		$('.billingSection').hide();$('.statSection').hide();$('.dpSection').hide();
         		$('.showAllFarmers').hide();$('.showFarmerApprovalPending').hide();
             });
 
 			$(".clickShowAllCustomers").on("click", function () {
                 $('.customerSection').show();
                 $('.farmerSection').hide();$('.productSection').hide();
-        		$('.billingSection').hide();$('.statSection').hide();
+        		$('.billingSection').hide();$('.statSection').hide();$('.dpSection').hide();
         		$('.showCustomerApprovalPending').hide();$('.showSearchCustomerList').hide();
             });
 			$(".clickShowApprovalPendingCustomers").on("click", function () {
                 $('.customerSection').show();
                 $('.farmerSection').hide();$('.productSection').hide();
-        		$('.billingSection').hide();$('.statSection').hide();
+        		$('.billingSection').hide();$('.statSection').hide();$('.dpSection').hide();
         		$('.showAllCustomers').hide();$('.showSearchCustomerList').hide();
             });
 			$(".clickSearchCustomer").on("click", function () {
                 $('.customerSection').show();
                 $('.farmerSection').hide();$('.productSection').hide();
-        		$('.billingSection').hide();$('.statSection').hide();
+        		$('.billingSection').hide();$('.statSection').hide();$('.dpSection').hide();
         		$('.showAllCustomers').hide();$('.showCustomerApprovalPending').hide();
             });
 
 			$(".clickShowAllProducts").on("click", function () {
                 $('.productSection').show();
                 $('.farmerSection').hide();$('.customerSection').hide();
-        		$('.billingSection').hide();$('.statSection').hide();
+        		$('.billingSection').hide();$('.statSection').hide();$('.dpSection').hide();
         		$('.showProductApprovalPending').hide();$('.showSearchProductList').hide();
             });
 			$(".clickShowApprovalPendingProducts").on("click", function () {
                 $('.productSection').show();
                 $('.farmerSection').hide();$('.customerSection').hide();
-        		$('.billingSection').hide();$('.statSection').hide();
+        		$('.billingSection').hide();$('.statSection').hide();$('.dpSection').hide();
         		$('.showAllProducts').hide();$('.showSearchProductList').hide();
             });
 			$(".clickSearchProduct").on("click", function () {
                 $('.productSection').show();
                 $('.farmerSection').hide();$('.customerSection').hide();
-        		$('.billingSection').hide();$('.statSection').hide();
+        		$('.billingSection').hide();$('.statSection').hide();$('.dpSection').hide();
         		$('.showAllProducts').hide();$('.showProductApprovalPending').hide();
             });
 
 			$(".clickShowBills").on("click", function () {
                 $('.billingSection').show();
                 $('.farmerSection').hide();$('.customerSection').hide();
-                $('.productSection').hide();$('.statSection').hide();
+                $('.productSection').hide();$('.statSection').hide();$('.dpSection').hide();
         		$('.showSearchBillingList').hide();
             });
             $(".clickSearchBill").on("click", function () {
                 $('.billingSection').show();
                 $('.farmerSection').hide();$('.customerSection').hide();
-                $('.productSection').hide();$('.statSection').hide();
+                $('.productSection').hide();$('.statSection').hide();$('.dpSection').hide();
         		$('.showAllBills').hide();
             });
               
             $(".clickRevenuePerWeek").on("click", function () {
                 $('.statSection').show();
                 $('.farmerSection').hide();$('.customerSection').hide();
-                $('.productSection').hide();$('.billingSection').hide();
+                $('.productSection').hide();$('.billingSection').hide();$('.dpSection').hide();
                 $('.showRidesPerArea').hide();$('.showRidesPerDriver').hide();
                 $('.showRidesPerCustomer').hide();
             });
             $(".clickRidesPerArea").on("click", function () {
                 $('.statSection').show();
                 $('.farmerSection').hide();$('.customerSection').hide();
-                $('.productSection').hide();$('.billingSection').hide();
+                $('.productSection').hide();$('.billingSection').hide();$('.dpSection').hide();
                	$('.showRevenuePerWeek').hide();$('.showRidesPerDriver').hide();
                	$('.showRidesPerCustomer').hide();
             });
             $(".clickRidesPerDriver").on("click", function () {
                 $('.statSection').show();
                 $('.farmerSection').hide();$('.customerSection').hide();
-                $('.productSection').hide();$('.billingSection').hide();
+                $('.productSection').hide();$('.billingSection').hide();$('.dpSection').hide();
                 $('.showRevenuePerWeek').hide();$('.showRidesPerArea').hide();
                 $('.showRidesPerCustomer').hide();
             });
             $(".clickRidesPerCustomer").on("click", function () {
                 $('.statSection').show();
                 $('.farmerSection').hide();$('.customerSection').hide();
-                $('.productSection').hide();$('.billingSection').hide();
+                $('.productSection').hide();$('.billingSection').hide();$('.dpSection').hide();
                 $('.showRevenuePerWeek').hide();$('.showRidesPerArea').hide();
                 $('.showRidesPerDriver').hide();
             });
+            
+            $(".clickDPProductType").on("click", function () {
+                $('.dpSection').show();
+                $('.farmerSection').hide();$('.customerSection').hide();
+                $('.productSection').hide();$('.billingSection').hide();$('.statSection').hide();
+                $('.showDPProduct').hide();$('.showDPFarmer').hide();
+            });
+            $(".clickDPProduct").on("click", function () {
+                $('.dpSection').show();
+                $('.farmerSection').hide();$('.customerSection').hide();
+                $('.productSection').hide();$('.billingSection').hide();$('.statSection').hide();
+                $('.showDPProductType').hide();$('.showDPFarmer').hide();
+            });
+            $(".clickDPFarmer").on("click", function () {
+                $('.dpSection').show();
+                $('.farmerSection').hide();$('.customerSection').hide();
+                $('.productSection').hide();$('.billingSection').hide();$('.statSection').hide();
+                $('.showDPProductType').hide();$('.showDPProduct').hide();
+            });
 });
 </script>
+<script async defer
+	    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB86L2RKXHDHNPfHJEWpbW2LMQ8QSTYmcM&callback=">
+	    </script>
 </html>

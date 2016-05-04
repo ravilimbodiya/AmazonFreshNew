@@ -345,11 +345,12 @@ exports.adminGetProductSearchList = function(req, res){
 
 exports.adminGetBillingList = function(req, res){
     var startPosition = req.param('startPosition');
+    var	msg_payload = {
+                "startPosition" : startPosition,
+                "func" : "getBillingList"
+            };
+    
     console.log("startPosition =" + startPosition);
-    var msg_payload = {
-        "startPosition" : startPosition,
-        "func" : "getBillingList"
-    };
     mq_client.make_request('adminBilling_queue', msg_payload, function(err,results) {
         //console.log(results);
         if (err) {
@@ -357,7 +358,7 @@ exports.adminGetBillingList = function(req, res){
             res.status(500).send(null);
         } else {
             console.log("about results" + results);
-            res.send({ //billingList: results.billingList,
+            res.send({ billingList: results.orders,
                            Status: results.Status,
                        //    count: results.count,
                        Message: results.Message,
@@ -378,18 +379,29 @@ exports.adminGetBillingSearchList = function(req, res){
                     Message: "Enter correct value"});
     }
     else{
-        var msg_payload = {
-            "startPosition" : startPosition,
-            "searchCriteria" : searchCriteria,
-            "q": q,
-            "func" : "getBillingSearchList"
-        };
+        var msg_payload;
+        if(req.param('criteria') === 'billId'){
+        	msg_payload = {
+                    "startPosition" : startPosition,
+                    "searchCriteria" : searchCriteria,
+                    "q": q,
+                    "func" : "getBillingSearchListByBillId"
+                };
+        }
+        else {
+        	msg_payload = {
+                    "startPosition" : startPosition,
+                    "searchCriteria" : searchCriteria,
+                    "q": q,
+                    "func" : "getBillingSearchListByCustId"
+                };
+        }
         mq_client.make_request('adminBilling_queue', msg_payload, function(err,results) {
             if (err) {
                 res.status(500).send(null);
             } else {
                 console.log("about results" + results);
-                res.send({ //billingList: results.billingList,
+                res.send({ billingList: results.orders,
                                Status: results.Status,
                                Message:results.Message,
                                count: results.count,
@@ -422,3 +434,116 @@ exports.testGraph = function(req, res){
 };      // end testGraph
 
 ////////////////////   ***** end Stats module ******* //////////////////////////////
+
+
+exports.getAllOrdersForAdmin = function getAllOrdersForAdmin(req, res){
+	
+	    mq_client.make_request('getAllOrdersForAdmin_queue', '', function (err, results) {
+	        if (err) {
+	            console.log('Err: ' + err);
+	            res.send({'statusCode': 400});
+	            throw err;
+	        } else {
+	            if (results.statusCode === 200) {
+	            	var zipcodes = [];
+	            	for(var i = 0; i < results.allOrders.length; i++){
+	            		for(var j = 0; j < results.allOrders[i].shoppingCart.items.length; j++){
+	            			var zip_json = {farmerZip: results.allOrders[i].shoppingCart.items[j].farmer.zipcode, customerZip: results.allOrders[i].customer_zipcode};
+	            			zipcodes.push(zip_json);
+		            	}
+	            	}
+	                res.send({zipcodes: zipcodes, allOrders: results.allOrders});
+	            } else {
+	                console('Error Occured in getting all orders for Admin!');
+	                res.send({'statusCode': 400});
+	            }
+	        }
+	    });
+};
+
+////////////////////***** Start DynamicPricing module ******* //////////////////////////////
+
+exports.adminGetUniqueProductTypes = function(req, res){
+    var msg_payload = {
+        "func" : "getUniqueProductTypes"
+    };
+    mq_client.make_request('adminDynamicPricing_queue', msg_payload, function(err,results) {
+        //console.log(results);
+        if (err) {
+            //console.log(err);
+            res.status(500).send(null);
+        } else {
+            console.log("about results" + results);
+            res.send({ productTypes: results.productTypes,
+                        Status: results.Status,
+                        Message: results.Message
+                    });
+        }
+    });
+};      // end adminGetUniqueProductTypes
+
+exports.adminGetUniqueProducts = function(req, res){
+    var msg_payload = {
+        "func" : "getUniqueProducts"
+    };
+    mq_client.make_request('adminDynamicPricing_queue', msg_payload, function(err,results) {
+        //console.log(results);
+        if (err) {
+            //console.log(err);
+            res.status(500).send(null);
+        } else {
+            console.log("about results" + results);
+            res.send({ products: results.products,
+                        Status: results.Status,
+                        Message: results.Message
+                    });
+        }
+    });
+};      // end adminGetUniqueProducts
+
+exports.adminApplyDPForProductType = function(req, res){
+    console.log("adminApplyDPForProductType");
+    productType = req.param('productType');
+    percentage = req.param('percentage');
+    var msg_payload = {
+        "productType" : productType,
+        "percentage": percentage,
+        "func" : "applyDPForProductType"
+    };
+    mq_client.make_request('adminDynamicPricing_queue', msg_payload, function(err,results) {
+        //console.log(results);
+        if (err) {
+            //console.log(err);
+            res.status(500).send(null);
+        } else {
+            console.log("about results" + results);
+            res.send({ Status: results.Status,
+                       Message: results.Message,
+                       });
+        }
+    });
+};      // end adminApplyDPForProductType
+
+exports.adminApplyDPForProduct = function(req, res){
+    console.log("adminApplyDPForProduct");
+    product = req.param('product');
+    percentage = req.param('percentage');
+    var msg_payload = {
+        "product" : product,
+        "percentage": percentage,
+        "func" : "applyDPForProduct"
+    };
+    mq_client.make_request('adminDynamicPricing_queue', msg_payload, function(err,results) {
+        //console.log(results);
+        if (err) {
+            //console.log(err);
+            res.status(500).send(null);
+        } else {
+            console.log("about results" + results);
+            res.send({ Status: results.Status,
+                       Message: results.Message,
+                       });
+        }
+    });
+};      // end adminApplyDPForProductType
+////////////////////   ***** end DynamicPricing module ******* //////////////////////////////

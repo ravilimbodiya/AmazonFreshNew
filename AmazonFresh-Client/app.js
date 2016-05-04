@@ -113,8 +113,18 @@ app.get('/adminApproveCustomer',  sessionMgmt.restrict, admin.adminApproveCustom
 app.get('/adminDisapproveCustomer',  sessionMgmt.restrict, admin.adminDisapproveCustomer);
 app.get('/adminGetCustomerSearchList',  sessionMgmt.restrict, admin.adminGetCustomerSearchList);
 app.get('/testGraph',  sessionMgmt.restrict, admin.testGraph);
-
-
+app.post('/getAllOrdersForAdmin',  sessionMgmt.restrict, admin.getAllOrdersForAdmin);
+app.get('/adminGetProductList',  sessionMgmt.restrict, admin.adminGetProductList);
+app.get('/adminGetProductApprovalPendingList',  sessionMgmt.restrict, admin.adminGetProductApprovalPendingList);
+app.get('/adminApproveProduct',  sessionMgmt.restrict, admin.adminApproveProduct);
+app.get('/adminDisapproveProduct',  sessionMgmt.restrict, admin.adminDisapproveProduct);
+app.get('/adminGetProductSearchList',  sessionMgmt.restrict, admin.adminGetProductSearchList);
+app.get('/adminGetBillingList', sessionMgmt.restrict, admin.adminGetBillingList);
+app.get('/adminGetBillingSearchList', sessionMgmt.restrict, admin.adminGetBillingSearchList);
+app.get('/adminGetUniqueProductTypes', sessionMgmt.restrict,admin.adminGetUniqueProductTypes);
+app.get('/adminGetUniqueProducts', sessionMgmt.restrict,admin.adminGetUniqueProducts);
+app.get('/adminApplyDPForProductType', sessionMgmt.restrict,admin.adminApplyDPForProductType);
+app.get('/adminApplyDPForProduct', sessionMgmt.restrict,admin.adminApplyDPForProduct);
 
 app.use(function(req, res, next) {
 	res.render('error');

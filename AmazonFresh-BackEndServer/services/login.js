@@ -44,9 +44,11 @@ exports.checkLogin = function(msg, callback) {
 					    			console.log(jsonParse);
 					                json_responses = {"statusCode" : 200, "userObj" : jsonParse, "userType": msg.userType};
 					                callback(null, json_responses);
+					    		} else if(jsonParse[0].approved === 0){
+					    			json_responses = {"statusCode" : 401, "msg": "Your request is not yet approved by the Admin. Please try again later.", "userType": msg.userType};
+				    				callback(null, json_responses);
 					    		} else {
-					    			console.log("ERROR: "+err);
-				    				json_responses = {"statusCode" : 401, "msg": "Farmer request is not approved by the Admin yet. Please try later.", "userType": msg.userType};
+					    			json_responses = {"statusCode" : 401, "msg": "Your request is rejected by Admin. Please fill all your information correctly and register again.", "userType": msg.userType};
 				    				callback(null, json_responses);
 					    		}
 		    				} else {

@@ -71,14 +71,13 @@
 				<div class="row">				
 					<div class="col-md-6">
 						
-						Signing As...<br>
+						Signing As...<br><br>
 						<p id="uterror" ng-show="uterror" style="color: red;">
 							<strong>Please select valid User Type.</strong>
 						</p>
-						<select class="form-control" style="background-color: #669900; color:white; font-size: medium;margin-top:12px; width: 150px;" ng-model="userType" required>
-						  <option value="customer" ng-click="login();">Customer</option>
-						  <option value="farmer" ng-click="login();">Farmer</option>
-						</select>
+						<input type="radio" name="utype" style="background-color: #669900;" ng-click="login('customer');"> Customer <br>
+						<input type="radio" name="utype" style="background-color: #669900;" ng-click="login('farmer');"> Farmer
+						
 					</div>
 					<div class="col-md-6" style="margin-top:30px;text-align: right;">				
 						<span id="sign_in_notification_row" class="small">
@@ -92,9 +91,9 @@
 		
 		<div class="col-md-4"></div>
 	</div>
-	
+	<div style="height: 100px;"></div>
 	<!-- Footer-->
-	<footer style="float:bottom;bottom:0" class="navbar-fixed-bottom">
+	<footer style="" class="">
 	<div id="refreshFooter">
 	    <div class="column" id="column1">
 	        <a id="lnk-gbl-help" href="#">Help</a>

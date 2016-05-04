@@ -1,4 +1,6 @@
 var mysql = require('./mysql');
+var mongo = require("./mongo");
+var mongoURL = "mongodb://localhost:27017/Amazonfresh";
 
 //// *******    start admin Farmer module  ******** /////
 
@@ -11,7 +13,7 @@ exports.handle_request_getFarmerList = function (msg, callback){
 	var username = msg.username;
 
 	//var farmerList = "SELECT * FROM f LIMIT " + offset + "," + limit + ";";
-	var farmerList = "SELECT far_id, farmer_id, first_name, last_name, city, state, zipcode, email, contact  FROM farmers LIMIT " + offset + "," + limit + ";";
+	var farmerList = "SELECT far_id, farmer_id, first_name, last_name, city, state, zipcode, email, contact, approved  FROM farmers LIMIT " + offset + "," + limit + ";";
 	console.log("Query is:"+farmerList);
 
 	mysql.fetchData(function(err,results){
@@ -42,7 +44,7 @@ exports.handle_request_getFarmerApprovalPendingList = function (msg, callback){
 	var limit = 250;
 	var offset = msg.startPosition;
 	console.log("In handle_request_adminGetFarmerList:");
-	var farmerList = "SELECT far_id, farmer_id, first_name, last_name, city, state, zipcode, email, contact  FROM farmers where approved = 0 LIMIT " + offset + "," + limit + ";";
+	var farmerList = "SELECT far_id, farmer_id, first_name, last_name, city, state, zipcode, email, contact, approved  FROM farmers where approved = 0 LIMIT " + offset + "," + limit + ";";
 	console.log("Query is:"+farmerList);
 	mysql.fetchData(function(err,results){
 		if(err){
@@ -92,7 +94,7 @@ exports.handle_request_disApproveFarmer = function (msg, callback){
 	var res = {};
 	console.log("In handle_request_disApproveFarmer:");
 	var farmerID = msg.farmer;
-	var query = "UPDATE farmers SET approved = 0 WHERE far_id = " + farmerID + ";";
+	var query = "UPDATE farmers SET approved = 2 WHERE far_id = " + farmerID + ";";
 	console.log("Query is:"+ query);
 	mysql.fetchData(function(err,results){
 		if(err){
@@ -118,31 +120,31 @@ exports.handle_request_getFarmerSearchList = function (msg, callback){
 	console.log("In handle_request_getFarmerSearchList: "+ searchCriteria + ":"+q);
 	switch (searchCriteria){
 		case"firstname":
-			farmerList = "SELECT far_id, farmer_id, first_name, last_name, city, state, zipcode, email, contact  FROM farmers where first_name =" + '"' + q +'"' +" LIMIT " + offset + "," + limit + ";";
+			farmerList = "SELECT far_id, farmer_id, first_name, last_name, city, state, zipcode, email, contact, approved  FROM farmers where first_name =" + '"' + q +'"' +" LIMIT " + offset + "," + limit + ";";
 		break;
 		case "lastname":
-			farmerList = "SELECT far_id, farmer_id, first_name, last_name, city, state, zipcode, email, contact  FROM farmers where last_name =" + '"' + q +'"' +" LIMIT " + offset + "," + limit + ";";
+			farmerList = "SELECT far_id, farmer_id, first_name, last_name, city, state, zipcode, email, contact, approved  FROM farmers where last_name =" + '"' + q +'"' +" LIMIT " + offset + "," + limit + ";";
 		break;
 		case "farmerID":
-			farmerList = "SELECT far_id, farmer_id, first_name, last_name, city, state, zipcode, email, contact  FROM farmers where farmer_id =" + '"' + q +'"' +" LIMIT " + offset + "," + limit + ";";
+			farmerList = "SELECT far_id, farmer_id, first_name, last_name, city, state, zipcode, email, contact, approved  FROM farmers where farmer_id =" + '"' + q +'"' +" LIMIT " + offset + "," + limit + ";";
 		break;
 		case "contact" :
-			farmerList = "SELECT far_id, farmer_id, first_name, last_name, city, state, zipcode, email, contact  FROM farmers where contact =" + '"' + q +'"' +" LIMIT " + offset + "," + limit + ";";
+			farmerList = "SELECT far_id, farmer_id, first_name, last_name, city, state, zipcode, email, contact, approved  FROM farmers where contact =" + '"' + q +'"' +" LIMIT " + offset + "," + limit + ";";
 		break;
 		case "email":
-			farmerList = "SELECT far_id, farmer_id, first_name, last_name, city, state, zipcode, email, contact  FROM farmers where email =" + '"' + q +'"' +" LIMIT " + offset + "," + limit + ";";
+			farmerList = "SELECT far_id, farmer_id, first_name, last_name, city, state, zipcode, email, contact, approved  FROM farmers where email =" + '"' + q +'"' +" LIMIT " + offset + "," + limit + ";";
 		break;
 		case "city":
-			farmerList = "SELECT far_id, farmer_id, first_name, last_name, city, state, zipcode, email, contact  FROM farmers where city =" + '"' + q +'"' +" LIMIT " + offset + "," + limit + ";";
+			farmerList = "SELECT far_id, farmer_id, first_name, last_name, city, state, zipcode, email, contact, approved  FROM farmers where city =" + '"' + q +'"' +" LIMIT " + offset + "," + limit + ";";
 		break;
 		case "state":
-			farmerList = "SELECT far_id, farmer_id, first_name, last_name, city, state, zipcode, email, contact  FROM farmers where state =" + '"' + q +'"' +" LIMIT " + offset + "," + limit + ";";
+			farmerList = "SELECT far_id, farmer_id, first_name, last_name, city, state, zipcode, email, contact, approved  FROM farmers where state =" + '"' + q +'"' +" LIMIT " + offset + "," + limit + ";";
 		break;
 		case "zipcode":
-			farmerList = "SELECT far_id, farmer_id, first_name, last_name, city, state, zipcode, email, contact  FROM farmers where zipcode =" + '"' + q +'"' +" LIMIT " + offset + "," + limit + ";";
+			farmerList = "SELECT far_id, farmer_id, first_name, last_name, city, state, zipcode, email, contact, approved  FROM farmers where zipcode =" + '"' + q +'"' +" LIMIT " + offset + "," + limit + ";";
 		break;
 		default:
-			farmerList = "SELECT far_id, farmer_id, first_name, last_name, city, state, zipcode, email, contact  FROM farmers where farmer_id like '%"+q+"%' or first_name like '%"+q+"%' or last_name like '%"+q+"%' or address like '%"+q+"%' or city like '%"+q+"%' or state like '%"+q+"%' or zipcode like '%"+q+"%' or email like '%"+q+"%' or contact like '%"+q+"%' LIMIT " + offset + "," + limit + ";";
+			farmerList = "SELECT far_id, farmer_id, first_name, last_name, city, state, zipcode, email, contact, approved  FROM farmers where farmer_id like '%"+q+"%' or first_name like '%"+q+"%' or last_name like '%"+q+"%' or address like '%"+q+"%' or city like '%"+q+"%' or state like '%"+q+"%' or zipcode like '%"+q+"%' or email like '%"+q+"%' or contact like '%"+q+"%' LIMIT " + offset + "," + limit + ";";
 	}
 	
 	console.log("Query is:"+farmerList);
@@ -178,7 +180,7 @@ exports.handle_request_getCustomerList = function (msg, callback){
 	var offset = msg.startPosition;
 	console.log("In handle_request_adminGetCustomerList:"+ msg.username);
 	var username = msg.username;
-	var customerList = "SELECT cust_id, customer_id, first_name, last_name, city, state, zipcode, email  FROM customers LIMIT " + offset + "," + limit + ";";
+	var customerList = "SELECT cust_id, customer_id, first_name, last_name, city, state, zipcode, email, contact  FROM customers LIMIT " + offset + "," + limit + ";";
 	console.log("Query is:"+ customerList);
 	mysql.fetchData(function(err,results){
 		if(err){
@@ -208,7 +210,7 @@ exports.handle_request_getCustomerApprovalPendingList = function (msg, callback)
 	var limit = 250;
 	var offset = msg.startPosition;
 	console.log("In handle_request_adminGetCustomerList:");
-	var customerList = "SELECT cust_id, customer_id, first_name, last_name, city, state, zipcode, email  FROM customers where approved = 0 LIMIT " + offset + "," + limit + ";";
+	var customerList = "SELECT cust_id, customer_id, first_name, last_name, city, state, zipcode, email, contact  FROM customers where approved = 0 LIMIT " + offset + "," + limit + ";";
 	console.log("Query is:"+ customerList);
 	mysql.fetchData(function(err,results){
 		if(err){
@@ -285,31 +287,31 @@ exports.handle_request_getCustomerSearchList = function (msg, callback){
 	console.log("In handle_request_getCustomerSearchList: "+ searchCriteria + ":"+q);
 	switch (searchCriteria){
 		case"firstname":
-			customerList = "SELECT cust_id, customer_id, first_name, last_name, city, state, zipcode, email  FROM customers where first_name =" + '"' + q +'"' +" LIMIT " + offset + "," + limit + ";";
+			customerList = "SELECT cust_id, customer_id, first_name, last_name, city, state, zipcode, email, contact  FROM customers where first_name =" + '"' + q +'"' +" LIMIT " + offset + "," + limit + ";";
 		break;
 		case "lastname":
-			customerList = "SELECT cust_id, customer_id, first_name, last_name, city, state, zipcode, email  FROM customers where last_name =" + '"' + q +'"' +" LIMIT " + offset + "," + limit + ";";
+			customerList = "SELECT cust_id, customer_id, first_name, last_name, city, state, zipcode, email, contact  FROM customers where last_name =" + '"' + q +'"' +" LIMIT " + offset + "," + limit + ";";
 		break;
 		case "farmerID":
-			customerList = "SELECT cust_id, customer_id, first_name, last_name, city, state, zipcode, email  FROM customers where customer_id =" + '"' + q +'"' +" LIMIT " + offset + "," + limit + ";";
+			customerList = "SELECT cust_id, customer_id, first_name, last_name, city, state, zipcode, email, contact  FROM customers where customer_id =" + '"' + q +'"' +" LIMIT " + offset + "," + limit + ";";
 		break;
 		case "contact" :
-			customerList = "SELECT cust_id, customer_id, first_name, last_name, city, state, zipcode, email  FROM customers where contact =" + '"' + q +'"' +" LIMIT " + offset + "," + limit + ";";
+			customerList = "SELECT cust_id, customer_id, first_name, last_name, city, state, zipcode, email, contact  FROM customers where contact =" + '"' + q +'"' +" LIMIT " + offset + "," + limit + ";";
 		break;
 		case "email":
-			customerList = "SELECT cust_id, customer_id, first_name, last_name, city, state, zipcode, email  FROM customers where email =" + '"' + q +'"' +" LIMIT " + offset + "," + limit + ";";
+			customerList = "SELECT cust_id, customer_id, first_name, last_name, city, state, zipcode, email, contact  FROM customers where email =" + '"' + q +'"' +" LIMIT " + offset + "," + limit + ";";
 		break;
 		case "city":
-			customerList = "SELECT cust_id, customer_id, first_name, last_name, city, state, zipcode, email  FROM customers where city =" + '"' + q +'"' +" LIMIT " + offset + "," + limit + ";";
+			customerList = "SELECT cust_id, customer_id, first_name, last_name, city, state, zipcode, email, contact  FROM customers where city =" + '"' + q +'"' +" LIMIT " + offset + "," + limit + ";";
 		break;
 		case "state":
-			customerList = "SELECT cust_id, customer_id, first_name, last_name, city, state, zipcode, email  FROM customers where state =" + '"' + q +'"' +" LIMIT " + offset + "," + limit + ";";
+			customerList = "SELECT cust_id, customer_id, first_name, last_name, city, state, zipcode, email, contact  FROM customers where state =" + '"' + q +'"' +" LIMIT " + offset + "," + limit + ";";
 		break;
 		case "zipcode":
-			customerList = "SELECT cust_id, customer_id, first_name, last_name, city, state, zipcode, email  FROM customers where zipcode =" + '"' + q +'"' +" LIMIT " + offset + "," + limit + ";";
+			customerList = "SELECT cust_id, customer_id, first_name, last_name, city, state, zipcode, email, contact  FROM customers where zipcode =" + '"' + q +'"' +" LIMIT " + offset + "," + limit + ";";
 		break;
 		default:
-			customerList = "SELECT cust_id, customer_id, first_name, last_name, city, state, zipcode, email  FROM customers where customer_id like '%"+q+"%' or first_name like '%"+q+"%' or last_name like '%"+q+"%' or address like '%"+q+"%' or city like '%"+q+"%' or state like '%"+q+"%' or zipcode like '%"+q+"%' or email like '%"+q+"%' or contact like '%"+q+"%' LIMIT " + offset + "," + limit + ";";
+			customerList = "SELECT cust_id, customer_id, first_name, last_name, city, state, zipcode, email, contact  FROM customers where customer_id like '%"+q+"%' or first_name like '%"+q+"%' or last_name like '%"+q+"%' or address like '%"+q+"%' or city like '%"+q+"%' or state like '%"+q+"%' or zipcode like '%"+q+"%' or email like '%"+q+"%' or contact like '%"+q+"%' LIMIT " + offset + "," + limit + ";";
 	}
 	
 	console.log("Query is:"+ customerList);
@@ -344,7 +346,7 @@ exports.handle_request_getProductList = function (msg, callback){
 	var offset = msg.startPosition;
 	console.log("In handle_request_getProductList:");
 	//var username = msg.username;
-	var productList = "SELECT product_id, farmer_id, name, price, quantity, product_type, description FROM product LIMIT " + offset + "," + limit + ";";
+	var productList = "SELECT product_id, farmer_id, name, price, quantity, product_type, description, approved FROM product LIMIT " + offset + "," + limit + ";";
 	console.log("Query is:"+ productList);
 	mysql.fetchData(function(err,results){
 		if(err){
@@ -426,7 +428,7 @@ exports.handle_request_disApproveProduct = function (msg, callback){
 	var res = {};
 	console.log("In handle_request_disApproveProduct:");
 	var productID = msg.product;
-	var query = "UPDATE product SET approved = 0 WHERE product_id = " + productID + ";";
+	var query = "UPDATE product SET approved = 2 WHERE product_id = " + productID + ";";
 	console.log("Query is:"+ query);
 	mysql.fetchData(function(err,results){
 		if(err){
@@ -456,16 +458,16 @@ exports.handle_request_getProductSearchList = function (msg, callback){
 
 		break;
 		case "famrer_id":
-			productList = "SELECT cust_id, customer_id, first_name, last_name, city, state, zipcode, email  FROM customers where last_name =" + '"' + q +'"' +" LIMIT " + offset + "," + limit + ";";
+			productList = "SELECT cust_id, customer_id, first_name, last_name, city, state, zipcode, email, contact  FROM customers where last_name =" + '"' + q +'"' +" LIMIT " + offset + "," + limit + ";";
 		break;
 		case "name":
-			productList = "SELECT cust_id, customer_id, first_name, last_name, city, state, zipcode, email  FROM customers where customer_id =" + '"' + q +'"' +" LIMIT " + offset + "," + limit + ";";
+			productList = "SELECT cust_id, customer_id, first_name, last_name, city, state, zipcode, email, contact  FROM customers where customer_id =" + '"' + q +'"' +" LIMIT " + offset + "," + limit + ";";
 		break;
 		case "product_type" :
-			productList = "SELECT cust_id, customer_id, first_name, last_name, city, state, zipcode, email  FROM customers where contact =" + '"' + q +'"' +" LIMIT " + offset + "," + limit + ";";
+			productList = "SELECT cust_id, customer_id, first_name, last_name, city, state, zipcode, email, contact  FROM customers where contact =" + '"' + q +'"' +" LIMIT " + offset + "," + limit + ";";
 		break;
 		default:
-			productList = "SELECT cust_id, customer_id, first_name, last_name, city, state, zipcode, email  FROM customers where customer_id like '%"+q+"%' or first_name like '%"+q+"%' or last_name like '%"+q+"%' or address like '%"+q+"%' or city like '%"+q+"%' or state like '%"+q+"%' or zipcode like '%"+q+"%' or email like '%"+q+"%' or contact like '%"+q+"%' LIMIT " + offset + "," + limit + ";";
+			productList = "SELECT cust_id, customer_id, first_name, last_name, city, state, zipcode, email, contact  FROM customers where customer_id like '%"+q+"%' or first_name like '%"+q+"%' or last_name like '%"+q+"%' or address like '%"+q+"%' or city like '%"+q+"%' or state like '%"+q+"%' or zipcode like '%"+q+"%' or email like '%"+q+"%' or contact like '%"+q+"%' LIMIT " + offset + "," + limit + ";";
 	}
 	
 	console.log("Query is:"+ productList);
@@ -529,19 +531,196 @@ exports.handle_request_getBillingList = function (msg, callback){
 			callback(null, res);
 		}  
 	},farmerList); */
+   
 
 }; 	// end handle_request_getFarmerList
 
-
-exports.handle_request_getBillingSearchList = function (msg, callback){
-	
+exports.handle_request_getBillingSearchListByBillId = function(msg, callback){
 	var res = {};
+	res.Status  = 200;
+    res.Message = "test Billing";
+	console.log("In handle_request_getBillingSearchListByBillId:");
+	mongo.connect(mongoURL, function() {
+		var json_responses;
+		console.log('Connected to mongo at: ' + mongoURL);
+		var coll = mongo.collection('orders');
+		console.log("order retrival ");
+		
+			coll.find({order_id: parseInt(msg.q)}).toArray(function(err1, result) {
+			  if(err1){
+					json_responses = { statusCode: 401 };
+					callback(null, json_responses);
+				}
+				else 
+				{
+					res.orders = result;
+					//json_responses = {"statusCode" : 200, orders: result };
+					console.log(res);
+					callback(null, res);
+				}
+		});
+  });	
+
+};
+
+exports.handle_request_getBillingSearchListByCustId = function (msg, callback){
+	var res = {};
+	res.Status  = 200;
+    res.Message = "test Billing";
 	var limit = 250;
 	var offset = msg.startPosition;
-	console.log("In handle_request_getBillingSearchList:");
-    res.Status  = 200;
-    res.Message = "test Billing search";
-    callback(null, res);
+	console.log("In handle_request_getBillingSearchListByCustId:");
+    mongo.connect(mongoURL, function() {
+		var json_responses;
+		console.log('Connected to mongo at: ' + mongoURL);
+		var coll = mongo.collection('orders');
+		coll.find({cust_id: parseInt(msg.q)}).toArray(function(err2, allOrders) {
+			if(err2){
+				json_responses = {"statusCode" : 401};
+				callback(null, json_responses);
+			}
+			else 
+			{
+				res.orders = allOrders;
+				//json_responses = {"statusCode" : 200, orders: result };
+				console.log(res);
+				callback(null, res);
+			}
+		});
+  });
 
 };
 //// *******    end admin Billing module  ******** /////
+
+exports.getAllOrdersForAdmin = function(msg, callback){
+	var res = {};
+	res.Status  = 200;
+    res.Message = "test Billing";
+	var limit = 250;
+	var offset = msg.startPosition;
+	console.log("");
+    mongo.connect(mongoURL, function() {
+		var json_responses;
+		console.log('Connected to mongo at: ' + mongoURL);
+		var coll = mongo.collection('orders');
+		coll.find({}).toArray(function(err2, allOrders) {
+			if(err2){
+				json_responses = {"statusCode" : 401};
+				callback(null, json_responses);
+			}
+			else 
+			{
+				res.orders = allOrders;
+				//json_responses = {"statusCode" : 200, orders: result };
+				console.log(res);
+				callback(null, res);
+			}
+		});
+  });
+};
+
+////*******    Start admin Dynamic Pricing module  ******** /////
+
+exports.handle_request_getUniqueProductTypes = function (msg, callback){
+	var res = {};
+	console.log("In handle_request_getUniqueProductTypes:");
+
+	var query = "SELECT DISTINCT product_type FROM product";
+	console.log("Query is:"+ query);
+	mysql.fetchData(function(err,results){
+		if(err){
+			throw err;
+		}
+		else 
+		{
+			if(results.length > 0){
+				var jsonString = JSON.stringify(results);
+				var jsonParse = JSON.parse(jsonString);
+				res.productTypes = jsonParse;
+				res.count = results.length;
+				res.Status = 200;
+				res.Message = "Found " + results.length + " Unique product types";
+				console.log("Rabbit Backend: search unique productTypes  count:"+ results.length );
+			}
+			else {    
+				res.Message = "End of search result";
+				console.log("End of search result");
+			}
+			callback(null, res);
+		}  
+	},query);
+}; 	// end handle_request_getUniqueProductTypes
+
+exports.handle_request_getUniqueProducts = function (msg, callback){
+	var res = {};
+	console.log("In handle_request_getUniqueProducts:");
+
+	var query = "SELECT DISTINCT name FROM product";
+	console.log("Query is:"+ query);
+	mysql.fetchData(function(err,results){
+		if(err){
+			throw err;
+		}
+		else 
+		{
+			if(results.length > 0){
+				var jsonString = JSON.stringify(results);
+				var jsonParse = JSON.parse(jsonString);
+				res.products = jsonParse;
+				res.count = results.length;
+				res.Status = 200;
+				res.Message = "Found " + results.length + " Unique products";
+				console.log("Rabbit Backend: search unique products  count:"+ results.length );
+			}
+			else {    
+				res.Message = "End of search result";
+				console.log("End of search result");
+			}
+			callback(null, res);
+		}  
+	},query);
+}; 	// end handle_request_getUniqueProducts
+
+exports.handle_request_applyDPForProductType = function (msg, callback){
+	var res = {};
+	console.log("In handle_request_applyDPForProductType:");
+	var productType = msg.productType;
+	var mul = 1+ ((msg.percentage)/100);
+	var query = "UPDATE product p SET p.price = p.price * " +  mul +  "where product_type = " + '"' + productType + '";';
+	console.log("Query is:"+ query);
+	mysql.fetchData(function(err,results){
+		if(err){
+			throw err;
+		}
+		else 
+		{
+			console.log("Dynamic Pricing applied for product type " + productType);
+			res.Status = 200;
+			res.Message = "Dynamic Pricing applied for product type " + productType;
+			callback(null, res);
+		}  
+	},query);
+}; 	// end handle_request_applyDPForProductType
+
+exports.handle_request_applyDPForProduct = function (msg, callback){
+	var res = {};
+	console.log("In handle_request_applyDPForProduct:");
+	var product = msg.product;
+	var mul = 1+ ((msg.percentage)/100);
+	var query = "UPDATE product p SET p.price = p.price * " +  mul +  "where name = " + '"' + product + '";';
+	console.log("Query is:"+ query);
+	mysql.fetchData(function(err,results){
+		if(err){
+			throw err;
+		}
+		else 
+		{
+			console.log("Dynamic Pricing applied for product  " + product);
+			res.Status = 200;
+			res.Message = "Dynamic Pricing applied for product  " + product;
+			callback(null, res);
+		}  
+	},query);
+}; 	// end handle_request_applyDPForProduct
+
+//// *******    end  admin Dynamic Pricing module  ******** /////
