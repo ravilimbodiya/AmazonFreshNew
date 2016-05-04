@@ -68,81 +68,7 @@ exports.createFarmer = function(msg, callback){
 	
 };
 
-exports.submitAddProduct = function(msg, callback){
 
-	console.log("Inside farmer.js submitAddProduct on server");
-	var farmerId = msg.farmerId;
-	var prodName = msg.prodName;
-	var price = msg.price;
-	var quantity = msg.quantity;
-	var description = msg.description;
-	var ratings = 0;
-	var imgFile = msg.imgFile;	
-	var prodType = msg.prodType;
-	//var prodId = msg.prodId;
-	
-	
-	//server side validation
-	if(farmerId!="" && prodType!="" && prodName!="" && price!="" && description!="" && quantity!=""){
-	
-		// insert product into DBs		
-		var query = "INSERT INTO product (farmer_id, name, price, quantity, description, ratings, image_url, product_type) " +
-		"VALUES ('" + farmerId + "','" + prodName + "','" + price + "','" + quantity + "','" +	description + "','" + ratings + "','" + imgFile + "','" + prodType + "')";
-		
-		var json_responses;
-		console.log("Query is: " + query);
-		
-		mysql.insertData(function(err, results){
-			if(err){
-				console.log("ERROR: " + err);
-				json_responses = {"statusCode" : 401};
-				callback(null, json_responses);
-			}
-			else 
-			{
-				json_responses = {"statusCode" : 200};
-				callback(null, json_responses);
-			}  
-		}, query);
-	}
-	else{
-		console.log('Error: Some field is null and failed server side validation');
-		json_responses = {"statusCode" : 401};
-		callback(null, json_responses);
-	}
-};//end create customer
-
-exports.loadProducts = function(msg, callback){
-	
-	var farmerId = msg.farmerId;
-	
-	var query="select * from product where farmer_id ='" + farmerId + "';";
-	var json_responses;
-	console.log("Query is: " + query);
-	
-	mysql.fetchData(function(err, results){
-		if(err){
-			console.log("ERROR: " + err);
-			json_responses = {"statusCode" : 401};
-			callback(null, json_responses);
-		}
-		else 
-		{
-			if(results.length > 0){
-				var rows = results;
-				var jsonString = JSON.stringify(results);
-				var jsonParse = JSON.parse(jsonString);
-				json_responses = {"statusCode" : 200, "result": jsonParse};				
-				callback(null, json_responses);
-			}
-			else {    
-				console.log('Error occurred in getting all products.');
-				json_responses = {"statusCode" : 401};
-				callback(null, json_responses);
-			}
-		}  
-	}, query);
-};
 
 exports.editprofileFarmer = function(msg, callback){
 
@@ -174,11 +100,164 @@ exports.editprofileFarmer = function(msg, callback){
 
 };
 
+
+
+exports.viewFarmerProfile = function(msg, callback){
+
+	console.log('reached view farmer');
+	var q = "select far_id, farmer_id, first_name, last_name, address, city, address, zipcode, email, contact, approved from farmers where farmer_id = ?";
+	var json_responses;
+	console.log("Query is:"+q);
+	mysql.fetchData(function(err,results){
+		if(err){
+			console.log("ERROR: "+err);
+			json_responses = {"statusCode" : 401};
+			callback(null, json_responses);
+		}
+		else
+		{
+
+			var jsonString = JSON.stringify(results);
+			var jsonParse = JSON.parse(jsonString);
+			console.log('reached else');
+			json_responses = {"statusCode" : 200, user: jsonParse};
+			//console.log(jsonParse);
+			callback(null, json_responses);
+
+		}
+	}, q, [msg.farmer_id]);
+
+
+};
+
+
+exports.submitAddProduct = function(msg, callback){
+
+	console.log("Inside farmer.js submitAddProduct on server");
+	var farmerId = msg.farmerId;
+	var prodName = msg.prodName;
+	var price = msg.price;
+	var quantity = msg.quantity;
+	var description = msg.description;
+	var ratings = 0;
+	var imgFile = msg.imgFile;	
+	var prodType = msg.prodType;	
+	
+	//server side validation
+	if(farmerId!="" && prodType!="" && prodName!="" && price!="" && description!="" && quantity!=""){
+	
+		// insert product into DBs		
+		var query = "INSERT INTO product (farmer_id, name, price, quantity, description, ratings, image_url, product_type) " +
+		"VALUES ('" + farmerId + "','" + prodName + "','" + price + "','" + quantity + "','" +	description + "','" + ratings + "','" + imgFile + "','" + prodType + "')";
+		
+		var json_responses;
+		console.log("Query is: " + query);
+		
+		mysql.insertData(function(err, results){
+			var json_responses;
+			if(err){
+				console.log("ERROR: " + err);				
+				json_responses = {"statusCode" : 401};
+				callback(null, json_responses);
+			}
+			else 
+			{
+				json_responses = {"statusCode" : 200};
+				callback(null, json_responses);
+			}  
+		}, query);
+	}
+	else{
+		var json_responses;
+		console.log('Error: Some field is null and failed server side validation');		
+		json_responses = {"statusCode" : 401};
+		callback(null, json_responses);
+	}
+};//end create farmer
+
+exports.loadProducts = function(msg, callback){
+	
+	var farmerId = msg.farmerId;
+	
+	var query="select * from product where farmer_id ='" + farmerId + "';";
+	var json_responses;
+	console.log("Query is: " + query);
+	
+	mysql.fetchData(function(err, results){
+		if(err){
+			console.log("ERROR: " + err);
+			json_responses = {"statusCode" : 401};
+			callback(null, json_responses);
+		}
+		else 
+		{
+			if(results.length > 0){
+				var rows = results;
+				var jsonString = JSON.stringify(results);
+				var jsonParse = JSON.parse(jsonString);
+				
+				var productsRetrievedLength = jsonParse.length;
+				var productIds = [];
+				
+				for(var p=0; p<productsRetrievedLength; p++){
+					productIds.push(jsonParse[p].product_id);
+					//console.log("PID: " + productIds[p]);
+				}
+				//console.log("Length: " + productsRetrievedLength);
+				var feedback_arr = [];
+				
+				//To retrieve ratings and reviews for the farmer
+				mongo.connect(mongoURL, function(){
+					
+					console.log('Connected to mongo at: ' + mongoURL);					
+					var coll = mongo.collection('orders');
+
+						coll.aggregate([
+					                     { $match: { 'shoppingCart.items.0.farmer.farmer_id': farmerId} },
+					                     { $group: 
+												{ _id:null, 
+												  totalEarnings: { $sum: "$amount" },
+												  countOrder: { $sum: 1 }
+												} 
+										 }
+					                   ]).toArray( function(err1, rows){
+													if(err1)
+													{
+														console.log("No Orders");		
+														json_responses = {"statusCode": 200, "result": jsonParse, "feedback": null};				
+														callback(null, json_responses);	
+													}
+													else
+													{
+														console.log("Earning and Order: " + JSON.stringify(rows));
+														if(rows.length>0){
+															json_responses = {"statusCode": 200, "result": jsonParse, "chartData": rows};				
+															callback(null, json_responses);		
+														}
+														else{
+															json_responses = {"statusCode": 200, "result": jsonParse, "chartData": null};				
+															callback(null, json_responses);
+														}
+																									
+													}							
+												});													
+										
+				}); //end mongo									
+			}//end if
+			else {    
+				console.log('Error occurred in getting all products.');
+				json_responses = {"statusCode" : 401};
+				callback(null, json_responses);
+			}
+		}  
+	}, query);
+};
+
 exports.viewFeedback = function(msg, callback){
 	
 	console.log("Inside view feedback server");
-	var farmerId = msg.farmerId.toString();
-	var prodId = msg.prodId;
+	var farmerId = msg.farmerId + "";
+	var prodId = parseInt(msg.prodId);
 	
 	console.log("Farmer Id: " + farmerId);
 	console.log("prodId " + prodId);
@@ -187,7 +266,7 @@ exports.viewFeedback = function(msg, callback){
 				mongo.connect(mongoURL, function(){
 					
 					console.log('Connected to mongo at: ' + mongoURL);					
-					var coll = mongo.collection('reviews_rating');
+					var coll = mongo.collection('farmer');
 
 						coll.find({$and:[{farmer_id: farmerId, product_id: prodId}]}).toArray(function(err1, rows){
 							if(err1)
@@ -214,3 +293,93 @@ exports.viewFeedback = function(msg, callback){
 						});//end find																				
 				}); //end mongo											
 };
+
+
+exports.updateProduct = function(msg, callback){
+
+	console.log("Inside farmer.js submitAddProduct on server");
+	var farmerId = msg.farmerId + "";
+	var prodId = parseInt(msg.prodId);
+	var prodName = msg.prodName + "";
+	var price = msg.price + "";
+	var quantity = msg.quantity + "";
+	var description = msg.description + "";
+	var ratings = 0;
+	var imgFile = msg.imgFile + "";	
+	var prodType = msg.prodType + "";
+	
+	//server side validation
+	if(farmerId!="" && prodType!="" && prodName!="" && price!="" && description!="" && quantity!=""){
+	
+		// insert product into DBs		
+		var query = "UPDATE product SET " + 
+					"name='" + prodName + "', " +
+					"price='" + price + "', " +
+					"quantity='" + quantity + "', " +
+					"description='" + description + "', " +
+					"image_url='" + imgFile + "'" +
+					"WHERE product_id=" + prodId + ";";
+					
+		
+		var json_responses;
+		console.log("Query is: " + query);
+		
+		mysql.insertData(function(err, results){
+			var json_responses;
+			if(err){
+				console.log("ERROR: " + err);				
+				json_responses = {"statusCode" : 401};
+				callback(null, json_responses);
+			}
+			else 
+			{
+				json_responses = {"statusCode" : 200};
+				callback(null, json_responses);
+			}  
+		}, query);
+	}
+	else{
+		var json_responses;
+		console.log('Error: Some field is null and failed server side validation');		
+		json_responses = {"statusCode" : 401};
+		callback(null, json_responses);
+	}
+};//end update farmer
+
+
+exports.deleteProduct = function(msg, callback){
+
+	console.log("Inside farmer.js deleteProduct on server");
+	var prodId = parseInt(msg.prodId);
+	
+	//server side validation
+	if(prodId!=""){
+	
+		// delete product from DB		
+		var query = "DELETE FROM product " + 					
+					"WHERE product_id=" + prodId + ";";
+					
+		var json_responses;
+		console.log("Query is: " + query);
+		
+		mysql.insertData(function(err, results){
+			var json_responses;
+			if(err){
+				console.log("ERROR: " + err);				
+				json_responses = {"statusCode" : 401};
+				callback(null, json_responses);
+			}
+			else 
+			{
+				json_responses = {"statusCode" : 200};
+				callback(null, json_responses);
+			}  
+		}, query);
+	}
+	else{
+		var json_responses;
+		console.log('Error: Some field is null and failed server side validation');		
+		json_responses = {"statusCode" : 401};
+		callback(null, json_responses);
+	}
+};//end delete product

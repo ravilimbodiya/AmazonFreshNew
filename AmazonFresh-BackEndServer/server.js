@@ -675,6 +675,42 @@ cnn.on('ready', function () {
             });
         });
     });
+    
+    cnn.queue('submitUpdateProduct_queue', function (q) {
+        q.subscribe(function (message, headers, deliveryInfo, m) {
+            util.log(util.format(deliveryInfo.routingKey, message));
+            util.log("Message: " + JSON.stringify(message));
+            util.log("DeliveryInfo: " + JSON.stringify(deliveryInfo));            
+            
+            farmer.updateProduct(message, function (err, res) {
+
+                //return index sent
+                cnn.publish(m.replyTo, res, {
+                    contentType: 'application/json',
+                    contentEncoding: 'utf-8',
+                    correlationId: m.correlationId
+                });
+            });
+        });
+    });
+    
+    cnn.queue('deleteProduct_queue', function (q) {
+        q.subscribe(function (message, headers, deliveryInfo, m) {
+            util.log(util.format(deliveryInfo.routingKey, message));
+            util.log("Message: " + JSON.stringify(message));
+            util.log("DeliveryInfo: " + JSON.stringify(deliveryInfo));            
+            
+            farmer.deleteProduct(message, function (err, res) {
+
+                //return index sent
+                cnn.publish(m.replyTo, res, {
+                    contentType: 'application/json',
+                    contentEncoding: 'utf-8',
+                    correlationId: m.correlationId
+                });
+            });
+        });
+    });
   //edit profile farmer
     cnn.queue('editprofileFarmer_queue', function(q){
         q.subscribe(function(message, headers, deliveryInfo, m){
@@ -684,6 +720,42 @@ cnn.on('ready', function () {
             console.log('reached edit farmer queue');
             farmer.editprofileFarmer(message, function(err,res){
                     console.log('queue success');
+                //return index sent
+                cnn.publish(m.replyTo, res, {
+                    contentType:'application/json',
+                    contentEncoding:'utf-8',
+                    correlationId:m.correlationId
+                });
+            });
+        });
+    });
+    
+    cnn.queue('viewCustomerProfile_queue', function(q){
+        q.subscribe(function(message, headers, deliveryInfo, m){
+            util.log(util.format( deliveryInfo.routingKey, message));
+            util.log("Message: "+JSON.stringify(message));
+            util.log("DeliveryInfo: "+JSON.stringify(deliveryInfo));
+            console.log('reached edit farmer queue');
+            customer.viewCustomerProfile(message, function(err,res){
+                    //console.log('queue success');
+                //return index sent
+                cnn.publish(m.replyTo, res, {
+                    contentType:'application/json',
+                    contentEncoding:'utf-8',
+                    correlationId:m.correlationId
+                });
+            });
+        });
+    });
+    
+    cnn.queue('viewFarmerProfile_queue', function(q){
+        q.subscribe(function(message, headers, deliveryInfo, m){
+            util.log(util.format( deliveryInfo.routingKey, message));
+            util.log("Message: "+JSON.stringify(message));
+            util.log("DeliveryInfo: "+JSON.stringify(deliveryInfo));
+            console.log('reached edit farmer queue');
+            farmer.viewFarmerProfile(message, function(err,res){
+                   //console.log('queue success');
                 //return index sent
                 cnn.publish(m.replyTo, res, {
                     contentType:'application/json',

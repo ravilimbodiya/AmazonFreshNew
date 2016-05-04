@@ -97,6 +97,10 @@ app.post('/editProfilefarmer',sessionMgmt.restrict, farmer.editProfilefarmer);
 app.post('/getcurrentfarmer',sessionMgmt.restrict, farmer.getcurrentFarmer);
 app.get('/renderFeedback/:prodId', sessionMgmt.restrict, farmer.renderFeedback);
 app.post('/viewFeedback', sessionMgmt.restrict, farmer.viewFeedback);
+app.post('/renderEditProduct', sessionMgmt.restrict,farmer.renderEditProduct);
+app.get('/farmerEditProduct', sessionMgmt.restrict,farmer.farmerEditProduct);
+app.post('/submitUpdateProduct', sessionMgmt.restrict,farmer.submitUpdateProduct);
+app.get('/deleteProduct/:prodId', sessionMgmt.restrict,farmer.deleteProduct);
 
 //Admin module
 app.get('/admin', index.adminSignIn);
@@ -125,6 +129,8 @@ app.get('/adminGetUniqueProductTypes', sessionMgmt.restrict,admin.adminGetUnique
 app.get('/adminGetUniqueProducts', sessionMgmt.restrict,admin.adminGetUniqueProducts);
 app.get('/adminApplyDPForProductType', sessionMgmt.restrict,admin.adminApplyDPForProductType);
 app.get('/adminApplyDPForProduct', sessionMgmt.restrict,admin.adminApplyDPForProduct);
+app.get('/farmers/:farmerId', sessionMgmt.restrict,admin.viewFarmerProfile);
+app.get('/customers/:custId', sessionMgmt.restrict,admin.viewCustomerProfile);
 
 app.use(function(req, res, next) {
 	res.render('error');

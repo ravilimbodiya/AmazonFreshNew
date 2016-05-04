@@ -298,7 +298,7 @@
 			<tbody>
 				<tr class="active" ng-repeat= "c in c1">
 					<td>{{$index+1}}</td>
-					<td>{{c.customer_id}}</td><td>{{c.first_name}}</td><td>{{c.last_name}}</td>
+					<td><a href="/customers/{{c.customer_id}}" style="color: blue;" target="_blank">{{c.customer_id}}</a></td><td>{{c.first_name}}</td><td>{{c.last_name}}</td>
 					<td>{{c.city}}</td><td>{{c.state}}</td><td>{{c.zipcode}}</td>
 					<td>{{c.contact}}</td><td>{{c.email}}</td>
 				</tr>
@@ -319,7 +319,7 @@
 			<tbody>
 				<tr class="active" ng-repeat= "c in c2">
 					<td>{{$index+1}}</td>
-					<td>{{c.customer_id}}</td><td>{{c.first_name}}</td><td>{{c.last_name}}</td>
+					<td><a href="/customers/{{c.customer_id}}" style="color: blue;" target="_blank">{{c.customer_id}}</a></td><td>{{c.first_name}}</td><td>{{c.last_name}}</td>
 					<td>{{c.city}}</td><td>{{c.state}}</td><td>{{c.zipcode}}</td>
 					<td>{{c.phoneNumber}}</td><td>{{c.email}}</td>
 					<td><button ng-click="approveCustomer(c);" ng-disabled="c.approve" class="btn btn-default">Approve</button></td>
@@ -341,7 +341,7 @@
 			<tbody>
 				<tr class="active" ng-repeat= "c in c3">
 					<td>{{$index+1}}</td>
-					<td>{{c.customer_id}}</td><td>{{c.first_name}}</td><td>{{c.last_name}}</td>
+					<td><a href="/customers/{{c.customer_id}}" style="color: blue;" target="_blank">{{c.customer_id}}</a></td><td>{{c.first_name}}</td><td>{{c.last_name}}</td>
 					<td>{{c.city}}</td><td>{{c.state}}</td><td>{{c.zipcode}}</td>
 					<td>{{c.contact}}</td><td>{{c.email}}</td>
 				</tr>

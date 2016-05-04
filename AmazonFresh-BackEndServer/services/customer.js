@@ -187,3 +187,31 @@ exports.editprofileCustomer = function(msg, callback){
 
 
 };
+
+exports.viewCustomerProfile = function(msg, callback){
+
+	console.log('reached view customer');
+	var q = "select cust_id, customer_id, first_name, last_name, address, city, address, zipcode, email, contact, approved from customers where customer_id = ?";
+	var json_responses;
+	console.log("Query is:"+q);
+	mysql.fetchData(function(err,results){
+		if(err){
+			console.log("ERROR: "+err);
+			json_responses = {"statusCode" : 401};
+			callback(null, json_responses);
+		}
+		else
+		{
+
+			var jsonString = JSON.stringify(results);
+			var jsonParse = JSON.parse(jsonString);
+			console.log('reached else');
+			json_responses = {"statusCode" : 200, user: jsonParse};
+			//console.log(jsonParse);
+			callback(null, json_responses);
+
+		}
+	}, q, [msg.cust_id]);
+
+
+};

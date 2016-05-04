@@ -547,3 +547,35 @@ exports.adminApplyDPForProduct = function(req, res){
     });
 };      // end adminApplyDPForProductType
 ////////////////////   ***** end DynamicPricing module ******* //////////////////////////////
+
+exports.viewFarmerProfile = function(req, res){
+	var msg_payload = {
+	        "farmer_id" : req.param('farmerId')
+	    };
+	    mq_client.make_request('viewFarmerProfile_queue', msg_payload, function(err,results) {
+	        //console.log(results);
+	        if (err) {
+	            //console.log(err);
+	            res.status(500).send(null);
+	        } else {
+	            console.log("about results" + results);
+	            res.render('viewProfile', {user: results[0].user});
+	        }
+	    });
+};
+
+exports.viewCustomerProfile = function(req, res){
+	var msg_payload = {
+	        "cust_id" : req.param('custId')
+	    };
+	    mq_client.make_request('viewCustomerProfile_queue', msg_payload, function(err,results) {
+	        //console.log(results);
+	        if (err) {
+	            //console.log(err);
+	            res.status(500).send(null);
+	        } else {
+	            console.log("about results" + results);
+	            res.render('viewProfile', {user: results[0].user});
+	        }
+	    });
+};

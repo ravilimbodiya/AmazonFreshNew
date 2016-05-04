@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html ng-app="amazonFreshApp" ng-controller="amazonCntrl" ng-init="loadProducts()">
+<html ng-app="amazonFreshApp" ng-controller="amazonCntrl" ng-init="loadProducts();">
 <head>
     <title>Welcome | AmazonFresh</title>
     <link rel='stylesheet' href='../stylesheets/style.css'/>
-    	
+        
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
     <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
@@ -18,14 +18,14 @@
     <script src="https://www.amcharts.com/lib/3/serial.js"></script>
     <script src="https://www.amcharts.com/lib/3/themes/light.js"></script>
     
-    <!-- AngularJs library --> 	
-	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+    <!-- AngularJs library -->  
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
     
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
-	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-	
-	<!-- Loading the AngularJS file from /public/angular folder -->
-	<script src="angular/controller.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    
+    <!-- Loading the AngularJS file from /public/angular folder -->
+    <script src="angular/controller.js"></script>
 </head>
 <body>
 <header>
@@ -47,9 +47,9 @@
                     <li style="cursor: pointer;"><i class="glyphicon glyphicon-shopping-cart cart"></i></li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="margin-right: 10px; padding: 5px;" role="button" aria-haspopup="true" 
-                        	aria-expanded="false">
-                        	<img class="profilePic" alt="" src="/images/user.jpg">
-                        	<span class="caret"></span>
+                            aria-expanded="false">
+                            <img class="profilePic" alt="" src="/images/user.jpg">
+                            <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
                             <li><a href="#" ng-model="userName" class="dropdown-item">User Name<br><span style="font-size: 9px;">View Profile</span></a></li>
@@ -70,62 +70,62 @@
 
 <div class="container" style="margin-top: 5%;" id="shopBar">
 <section class="decoration shoppingListBar">
-	<div class="row">
-    	<div class="col-md-4" align="left">
-    		<div class="dropdown">
-			  <button class="btn dropdown-toggle" type="button" 
-				  id="shopDefault" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-			    Add Product
-			    <span class="caret"></span>
-			  </button>
-			  <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-			    <li><a class="small trigger right-caret" tabindex="-1"><strong>Produce</strong></a>
-				    <ul class="dropdown-menu sub-menu">
-						<li><a class="small" style="color: #464646;" ng-click="renderAddProduct('Produce')">Fresh Fruits</a></li>
-						<li><a class="small" style="color: #464646;" ng-click="renderAddProduct('Produce')">Fresh Vegetables</a></li>
-						<li><a class="small" style="color: #464646;" ng-click="renderAddProduct('Produce')">Herbs</a></li>
-						<li><a class="small" style="color: #464646;" ng-click="renderAddProduct('Produce')">Nuts, Seeds & Dried Fruits</a></li>
-					</ul>	    
-			    </li>
-			    <li><a class="small trigger right-caret" tabindex="-1"><strong>Perishables</strong></a>
-				    <ul class="dropdown-menu sub-menu">
-					<li><a class="small" style="color: #464646;" ng-click="renderAddProduct('Perishables')">Breads & Bakery</a></li>
-					<li><a class="small" style="color: #464646;" ng-click="renderAddProduct('Perishables')">Cheese</a></li>
-					<li><a class="small" style="color: #464646;" ng-click="renderAddProduct('Perishables')">Dairy & Eggs</a></li>
-					<li><a class="small" style="color: #464646;" ng-click="renderAddProduct('Perishables')">Deli</a></li>
-					<li><a class="small" style="color: #464646;" ng-click="renderAddProduct('Perishables')">Frozen Foods</a></li>
-					<li><a class="small" style="color: #464646;" ng-click="renderAddProduct('Perishables')">Meat & Seafood</a></li>
-					<li><a class="small" style="color: #464646;" ng-click="renderAddProduct('Perishables')">Premium Juice</a></li>
-					<li><a class="small" style="color: #464646;" ng-click="renderAddProduct('Perishables')">Yogurt</a></li>
-					</ul>			    
-			    </li>
-			    <li><a class="small trigger right-caret" tabindex="-1"><strong>Pantry</strong></a>
-				    <ul class="dropdown-menu sub-menu">
-					<li><a class="small" style="color: #464646;" ng-click="renderAddProduct('Pantry')">Beer & Wine</a></li>
-					<li><a class="small" style="color: #464646;" ng-click="renderAddProduct('Pantry')">Beverages</a></li>
-					<li><a class="small" style="color: #464646;" ng-click="renderAddProduct('Pantry')">Breakfast Foods</a></li>
-					<li><a class="small" style="color: #464646;" ng-click="renderAddProduct('Pantry')">Grains & Pasta</a></li>
-					<li><a class="small" style="color: #464646;" ng-click="renderAddProduct('Pantry')">Snacks, Cookies & Candy</a></li>
-					</ul>
-			    </li>			    
-			    <li><a class="small trigger right-caret" tabindex="-1"><strong>Speciality</strong></a>
-				    <ul class="dropdown-menu sub-menu">
-					<li><a class="small" style="color: #464646;" ng-click="renderAddProduct('Speciality')">Gluten-Free</a></li>
-					<li><a class="small" style="color: #464646;" ng-click="renderAddProduct('Speciality')">Organic Grocery</a></li>
-					</ul>				    
-			    </li>
-			  </ul>
-			</div>
-    	</div>
-    	<div class="col-md-8">
-    		<div class="input-group">
-		      <input type="text" class="form-control" placeholder="Amazon Fresh Search">
-		      <span class="input-group-btn">
-		        <button class="btn btn-default" type="button" id="shopGo"></button>
-		      </span>
-		    </div>
-  		</div>
-	</div>
+    <div class="row">
+        <div class="col-md-4" align="left">
+            <div class="dropdown">
+              <button class="btn dropdown-toggle" type="button" 
+                  id="shopDefault" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                Add Product
+                <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                <li><a class="small trigger right-caret" tabindex="-1"><strong>Produce</strong></a>
+                    <ul class="dropdown-menu sub-menu">
+                        <li><a class="small" style="color: #464646;" ng-click="renderAddProduct('Produce')">Fresh Fruits</a></li>
+                        <li><a class="small" style="color: #464646;" ng-click="renderAddProduct('Produce')">Fresh Vegetables</a></li>
+                        <li><a class="small" style="color: #464646;" ng-click="renderAddProduct('Produce')">Herbs</a></li>
+                        <li><a class="small" style="color: #464646;" ng-click="renderAddProduct('Produce')">Nuts, Seeds & Dried Fruits</a></li>
+                    </ul>       
+                </li>
+                <li><a class="small trigger right-caret" tabindex="-1"><strong>Perishables</strong></a>
+                    <ul class="dropdown-menu sub-menu">
+                    <li><a class="small" style="color: #464646;" ng-click="renderAddProduct('Perishables')">Breads & Bakery</a></li>
+                    <li><a class="small" style="color: #464646;" ng-click="renderAddProduct('Perishables')">Cheese</a></li>
+                    <li><a class="small" style="color: #464646;" ng-click="renderAddProduct('Perishables')">Dairy & Eggs</a></li>
+                    <li><a class="small" style="color: #464646;" ng-click="renderAddProduct('Perishables')">Deli</a></li>
+                    <li><a class="small" style="color: #464646;" ng-click="renderAddProduct('Perishables')">Frozen Foods</a></li>
+                    <li><a class="small" style="color: #464646;" ng-click="renderAddProduct('Perishables')">Meat & Seafood</a></li>
+                    <li><a class="small" style="color: #464646;" ng-click="renderAddProduct('Perishables')">Premium Juice</a></li>
+                    <li><a class="small" style="color: #464646;" ng-click="renderAddProduct('Perishables')">Yogurt</a></li>
+                    </ul>               
+                </li>
+                <li><a class="small trigger right-caret" tabindex="-1"><strong>Pantry</strong></a>
+                    <ul class="dropdown-menu sub-menu">
+                    <li><a class="small" style="color: #464646;" ng-click="renderAddProduct('Pantry')">Beer & Wine</a></li>
+                    <li><a class="small" style="color: #464646;" ng-click="renderAddProduct('Pantry')">Beverages</a></li>
+                    <li><a class="small" style="color: #464646;" ng-click="renderAddProduct('Pantry')">Breakfast Foods</a></li>
+                    <li><a class="small" style="color: #464646;" ng-click="renderAddProduct('Pantry')">Grains & Pasta</a></li>
+                    <li><a class="small" style="color: #464646;" ng-click="renderAddProduct('Pantry')">Snacks, Cookies & Candy</a></li>
+                    </ul>
+                </li>               
+                <li><a class="small trigger right-caret" tabindex="-1"><strong>Speciality</strong></a>
+                    <ul class="dropdown-menu sub-menu">
+                    <li><a class="small" style="color: #464646;" ng-click="renderAddProduct('Speciality')">Gluten-Free</a></li>
+                    <li><a class="small" style="color: #464646;" ng-click="renderAddProduct('Speciality')">Organic Grocery</a></li>
+                    </ul>                   
+                </li>
+              </ul>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="input-group">
+              <input type="text" class="form-control" placeholder="Amazon Fresh Search">
+              <span class="input-group-btn">
+                <button class="btn btn-default" type="button" id="shopGo" style="background-color:#393F44; color: #fff;">Go</button>
+              </span>
+            </div>
+        </div>
+    </div>
 </section>
 </div>
 
@@ -133,44 +133,44 @@
 <section>
 <div class="container-fluid">
 <div class="row">
-	<div class="col-md-6">
-	<h3>Summary</h3>
-		<table class="table table-bordered table-hover table-condensed">
-			<tr>
-				<th>Total Earning</th>
-				<td>$100</td>
-			</tr>
-			<tr>
-				<th>Number of Orders</th>
-				<td>30</td>
-			</tr>
-			<tr>
-				<th>Number of Products</th>
-				<td>10</td>
-			</tr>
-		</table>
-	</div>
-	<div class="col-md-6">	
-		<div id="chartdiv"></div>
-		<!--<div class="container-fluid">
-		  <div class="row text-center" style="overflow:hidden;">
-				<div class="col-sm-3" style="float: none !important;display: inline-block;">
-					<label class="text-left">Top Radius:</label>
-					<input class="chart-input" data-property="topRadius" type="range" min="0" max="1.5" value="1" step="0.01"/>
-				</div>
-	
-				<div class="col-sm-3" style="float: none !important;display: inline-block;">
-					<label class="text-left">Angle:</label>
-					<input class="chart-input" data-property="angle" type="range" min="0" max="89" value="30" step="1"/>	
-				</div>
-	
-				<div class="col-sm-3" style="float: none !important;display: inline-block;">
-					<label class="text-left">Depth:</label>
-					<input class="chart-input" data-property="depth3D" type="range" min="1" max="120" value="40" step="1"/>
-				</div>
-			</div>
-		</div>-->		
-	</div>
+    <div class="col-md-6">
+    <h3>Summary</h3>
+        <table class="table table-bordered table-hover table-condensed">
+            <tr>
+                <th>Total Earning</th>
+                <td id="earnings">${{earnings}}</td>
+            </tr>
+            <tr>
+                <th>Number of Orders</th>
+                <td id="orders">{{orders}}</td>
+            </tr>
+            <tr>
+                <th>Number of Products</th>
+                <td id="products">{{products}}</td>
+            </tr>
+        </table>
+    </div>
+    <div class="col-md-6">  
+        <div id="chartdiv"></div>
+        <!--<div class="container-fluid">
+          <div class="row text-center" style="overflow:hidden;">
+                <div class="col-sm-3" style="float: none !important;display: inline-block;">
+                    <label class="text-left">Top Radius:</label>
+                    <input class="chart-input" data-property="topRadius" type="range" min="0" max="1.5" value="1" step="0.01"/>
+                </div>
+    
+                <div class="col-sm-3" style="float: none !important;display: inline-block;">
+                    <label class="text-left">Angle:</label>
+                    <input class="chart-input" data-property="angle" type="range" min="0" max="89" value="30" step="1"/>    
+                </div>
+    
+                <div class="col-sm-3" style="float: none !important;display: inline-block;">
+                    <label class="text-left">Depth:</label>
+                    <input class="chart-input" data-property="depth3D" type="range" min="1" max="120" value="40" step="1"/>
+                </div>
+            </div>
+        </div>-->       
+    </div>
 </div>
 </div>
 </section>
@@ -181,44 +181,46 @@
 <div class="container-fluid">
 <div class="row">
 
-	<div class="col-md-12">
-	<h3>Product Description</h3>
-		<table class="table table-condensed table-bordered">
-			<thead align="center">
-				<tr>
-					<th>#</th>
-					<th>Image</th>
-					<th>Product Name</th>
-					<th>Product Description</th>
-					<th>Product Type</th>
-					<th>Price</th>
-					<th>Quantity</th>
-					<th>Ratings and Reviews</th>
-					<th>Update Product?</th>
-				</tr>
-			</thead>
-			<tbody ng-repeat="product in allProducts">
-				<tr style="margin-top: 10px">
-					<td>{{product.product_id}}</td>
-					<td><img id="productImg" src="../images/strawberries.jpg"  width="80px" height="80px"></img></td>
-					<td>{{product.name}}</td>
-					<td>{{product.description}}</td>
-					<td>{{product.product_type}}</td>
-					<td>${{product.price}}</td>
-					<td>{{product.quantity}}</td>
-					<td align="center">											
-						<a style="background-color: #669900; color: white;padding: 5px; border-radius: 20px;" href="/renderFeedback/{{product.product_id}}-{{product.name}}">View</a>
-					</td>
-					<td align="center">											
-						<a style="background-color: #669900; color: white;padding: 5px; border-radius: 20px;" href="/renderEditProduct/{{product.product_id}}">Edit</a>
-					</td>					
-				</tr>					
-			</tbody>
-		</table>
-		
-		
-		
-	</div>
+    <div class="col-md-12">
+    <h3>Product Description</h3>
+        <table class="table table-condensed table-bordered">
+            <thead align="center">
+                <tr>
+                    <th>#</th>
+                    <th>Image</th>
+                    <th>Product Name</th>
+                    <th>Product Description</th>
+                    <th>Product Type</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Ratings and Reviews</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody >
+                <tr ng-repeat="product in allProducts" style="margin-top: 10px">                    
+                    <td>{{product.product_id}}</td>
+                    <td><img id="productImg" src="../images/{{product.image_url}}"  width="80px" height="80px"></img></td>
+                    <td>{{product.name}}</td>
+                    <td>{{product.description}}</td>
+                    <td>{{product.product_type}}</td>
+                    <td>${{product.price}}</td>
+                    <td>{{product.quantity}}</td>
+                    <td align="center">                                         
+                        <a class="btn btn-default" role="button" style="background-color: #669900; color: white;margin-top: 20px;width: 90px" href="/renderFeedback/{{product.product_id}}-{{product.name}}">View</a>
+                    </td>
+                    <td align="center">                                         
+                        <a class="btn btn-default" role="button" style="background-color: #669900; color: white;margin-top: 20px;width: 90px" ng-click="renderEditProduct(product)">Update</a>
+                    </td>
+                    <td align="center">                                         
+                        <a class="btn btn-default" role="button" style="background-color: #669900; color: white;margin-top: 20px;width: 90px" href="/deleteProduct/{{product.product_id}}">Delete</a>                   
+                    </td>                                   
+                </tr>                       
+            </tbody>
+        </table>
+        
+    </div>
 </div>
 </div>
 </section>
@@ -243,98 +245,6 @@
     </div>
 </footer>
 
-<script type="text/javascript">
-    
-    //For making the AM chart
-    
-    var chart = AmCharts.makeChart("chartdiv", {
-        "theme": "light",
-        "type": "serial",
-    	"startDuration": 2,
-        "dataProvider": [{
-            "col": "Earnings",
-            "value": 100,
-            "color": "#FF0F00"
-        }, {
-            "col": "Orders",
-            "value": 30,
-            "color": "#FF6600"
-        }, {
-            "col": "Products",
-            "value": 10,
-            "color": "FF9E01"
-        }],
-        "valueAxes": [{
-            "position": "left",
-            "axisAlpha":0,
-            "gridAlpha":0         
-        }],
-        "graphs": [{
-            "balloonText": "[[category]]: <b>[[value]]</b>",
-            "colorField": "color",
-            "fillAlphas": 0.85,
-            "lineAlpha": 0.1,
-            "type": "column",
-            "topRadius":1,
-            "valueField": "value"
-        }],
-        "depth3D": 40,
-    	"angle": 30,
-        "chartCursor": {
-            "categoryBalloonEnabled": false,
-            "cursorAlpha": 0,
-            "zoomable": false
-        },    
-        "categoryField": "col",
-        "categoryAxis": {
-            "gridPosition": "start",
-            "axisAlpha":0,
-            "gridAlpha":0
-            
-        },
-        "export": {
-        	"enabled": true
-         }
 
-    },0);
-
-    jQuery('.chart-input').off().on('input change',function() {
-    	var property	= jQuery(this).data('property');
-    	var target		= chart;
-    	chart.startDuration = 0;
-
-    	if ( property == 'topRadius') {
-    		target = chart.graphs[0];
-    	}
-
-    	target[property] = this.value;
-    	chart.validateNow();
-    });
-    
-    //For tool tip
-    $(document).ready(function(){
-        $('[data-toggle="tooltip"]').tooltip();   
-    });
-    
-    //For multilevel drop down
-    $(function(){
-    	$(".dropdown-menu > li > a.trigger").on("click",function(e){
-    		var current=$(this).next();
-    		var grandparent=$(this).parent().parent();
-    		if($(this).hasClass('left-caret')||$(this).hasClass('right-caret'))
-    			$(this).toggleClass('right-caret left-caret');
-    		grandparent.find('.left-caret').not(this).toggleClass('right-caret left-caret');
-    		grandparent.find(".sub-menu:visible").not(current).hide();
-    		current.toggle();
-    		e.stopPropagation();
-    	});
-    	$(".dropdown-menu > li > a:not(.trigger)").on("click",function(){
-    		var root=$(this).closest('.dropdown');
-    		root.find('.left-caret').toggleClass('right-caret left-caret');
-    		root.find('.sub-menu:visible').hide();
-    	});
-    });	      
-
-</script>
 </body>
 </html>

@@ -453,8 +453,11 @@ amazon.controller('amazonCntrl', function($scope, $http) {
 
 	//Start Submit Add Product
 	$scope.submitAddProduct = function(type) {
-			
-		var filePath = document.getElementById("imgFile").value;
+		
+		var filePath = document.getElementById("imgFile").value + "";		
+		var temp = filePath.split("\\");
+		var fileName = temp[temp.length-1];
+		
 		//alert("File Path: " + filePath);
 		$http({
 			method : "POST",
@@ -464,7 +467,7 @@ amazon.controller('amazonCntrl', function($scope, $http) {
 					"prodName" 		: $scope.prodName,
 					"price" 		: $scope.price,
 					"description" 	: $scope.description,
-					"imgFile" 		: $scope.imgFile,
+					"imgFile" 		: fileName,
 					"quantity"		: $scope.quantity
 				}
 		}).success(function(data) {
@@ -481,28 +484,228 @@ amazon.controller('amazonCntrl', function($scope, $http) {
 	};
 	//End Submit Add Product
 	
-	//Start Add Product
-	$scope.loadProducts = function() {
+	//Start Load Product
+	$scope.loadProducts = function loadProducts() {
 		var allProducts = [];
+
 		$http({
 			method : "GET",
 			url    : '/loadProducts'
 		}).success(function(data) {
 			//checking the response data for statusCode
-			if (data.statusCode == 200) {				
-				for(var i=0; i<data.rows.length; i++)
-					allProducts.push(data.rows[i]);				
-				
-				$scope.allProducts = allProducts;				
+			if (data.statusCode == 200) {			
+			console.log("Data: " + JSON.stringify(data));	
+
+			for(var i=0; i<data.rows.length; i++){
+				allProducts.push(data.rows[i]);		
+			}//end for i
+
+			$scope.allProducts = allProducts;	
+			
+			$scope.earnings = data.chartDataR[0].totalEarnings;
+			$scope.orders = data.chartDataR[0].countOrder;
+			$scope.products = data.rows.length;
+			
+			
+			//Start for making the AM chart
+		    
+		    var chart = AmCharts.makeChart("chartdiv", {
+		        "theme": "light",
+		        "type": "serial",
+		    	"startDuration": 2,
+		        "dataProvider": [{
+		            "col": "Earnings",
+		            "value": data.chartDataR[0].totalEarnings,
+		            "color": "#FF0F00"
+		        }, {
+		            "col": "Orders",
+		            "value": data.chartDataR[0].countOrder,
+		            "color": "#FF6600"
+		        }, {
+		            "col": "Products",
+		            "value": data.rows.length,
+		            "color": "FF9E01"
+		        }],
+		        "valueAxes": [{
+		            "position": "left",
+		            "axisAlpha":0,
+		            "gridAlpha":0         
+		        }],
+		        "graphs": [{
+		            "balloonText": "[[category]]: <b>[[value]]</b>",
+		            "colorField": "color",
+		            "fillAlphas": 0.85,
+		            "lineAlpha": 0.1,
+		            "type": "column",
+		            "topRadius":1,
+		            "valueField": "value"
+		        }],
+		        "depth3D": 40,
+		    	"angle": 30,
+		        "chartCursor": {
+		            "categoryBalloonEnabled": false,
+		            "cursorAlpha": 0,
+		            "zoomable": false
+		        },    
+		        "categoryField": "col",
+		        "categoryAxis": {
+		            "gridPosition": "start",
+		            "axisAlpha":0,
+		            "gridAlpha":0
+		            
+		        },
+		        "export": {
+		        	"enabled": true
+		         }
+
+		    },0);
+
+		    jQuery('.chart-input').off().on('input change',function() {
+		    	var property	= jQuery(this).data('property');
+		    	var target		= chart;
+		    	chart.startDuration = 0;
+
+		    	if ( property == 'topRadius') {
+		    		target = chart.graphs[0];
+		    	}
+
+		    	target[property] = this.value;
+		    	chart.validateNow();
+		    });
+		    
+		    //For tool tip
+		    $(document).ready(function(){
+		        $('[data-toggle="tooltip"]').tooltip();   
+		    });
+		    
+		    //For multilevel drop down
+		    $(function(){
+		    	$(".dropdown-menu > li > a.trigger").on("click",function(e){
+		    		var current=$(this).next();
+		    		var grandparent=$(this).parent().parent();
+		    		if($(this).hasClass('left-caret')||$(this).hasClass('right-caret'))
+		    			$(this).toggleClass('right-caret left-caret');
+		    		grandparent.find('.left-caret').not(this).toggleClass('right-caret left-caret');
+		    		grandparent.find(".sub-menu:visible").not(current).hide();
+		    		current.toggle();
+		    		e.stopPropagation();
+		    	});
+		    	$(".dropdown-menu > li > a:not(.trigger)").on("click",function(){
+		    		var root=$(this).closest('.dropdown');
+		    		root.find('.left-caret').toggleClass('right-caret left-caret');
+		    		root.find('.sub-menu:visible').hide();
+		    	});
+		    });	
+		    
+		    //End for making the AM chart 
+			
+			
 			}
 			else {
-				alert("Unexpected Error. Please try again");
+
+				window.location.assign("/farmerDashboard");
 			}
 		}).error(function(error) {
-				alert("Unexpected Error: " + error);
+
+				window.location.assign("/farmerDashboard");
+		});
+	};
+	//End Load Product
+	
+	var prodName;
+	
+	//Start Add Product
+	$scope.viewFeedback = function(pid) {
+		//alert("Inside view feedback" + pid);
+		var prodDetails = pid.split("-");
+		var prid = prodDetails[0];
+		prodName = prodDetails[1];
+		var allFeedbacks = [];
+		
+		$http({
+			method : "POST",
+			url    : '/viewFeedback',
+			data   : {prodId : prid}
+		}).success(function(data) {
+			//checking the response data for statusCode
+			if (data.statusCode == 200) {			
+			console.log("Data: " + JSON.stringify(data));	
+
+			$scope.prod = prodName;
+			for(var i=0; i<data.feedback.length; i++){
+				allFeedbacks.push(data.feedback[i]);		
+			}//end for i
+
+			$scope.allFeedbacks = allFeedbacks;							
+			}
+			else {
+
+				window.location.assign("/farmerDashboard");
+			}
+		}).error(function(error) {
+
+				window.location.assign("/farmerDashboard");
 		});
 	};
 	//End Add Product
+
+	
+	//Start Render Edit Product
+	$scope.renderEditProduct = function(prodObj) {
+		
+		console.log("Inside Render Edit Project");
+		
+		$http({
+			method : "POST",
+			url    : '/renderEditProduct',
+			data   : {prodObj : prodObj}
+		}).success(function(data) {
+			
+			if (data.statusCode == 200) {			
+				window.location.assign("/farmerEditProduct");
+			}
+			else {
+				window.location.assign("/farmerDashboard");
+			}
+		}).error(function(error) {
+				window.location.assign("/farmerDashboard");
+		});
+	};
+	//End Render Edit Product
+	
+	//Start Submit Update Product
+	$scope.submitUpdateProduct = function(updateForProdId) {
+		
+		console.log("Inside submit update Edit Project");
+		
+		var filePath = document.getElementById("updateImgFile").value + "";		
+		var temp = filePath.split("\\");
+		var fileName = temp[temp.length-1];
+		
+		$http({
+			method : "POST",
+			url    : '/submitUpdateProduct',
+			data   : {"prodId"			: updateForProdId,
+					  "prodType" 		: $scope.updateProdType,
+					  "prodName" 		: document.getElementById("updateProdName").value,
+					  "price" 			: document.getElementById("updatePrice").value,
+					  "description" 	: document.getElementById("updateDescription").value,
+					  "imgFile" 		: fileName,
+					  "quantity"		: document.getElementById("updateQuantity").value							
+					}
+		}).success(function(data) {
+			
+			if (data.statusCode == 200) {			
+				window.location.assign("/farmerDashboard");
+			}
+			else {
+				window.location.assign("/farmerDashboard");
+			}
+		}).error(function(error) {
+				window.location.assign("/farmerDashboard");
+		});
+	};
+	//End Submit Update Product	
 	
 	
 });
