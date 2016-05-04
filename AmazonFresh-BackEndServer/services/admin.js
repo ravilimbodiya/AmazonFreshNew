@@ -597,7 +597,7 @@ exports.getAllOrdersForAdmin = function(msg, callback){
 	res.Status  = 200;
     res.Message = "test Billing";
 	var limit = 250;
-	var offset = msg.startPosition;
+	//var offset = msg.startPosition;
 	console.log("");
     mongo.connect(mongoURL, function() {
 		var json_responses;

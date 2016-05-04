@@ -92,7 +92,7 @@
 	    		<tbody>
 	    			<div class="alert alert-warning" ng-show="emptyShoppingCart"> {{msg}}</div>
 	    			<tr ng-repeat="item in allItems track by $index">
-	    				<td><img class="imgClass" src="../images/temp/apple.jpg" height="50" width="50" alt="Item Photo"></td>
+	    				<td><img class="imgClass" src="../images/{{item.product.image_url}}" height="50" width="50" alt="Item Photo"></td>
 	    				<td>{{item.product.name}}</td>
 	    				<td>${{item.product.price}}</td>
 
@@ -120,7 +120,7 @@
 				</ul>
 	    	</div>
 	    	<a href="/" class="btn btn-primary" style="float: left;">Continue Shopping</a>
-	    	<a href="/checkout" class="btn btn-default" style="float: right;">Proceed to Checkout</a>
+	    	<a href="/checkout" class="btn btn-default"  ng-show="!emptyShoppingCart" style="float: right;">Proceed to Checkout</a>
 	    </section>
     </div>
 

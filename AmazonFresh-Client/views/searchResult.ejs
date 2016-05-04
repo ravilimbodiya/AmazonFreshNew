@@ -90,7 +90,7 @@
 						<div class="row">
 							<div class="col-lg-4" ng-repeat="product in allProducts track by $index" style="margin-bottom: 15px;">
 								<div class="media">
-								  <img id="{{product.product_id}}" class="img-circle" src="../images/temp/apple.jpg" width="250" height="200" alt="Generic placeholder image">
+								  <img id="{{product.product_id}}" class="img-circle" src="../images/{{product.image_url}}" width="250" height="200" alt="Generic placeholder image">
 						          <h2>{{product.name}}</h2>
 						          <p>{{product.description}}</p>
 						          

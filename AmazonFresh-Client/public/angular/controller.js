@@ -573,13 +573,10 @@ amazon.controller('amazonCntrl', function($scope, $http) {
 		    	chart.validateNow();
 		    });
 		    
-		    //For tool tip
-		    $(document).ready(function(){
-		        $('[data-toggle="tooltip"]').tooltip();   
-		    });
+		   
 		    
 		    //For multilevel drop down
-		    $(function(){
+		    /*$(function(){
 		    	$(".dropdown-menu > li > a.trigger").on("click",function(e){
 		    		var current=$(this).next();
 		    		var grandparent=$(this).parent().parent();
@@ -595,7 +592,7 @@ amazon.controller('amazonCntrl', function($scope, $http) {
 		    		root.find('.left-caret').toggleClass('right-caret left-caret');
 		    		root.find('.sub-menu:visible').hide();
 		    	});
-		    });	
+		    });	*/
 		    
 		    //End for making the AM chart 
 			
@@ -603,11 +600,11 @@ amazon.controller('amazonCntrl', function($scope, $http) {
 			}
 			else {
 
-				window.location.assign("/farmerDashboard");
+				//window.location.assign("/farmerDashboard");
 			}
 		}).error(function(error) {
 
-				window.location.assign("/farmerDashboard");
+				//window.location.assign("/farmerDashboard");
 		});
 	};
 	//End Load Product
@@ -769,6 +766,10 @@ editProfile.controller('editProfileCntrl', function($scope, $http) {
 			console.log("Data: " + JSON.stringify(data));	
 
 			$scope.prod = prodName;
+			
+			if(data.feedback == null){
+				allFeedbacks.push({'ratings':'No Rating', 'review':'No Reviews'});
+			}
 			for(var i=0; i<data.feedback.length; i++){
 				allFeedbacks.push(data.feedback[i]);		
 			}//end for i

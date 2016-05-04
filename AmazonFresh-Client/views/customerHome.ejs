@@ -66,11 +66,11 @@
 					    <span class="caret"></span>
 					  </button>
 					  <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-					    <li style="padding: 10px;"><span ng-click="listAllProductsByCategory('produce');" style="padding: 15px;">Produce</span></li>
-					    <li style="padding: 10px;"><span ng-click="listAllProductsByCategory('perishable');" style="padding: 15px;">Perishables</span></li>
-					    <li style="padding: 10px;"><span ng-click="listAllProductsByCategory('preparedfoods');" style="padding: 15px;">Prepared Foods</span></li>
-					    <li style="padding: 10px;"><span ng-click="listAllProductsByCategory('pantry');" style="padding: 15px;">Pantry</span></li>
-					    <li style="padding: 10px;"><span ng-click="listAllProductsByCategory('speciality');" style="padding: 15px;">Speciality</span></li>
+					    <li style="padding: 10px;"><span ng-click="listAllProductsByCategory('Produce');" style="padding: 15px;">Produce</span></li>
+					    <li style="padding: 10px;"><span ng-click="listAllProductsByCategory('Perishable');" style="padding: 15px;">Perishables</span></li>
+					    <li style="padding: 10px;"><span ng-click="listAllProductsByCategory('Preparedfoods');" style="padding: 15px;">Prepared Foods</span></li>
+					    <li style="padding: 10px;"><span ng-click="listAllProductsByCategory('Pantry');" style="padding: 15px;">Pantry</span></li>
+					    <li style="padding: 10px;"><span ng-click="listAllProductsByCategory('Speciality');" style="padding: 15px;">Speciality</span></li>
 					  </ul>
 					</div>
 		    	</div>
@@ -95,17 +95,17 @@
 		        <div class="col-lg-4">
 		          <img src="../images/temp/orange.jpg" alt="Generic placeholder image">
 		          <h4>Orange</h4>
-		          <p><a class="btn btn-default" href="#" role="button">Add to cart &raquo;</a></p>
+		          
 		        </div><!-- /.col-lg-4 -->
 		        <div class="col-lg-4">
 		          <img src="../images/temp/strawberry.jpg" alt="Generic placeholder image">
 		          <h4>Strawberry</h4>
-		          <p><a class="btn btn-default" href="#" role="button">Add to cart &raquo;</a></p>
+		          
 		        </div><!-- /.col-lg-4 -->
 		        <div class="col-lg-4">
 		          <img src="../images/temp/grapes.jpg" alt="Generic placeholder image">
 		          <h4>Grapes</h4>
-		          <p><a class="btn btn-default" href="#" role="button">Add to cart &raquo;</a></p>
+		          
 		        </div><!-- /.col-lg-4 -->
 		      </div><!-- /.row -->
 				 
@@ -115,17 +115,17 @@
 		        <div class="col-lg-4">
 		          <img src="../images/temp/orange.jpg" alt="Generic placeholder image">
 		          <h4>Orange</h4>
-		          <p><a class="btn btn-default" href="#" role="button">Add to cart &raquo;</a></p>
+		          
 		        </div><!-- /.col-lg-4 -->
 		        <div class="col-lg-4">
 		          <img src="../images/temp/strawberry.jpg" alt="Generic placeholder image">
 		          <h4>Strawberry</h4>
-		          <p><a class="btn btn-default" href="#" role="button">Add to cart &raquo;</a></p>
+		          
 		        </div><!-- /.col-lg-4 -->
 		        <div class="col-lg-4">
 		          <img src="../images/temp/grapes.jpg" alt="Generic placeholder image">
 		          <h4>Grapes</h4>
-		          <p><a class="btn btn-default" href="#" role="button">Add to cart &raquo;</a></p>
+		          
 		        </div><!-- /.col-lg-4 -->
 		      </div><!-- /.row -->
 				 
@@ -135,17 +135,17 @@
 		        <div class="col-lg-4">
 		          <img src="../images/temp/orange.jpg" alt="Generic placeholder image">
 		          <h4>Orange</h4>
-		          <p><a class="btn btn-default" href="#" role="button">Add to cart &raquo;</a></p>
+		          
 		        </div><!-- /.col-lg-4 -->
 		        <div class="col-lg-4">
 		          <img src="../images/temp/strawberry.jpg" alt="Generic placeholder image">
 		          <h4>Strawberry</h4>
-		          <p><a class="btn btn-default" href="#" role="button">Add to cart &raquo;</a></p>
+		          
 		        </div><!-- /.col-lg-4 -->
 		        <div class="col-lg-4">
 		          <img src="../images/temp/grapes.jpg" alt="Generic placeholder image">
 		          <h4>Grapes</h4>
-		          <p><a class="btn btn-default" href="#" role="button">Add to cart &raquo;</a></p>
+		          
 		        </div><!-- /.col-lg-4 -->
 		      </div><!-- /.row -->
 		        </div>
@@ -170,7 +170,7 @@
 						<div class="row">
 							<div class="col-lg-4" ng-repeat="product in allProducts track by $index" style="margin-bottom: 15px;">
 								<div class="media">
-								  <img id="{{product.product_id}}" class="img-circle" src="../images/temp/apple.jpg" width="250" height="200" alt="Generic placeholder image">
+								  <img id="{{product.product_id}}" class="img-circle" src="../images/{{product.image_url}}" width="250" height="200" alt="Generic placeholder image">
 						          <h2>{{product.name}}</h2>
 						          <p>{{product.description}}</p>
 						          
@@ -200,7 +200,7 @@
 						<div class="row">
 							<div class="col-lg-4" ng-repeat="prod in oneCatProducts track by $index" style="margin-bottom: 15px;">
 								<div class="media">
-								  <img id="{{prod.product_id}}" class="img-circle" src="../images/temp/nepali-momo.png" width="250" height="200" alt="Generic placeholder image">
+								  <img id="{{prod.product_id}}" class="img-circle" src="../images/{{prod.image_url}}" width="250" height="200" alt="Generic placeholder image">
 						          <h2>{{prod.name}}</h2>
 						          <p>{{prod.description}}</p>
 						          

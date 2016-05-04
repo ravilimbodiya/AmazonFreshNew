@@ -121,7 +121,7 @@ exports.insertData = function(callback,sqlQuery, params){
 	});
 	console.log("\nConnection closed..");
 	connection.end();
-}
+};
 
 
 exports.fetchData = fetchData;

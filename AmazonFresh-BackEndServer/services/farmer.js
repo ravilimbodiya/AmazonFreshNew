@@ -153,7 +153,7 @@ exports.submitAddProduct = function(msg, callback){
 		var json_responses;
 		console.log("Query is: " + query);
 		
-		mysql.insertData(function(err, results){
+		mysql.fetchData(function(err, results){
 			var json_responses;
 			if(err){
 				console.log("ERROR: " + err);				
@@ -168,7 +168,7 @@ exports.submitAddProduct = function(msg, callback){
 		}, query);
 	}
 	else{
-		var json_responses;
+		//var json_responses;
 		console.log('Error: Some field is null and failed server side validation');		
 		json_responses = {"statusCode" : 401};
 		callback(null, json_responses);
@@ -266,7 +266,7 @@ exports.viewFeedback = function(msg, callback){
 				mongo.connect(mongoURL, function(){
 					
 					console.log('Connected to mongo at: ' + mongoURL);					
-					var coll = mongo.collection('farmer');
+					var coll = mongo.collection('reviews_rating');
 
 						coll.find({$and:[{farmer_id: farmerId, product_id: prodId}]}).toArray(function(err1, rows){
 							if(err1)

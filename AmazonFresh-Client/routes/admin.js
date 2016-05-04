@@ -444,11 +444,11 @@ exports.getAllOrdersForAdmin = function getAllOrdersForAdmin(req, res){
 	            res.send({'statusCode': 400});
 	            throw err;
 	        } else {
-	            if (results.statusCode === 200) {
+	            if (results.Status === 200) {
 	            	var zipcodes = [];
-	            	for(var i = 0; i < results.allOrders.length; i++){
-	            		for(var j = 0; j < results.allOrders[i].shoppingCart.items.length; j++){
-	            			var zip_json = {farmerZip: results.allOrders[i].shoppingCart.items[j].farmer.zipcode, customerZip: results.allOrders[i].customer_zipcode};
+	            	for(var i = 0; i < results.orders.length; i++){
+	            		for(var j = 0; j < results.orders[i].shoppingCart.items.length; j++){
+	            			var zip_json = {farmerZip: results.orders[i].shoppingCart.items[j].farmer.zipcode, customerZip: results.orders[i].customer_zipcode};
 	            			zipcodes.push(zip_json);
 		            	}
 	            	}
