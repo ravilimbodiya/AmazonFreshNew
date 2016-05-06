@@ -591,6 +591,132 @@ exports.handle_request_getBillingSearchListByCustId = function (msg, callback){
 
 };
 //// *******    end admin Billing module  ******** /////
+////*******    Start  admin Stats  module  ******** /////
+
+exports.handle_request_getRevenuePerWeek = function (msg, callback){
+	var res = {};
+	console.log("In handle_request_getRevenuePerWeek:");
+	var date = msg.date;
+	var totalRevenueOnTheDay = 0;
+	console.log(msg.date);
+	var revenueJson = {};
+    var revenueDate = new Date(msg.date); 
+    revenueDate.setDate(revenueDate.getDate()+1);
+    console.log("Revenue Date"+revenueDate.getDate()+"-"+(revenueDate.getMonth()+1)+"-"+revenueDate.getFullYear());
+    var dateOneAfter = new Date(revenueDate);
+    dateOneAfter.setDate(dateOneAfter.getDate() + 1);
+    var dateTwoAfter = new Date(dateOneAfter); 
+    dateTwoAfter.setDate(dateTwoAfter.getDate() + 1);
+    console.log("Date: " + revenueDate);
+    console.log("Date One After: " + dateOneAfter);
+    console.log("Date Two After: " + dateTwoAfter);
+
+	var dateConvert = function(date){
+		console.log("Convert Date Called!");
+		var mm = date.getMonth()+1;
+		console.log(mm);
+		var dd = "";
+		if(date.getDate() < 10)  
+			{
+				dd = "0"+date.getDate();
+			}
+		if(mm<10) 
+			{
+				mm = "0" + mm;
+			}
+		var yyyy = date.getFullYear();
+
+		return [yyyy,mm,dd].join("-");
+	}   
+
+    console.log("revenueDate: "+dateConvert(revenueDate));
+    console.log("dateOneAfter: "+dateConvert(dateOneAfter));
+    console.log("dateTwoAfter"+dateConvert(dateTwoAfter));
+      mongo.connect(mongoURL, function () {
+        var coll = mongo.collection('orders');        
+        coll.find({"delivery_date": "05/03/2016"}).toArray(function (err, results) {
+            if(results.length > 0){
+	            for (var i = 0; i < results.length; i++) {
+	            	totalRevenueOnTheDay += results[i].amount;
+	            	revenueJson.Status=200;
+	            	revenueJson.totalRevenueOnTheDay = totalRevenueOnTheDay;
+        		}
+        		console.log("success"+totalRevenueOnTheDay);
+	            }
+	            callback(null, revenueJson);
+        	});
+
+    });
+}; 	// end handle_request_getRevenuePerWeek
+
+exports.handle_request_getRidesPerArea = function (msg, callback){
+	console.log("In handle_request_getRidesPerArea:");
+	var states = msg.states;
+	console.log ("1 = " +states[1]);
+	var count = msg.count;
+	var i = 0;
+	console.log(count);
+	var ridesJson = {};   
+	console.log("States: " +states);
+	var rideCount=[];
+	for (i=0; i<count; i++){
+		rideCount[i] = Math.floor((Math.random ()*20) + 1)
+	}
+	ridesJson.rideCount= rideCount;
+	ridesJson.Status = 200;
+	console.log(JSON.stringify(ridesJson));
+	callback(null, ridesJson);
+      /*mongo.connect(mongoURL, function () {
+        var coll = mongo.collection('orders');        
+        for (i = 0; i < count ; i++){
+        coll.find({"customer_state": states[i]}).toArray(function (err, results) {
+            if(results.length > 0){
+        		console.log("success"+results.length);
+        		ridesJson.rideCount[i] = results.length;
+        		ridesJson.Status=200;
+	            }
+        	});
+    	}callback(null, ridesJson);
+    }); */
+
+}; 	// end handle_request_getRevenuePerWeek
+//// *******    End  admin Stats  module  ******** /////
+exports.deleteCustomer = function(msg, callback){
+
+	console.log("Inside farmer.js deleteCustomer on server");
+	var custId = parseInt(msg.custId);
+	
+	//server side validation
+	if(custId!=""){
+	
+		// delete product from DB		
+		var query = "DELETE FROM customers " + 					
+					"WHERE cust_id=" + custId + ";";
+					
+		var json_responses;
+		console.log("Query is: " + query);
+		
+		mysql.insertData(function(err, results){
+			var json_responses;
+			if(err){
+				console.log("ERROR: " + err);				
+				json_responses = {"statusCode" : 401};
+				callback(null, json_responses);
+			}
+			else 
+			{
+				json_responses = {"statusCode" : 200};
+				callback(null, json_responses);
+			}  
+		}, query);
+	}
+	else{
+		var json_responses;
+		console.log('Error: Some field is null and failed server side validation');		
+		json_responses = {"statusCode" : 401};
+		callback(null, json_responses);
+	}
+};//end delete customer
 
 exports.getAllOrdersForAdmin = function(msg, callback){
 	var res = {};

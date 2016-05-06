@@ -413,27 +413,70 @@ exports.adminGetBillingSearchList = function(req, res){
 
 ////////////////////   ***** End Billing module ******* //////////////////////////////
 
-////////////////////   ***** Start Stats module ******* //////////////////////////////
+////////////////////***** Start Stats module ******* //////////////////////////////
 
-exports.testGraph = function(req, res){
-    console.log("testGraph");
-    date = req.param('date')
-    days = req.param('days')
+exports.adminGetRevenuePerWeek = function(req, res){
+    console.log("adminGetRevenuePerWeek");
+    var date = req.param('date')
+    var days = req.param('days')
     console.log("date: " + date + "  days:" + days);
-    var s1 = [[2002, 112000], [2003, 122000], [2004, 104000], [2005, 99000], [2006, 121000], 
-    [2007, 148000], [2008, 114000], [2009, 133000], [2010, 161000], [2011, 173000]];
-    var s2 = [[2002, 10200], [2003, 10800], [2004, 11200], [2005, 11800], [2006, 12400], 
-    [2007, 12800], [2008, 13200], [2009, 12600], [2010, 13100]];
+    var msg_payload = {
+            "date" : date,
+            "days" : 7,
+            "func" : "getRevenuePerWeek"
+        };
+        mq_client.make_request('adminStats_queue', msg_payload, function(err,results) {
+            if (err) {
+                res.status(500).send(null);
+            } else {
+                console.log("about results" + results.totalRevenueOnTheDay);
+                res.send({  day1Revenue:  results.totalRevenueOnTheDay,
+                            Status: results.Status
+                           });
+            }
+        });
 
+    /*var resp ={};
+    var day1 = {},  day2 = {}, day3 = {},  day4 = {}, day5 = {}, day6 = {}, day7 = {};
+    day1.date ="2016-03-12";   day1.revenue = 120;
+    day2. date ="2016-03-13";    day2.revenue = 125;
+    day3.date ="2016-03-14";   day3.revenue = 120;
+    day4. date ="2016-03-15";    day4.revenue = 125;
+    day5.date ="2016-03-16";   day5.revenue = 120;
+    day6. date ="2016-03-17";    day6.revenue = 125;
+    day7. date ="2016-03-18";    day7.revenue = 125;
+    resp.day1 = day1;    resp.day2 = day2; resp.day3 = day3;    resp.day4 = day4;
+    resp.day5 = day5;    resp.day6 = day6; resp.day7 = day7; 
+    
     res.send({ Message: "success testGraph from rabbitClientNode",
                Status: 200,
-               s1:s1,
-               s2:s2
-              });
+               res:resp
+              }); */
 
-};      // end testGraph
+};      // end adminGetRevenuePerWeek
 
-////////////////////   ***** end Stats module ******* //////////////////////////////
+exports.adminGetRidesPerArea = function(req, res){
+    console.log("adminGetRevenuePerWeek");
+    var states = req.param('states')
+    var count = req.param('count')
+    console.log("States " + states + "  count:" + count);
+    var msg_payload = {
+            "states" : states,
+            "count" : count,
+            "func" : "getRidesPerArea"
+        };
+        mq_client.make_request('adminStats_queue', msg_payload, function(err,results) {
+            if (err) {
+                res.status(500).send(null);
+            } else {
+                console.log("about results: " + results.Status);
+                res.send(  results
+                           );
+            }
+        });
+
+};      // end adminGetRidesPerArea
+
 
 
 exports.getAllOrdersForAdmin = function getAllOrdersForAdmin(req, res){
@@ -578,4 +621,21 @@ exports.viewCustomerProfile = function(req, res){
 	            res.render('viewProfile', {user: results[0].user});
 	        }
 	    });
+};
+exports.deleteCustomer = function deleteCustomer(req, res) {
+	console.log("CustId in delete product: " + req.param('custId'));
+	mq_client.make_request('deleteCustomer_queue', {'custId' : req.param('custId')}, function (err, results) {
+        if (err) {
+            console.log('Err: ' + err);
+            res.render('deleteError');
+            //throw err;
+        } else {
+            if (results.statusCode == 200) {            	
+                res.render('adminDashboard');
+            } else {
+                console('Error Occurred!');
+                res.render('deleteError');
+            }
+        }
+    });
 };

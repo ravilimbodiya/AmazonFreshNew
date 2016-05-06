@@ -101,6 +101,7 @@ app.post('/renderEditProduct', sessionMgmt.restrict,farmer.renderEditProduct);
 app.get('/farmerEditProduct', sessionMgmt.restrict,farmer.farmerEditProduct);
 app.post('/submitUpdateProduct', sessionMgmt.restrict,farmer.submitUpdateProduct);
 app.get('/deleteProduct/:prodId', sessionMgmt.restrict,farmer.deleteProduct);
+app.get('/deleteCustomer/:custId', admin.deleteCustomer);
 
 //Admin module
 app.get('/admin', index.adminSignIn);
@@ -116,7 +117,7 @@ app.get('/adminGetCustomerApprovalPendingList',  sessionMgmt.restrict, admin.adm
 app.get('/adminApproveCustomer',  sessionMgmt.restrict, admin.adminApproveCustomer);
 app.get('/adminDisapproveCustomer',  sessionMgmt.restrict, admin.adminDisapproveCustomer);
 app.get('/adminGetCustomerSearchList',  sessionMgmt.restrict, admin.adminGetCustomerSearchList);
-app.get('/testGraph',  sessionMgmt.restrict, admin.testGraph);
+
 app.post('/getAllOrdersForAdmin',  sessionMgmt.restrict, admin.getAllOrdersForAdmin);
 app.get('/adminGetProductList',  sessionMgmt.restrict, admin.adminGetProductList);
 app.get('/adminGetProductApprovalPendingList',  sessionMgmt.restrict, admin.adminGetProductApprovalPendingList);
@@ -131,6 +132,8 @@ app.get('/adminApplyDPForProductType', sessionMgmt.restrict,admin.adminApplyDPFo
 app.get('/adminApplyDPForProduct', sessionMgmt.restrict,admin.adminApplyDPForProduct);
 app.get('/farmers/:farmerId', sessionMgmt.restrict,admin.viewFarmerProfile);
 app.get('/customers/:custId', sessionMgmt.restrict,admin.viewCustomerProfile);
+app.get('/adminGetRevenuePerWeek', admin.adminGetRevenuePerWeek);
+app.get('/adminGetRidesPerArea', admin.adminGetRidesPerArea);
 
 app.use(function(req, res, next) {
 	res.render('error');

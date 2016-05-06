@@ -8,7 +8,7 @@ app = express();
 describe('http test', function () {
     it('should not login', function (done) {
         request.post('http://localhost:3000/checkLogin',
-            {form: {username: 'anshuman.tripathi@sjsu.edu', password: '12345', userType: 'farmer'}},
+            {form: {username: 'ravi@gmail.com', password: '123', userType: 'customer'}},
             function (error, response, body) {
                 assert.equal(200, response.statusCode);
                 done();

@@ -82,10 +82,70 @@ exports.deleteProduct = function(msg, callback){
 
 
 };
+exports.postReviewRating = function(msg, callback){
 
+    console.log(msg.toString());
+   mongo.connect(mongoURL, function() {
+      var json_responses;
+      console.log('Connected to mongo at: ' + mongoURL);
+      var coll = mongo.collection('reviews_rating');
+      console.log("inserting reviews and ratings");
+         //var q = {customer_id: msg.cust_id, ratings: msg.rating, review: msg.reviewComment};
+       coll.find({product_id: msg.prodId}).count(function(err, count) {
+            console.log("There are " + count + " records.");
+           if(count==0){
+               console.log('reached count 0'+count);
+               coll.insert({product_id: msg.prodId}, {product_id: msg.prodId, farmer_id: msg.farmerId},{$push : {feedback : {customer_id: msg.cust_id, ratings: msg.rating, review: msg.reviewComment}}}, function(err1, result) {
+              /* coll.update({product_id:msg.prodId},{product_id: msg.prodId, farmer_id:msg.farmerId},{$push:{feedback:[{customer_id: msg.cust_id,ratings: msg.rating,review: msg.reviewComment}]}}, function(err1, result) {*/
+
+               if(err1){
+
+                       console.log('reached insert query fail');
+                       json_responses = { statusCode: 401 };
+                       callback(null, json_responses);
+                   }
+                   else
+                   {
+                       console.log('reached insert query success');
+                       console.log('reached count 1+');
+                       json_responses = {"statusCode" : 200};
+                       console.log(json_responses);
+                       callback(null, json_responses);
+                   }
+               });
+
+
+           }else{
+                console.log('reaching update query')
+               coll.update({product_id:msg.prodId},{product_id: msg.prodId, farmer_id:msg.farmerId},{feedback:[{customer_id: msg.cust_id,ratings: msg.rating,review: msg.reviewComment}]}, function(err1, result) {
+               /*coll.update({product_id: msg.prodId})*/
+                   if(err1){
+                       console.log('reached update query fail');
+                       json_responses = { statusCode: 401 };
+                       callback(null, json_responses);
+                   }
+                   else
+                   {
+                       console.log('reached update query success');
+                       json_responses = {"statusCode" : 200};
+                       console.log(json_responses);
+                       callback(null, json_responses);
+                   }
+               });
+
+
+           }
+
+        });
+
+
+
+
+  });  
+}
 exports.listallProduct = function(msg, callback){
 
-    var query="select * from product";
+    var query="select * from product LIMIT 50";
     var json_responses;
     console.log("Query is:"+query);
 

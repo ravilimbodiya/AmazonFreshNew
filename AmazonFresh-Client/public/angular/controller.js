@@ -454,11 +454,56 @@ amazon.controller('amazonCntrl', function($scope, $http) {
 	//Start Submit Add Product
 	$scope.submitAddProduct = function(type) {
 		
-		var filePath = document.getElementById("imgFile").value + "";		
+		/*var filePath = document.getElementById("imgFile").value + "";		
 		var temp = filePath.split("\\");
-		var fileName = temp[temp.length-1];
+		var fileName = temp[temp.length-1];*/
+		var allValidFlag = true;
 		
+		
+		if(type === undefined || type === ""){			
+			allValidFlag = false;
+		} 		
+		
+		if(!$scope.form.prodName.$valid || $scope.prodName === undefined || $scope.prodName === ""){
+			$scope.nameerror = true;
+			allValidFlag = false;
+		} else {
+			$scope.nameerror = false;
+		}
+		
+		if(!$scope.form.price.$valid || $scope.price === undefined || $scope.price === ""){
+			$scope.priceerror = true;
+			allValidFlag = false;
+		} else {
+			$scope.priceerror = false;
+		}
+		
+		
+		if(!$scope.form.description.$valid || $scope.description === undefined || $scope.description === ""){
+			$scope.descerror = true;
+			allValidFlag = false;
+		} else {
+			$scope.descerror = false;
+		}
+		
+		if(!$scope.form.quantity.$valid || $scope.quantity === undefined || $scope.quantity === ""){
+			$scope.quantityerror = true;
+			allValidFlag = false;
+		} else {
+			$scope.quantityerror = false;
+		}
+		
+		var filePath = document.getElementById("imgFile").value + "";	
+		if(filePath != ""){
+			var temp = filePath.split("\\");
+			var fileName = temp[temp.length-1];
+		}
+		else{
+			fileName = null;
+		}
 		//alert("File Path: " + filePath);
+		
+		
 		$http({
 			method : "POST",
 			url : '/submitAddProduct',
@@ -481,6 +526,7 @@ amazon.controller('amazonCntrl', function($scope, $http) {
 		}).error(function(error) {
 				window.location.assign("/farmerDashboard");
 		});
+		
 	};
 	//End Submit Add Product
 	

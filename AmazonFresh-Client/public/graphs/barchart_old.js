@@ -3,16 +3,14 @@
     $(".ShowRevenuePerWeek").on("click", function () {
     $('#chart1').empty();   // reload the chart
     var d = $("#revenueDate").text();
-    //alert(d);
-    var param = { date: d,
+    alert(d);
+    var param = { date: "2008-08-10",
                   days: 7}
-    $.getJSON("\ adminGetRevenuePerWeek",  param, function(res){
+    $.getJSON("\ testGraph",  param, function(res){
+        
+    var r1 = res.s1;
     
-    alert (res.Status + res.day1Revenue);
-    var s2=
-    v;
-    
-    plot1 = $.jqplot("chart1", [s1, s1], {
+    plot1 = $.jqplot("chart1", [r1, r1], {
         // Turns on animatino for all series in this plot.
         animate: true,
         // Will animate plot on calls to plot1.replot({resetAxes:true})
@@ -24,7 +22,7 @@
             looseZoom: true,
             showTooltip: false
         },
-        series:[    
+        series:[
             {
                 pointLabels: {
                     show: true
@@ -41,7 +39,7 @@
                     },
                     barWidth: 15,
                     barPadding: -15,
-                    barMargin: 10,
+                    barMargin: 0,
                     highlightMouseOver: false
                 }
             }, 
@@ -118,15 +116,10 @@
            ticks[i++] = "'"+$(this).val()+"'";
        });
         alert(ticks);
-        var param ; 
-        param= {states: ticks,
-                count: i}
-        //var s1 = [7, 5, 3, 2, 3, 4, 10];
-        //var s1 = res.s1;
-        $.getJSON("\ adminGetRidesPerArea",  param, function(res){
-        //alert (res.rideCount[0]  + " " + res.rideCount[1] );
-        var s1=[];
-        s1 = res.rideCount;
+        var param = ticks;
+        $.getJSON("\ testGraph_3",  param, function(res){
+        var s1 = res.s1;
+         
         plot2 = $.jqplot('chart2', [s1], {
             title : "Total Rides Per Area",
             animateReplot: true,
@@ -156,8 +149,7 @@
             function (ev) {
                 $('#info2').html('Nothing');
             }
-        );*/
-    });
+        );*/}
     });
 
 //////////////***************      end  showRidesPerArea ***************///////////////////////////
@@ -171,9 +163,9 @@
            ticks[i++] = "'"+$(this).val()+"'";
        });
         alert(ticks);
-        var s1 = [7, 5, 3, 2, 3, 4, 10, 12,11,3, 7, 3];
+        $.getJSON("\ testGraph_3",  param, function(res){
 
-        //var s1 = res
+        var s1 = res.s1;
          
         plot2 = $.jqplot('chart3', [s1], {
             title : "Total Rides Per Driver",
@@ -204,7 +196,7 @@
             function (ev) {
                 $('#info3').html('Nothing');
             }
-        );*/
+        );*/}
     });
 
 //////////////***************      end  showRidesPerDriver ***************///////////////////////////
@@ -218,10 +210,10 @@
            ticks[i++] = "'"+$(this).val()+"'";
        });
         alert(ticks);
-        var s2 = [7, 5, 3, 2, 3, 4, 10, 12, 4, 7, 9];
-        
+        $.getJSON("\ testGraph_3",  param, function(res){
+        var s1 =res.s1
          
-        plot2 = $.jqplot('chart4', [s2], {
+        plot2 = $.jqplot('chart4', [s1], {
             title : "Total Rides Per Customer",
             animateReplot: true,
             seriesDefaults: {
@@ -250,7 +242,7 @@
             function (ev) {
                 $('#info4').html('Nothing');
             }
-        );*/
+        );*/}
     });
 
 //////////////***************      end  showRidesPerCustomer ***************///////////////////////////

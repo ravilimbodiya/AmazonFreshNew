@@ -77,25 +77,37 @@
     <fieldset>
         <legend class="prodType" ng-model="prodType"><%= prodType %></legend>
     
-        <form role="form" method="post" enctype="multipart/form-data">
+        <form role="form" name="form" method="post" enctype="multipart/form-data">
             <div class="form-group">                     
                 <label for="name">Name</label>
-                <input ng-model="prodName" type="text" class="form-control" id="productName" required/>
+                <input ng-model="prodName" name="prodName" type="text" class="form-control" id="productName" required/>
+                <p id="error" ng-show="nameerror" style="float:right;color: red;">
+                        <strong>Please enter name</strong>
+                </p>
             </div>
             
             <div class="form-group">                     
                 <label for="price">Price</label>
-                <input ng-model="price" type="text" class="form-control" id="price" required/>
+                <input ng-model="price" name="price" type="text" class="form-control" id="price" required/>
+                <p id="error" ng-show="priceerror" style="float:right;color: red;">
+                        <strong>Please enter valid number</strong>
+                </p>
             </div>
             
             <div class="form-group">                     
                 <label for="description">Description</label>
-                <textarea ng-model="description" type="text" class="form-control" rows="5" id="description" required></textarea>
+                <textarea ng-model="description" name="description" type="text" class="form-control" rows="5" id="description" required></textarea>
+                <p id="error" ng-show="descerror" style="float:right;color: red;">
+                        <strong>Please enter valid description</strong>
+                </p>
             </div>
             
             <div class="form-group">                     
                 <label for="quantity">Quantity</label>
-                <input ng-model="quantity" type="text" class="form-control" id="quantity" required/>
+                <input ng-model="quantity" name="quantity" type="text" class="form-control" id="quantity" required/>
+                <p id="error" ng-show="quantityerror" style="float:right;color: red;">
+                        <strong>Please enter valid description</strong>
+                </p>
             </div>
             
             <div class="form-group">                 

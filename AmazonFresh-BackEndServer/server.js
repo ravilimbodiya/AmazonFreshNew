@@ -766,6 +766,24 @@ cnn.on('ready', function () {
         });
     });
     
+  //Delete customer queue
+    cnn.queue('deleteCustomer_queue', function (q) {
+        q.subscribe(function (message, headers, deliveryInfo, m) {
+            util.log(util.format(deliveryInfo.routingKey, message));
+            util.log("Message: " + JSON.stringify(message));
+            util.log("DeliveryInfo: " + JSON.stringify(deliveryInfo));
+            admin.deleteCustomer(message, function (err, res) {
+
+                //return index sent
+                cnn.publish(m.replyTo, res, {
+                    contentType: 'application/json',
+                    contentEncoding: 'utf-8',
+                    correlationId: m.correlationId
+                });
+            });
+        });
+    });
+    
 ////*******    start admin farmer module  *****  /////
     cnn.queue('getAllOrdersForAdmin_queue', function (q) {
         q.subscribe(function (message, headers, deliveryInfo, m) {
@@ -1111,4 +1129,40 @@ cnn.on('ready', function () {
        });
 
     //// *******    end   admin Billing module  *****  /////
+////*******    Start  admin stats module  *****  /////
+    cnn.queue('adminStats_queue', function(q){
+            console.log("listening on adminStats_queue");     
+            q.subscribe(function(message, headers, deliveryInfo, m){
+                util.log(util.format( deliveryInfo.routingKey, message));
+                util.log("Message: "+JSON.stringify(message));
+                util.log("DeliveryInfo: "+JSON.stringify(deliveryInfo));
+
+                switch (message.func) {
+                    case "getRevenuePerWeek":
+                        admin.handle_request_getRevenuePerWeek(message, function(err,res){
+                            util.log("Correlation ID: " + m.correlationId);
+                            // return index sent
+                            cnn.publish(m.replyTo, res, {
+                                contentType: 'application/json',
+                                contentEncoding: 'utf-8',
+                                correlationId: m.correlationId
+                        });
+                    });
+                    break;
+                    case "getRidesPerArea":
+                        admin.handle_request_getRidesPerArea(message, function(err,res){
+                            util.log("Correlation ID: " + m.correlationId);
+                            // return index sent
+                            cnn.publish(m.replyTo, res, {
+                                contentType: 'application/json',
+                                contentEncoding: 'utf-8',
+                                correlationId: m.correlationId
+                        });
+                    });
+                    break;
+                }
+            });
+        });
+
+    //// *******    end   admin Stats module  *****  /////
 });
